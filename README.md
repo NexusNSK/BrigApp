@@ -1,14 +1,6 @@
-# Spring Boot and Vaadin course source code
+# BrigApp application for editing and managing a team
 
-This repository contains the source code for the [Building Modern Web Applications With Spring Boot and Vaadin](https://vaadin.com/docs/latest/flow/tutorials/in-depth-course).
+This repository create for personal needs
 
-*Live demo:* https://crm.demo.vaadin.com
-
-## Branches
-
-- The main branch contains the source code for the latest Vaadin release
-- The `v14` branch contains the source code for Vaadin 14
-
-
-## Text tutorial
-You can find a text version of the tutorial in the [Vaadin Documentation](https://vaadin.com/docs/latest/flow/tutorials/in-depth-course).
+## Еhe development of the application continues
+You can contact me at the link https://t.me/ka_ban54
