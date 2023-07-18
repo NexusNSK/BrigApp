@@ -1,7 +1,6 @@
 package ru.markov.application.views;
 
 import ru.markov.application.security.SecurityService;
-import ru.markov.application.views.list.ListView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -28,7 +27,7 @@ public class MainLayout extends AppLayout {
             LumoUtility.Margin.MEDIUM);
 
         String u = securityService.getAuthenticatedUser().getUsername();
-        Button logout = new Button("Log out " + u, e -> securityService.logout()); // <2>
+        Button logout = new Button("Выйти " + u, e -> securityService.logout()); // <2>
 
         var header = new HorizontalLayout(new DrawerToggle(), logo, logout);
 
@@ -45,8 +44,8 @@ public class MainLayout extends AppLayout {
 
     private void createDrawer() {
         addToDrawer(new VerticalLayout(
-                new RouterLink("List", ListView.class),
-                new RouterLink("Dashboard", DashboardView.class)
+                new RouterLink("Редактор бригады", BrigEditor.class),
+                new RouterLink("Управление бригадой", DashboardView.class)
         ));
     }
 }
