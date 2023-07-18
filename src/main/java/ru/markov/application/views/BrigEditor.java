@@ -1,9 +1,5 @@
 package ru.markov.application.views;
 
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep;
 import com.vaadin.flow.component.html.Div;
@@ -16,8 +12,10 @@ import jakarta.annotation.security.PermitAll;
 import org.springframework.context.annotation.Scope;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import ru.markov.application.data.Worker;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @SpringComponent
@@ -26,7 +24,9 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 @Route(value = "", layout = MainLayout.class)
 @PageTitle("BrigApp")
 public class BrigEditor extends Div {
+    List<Worker>workerList = new ArrayList<>();
     public BrigEditor() {
+
         Notification addWorkerNotification = new Notification("Техник был добавлен в базу данных");
         TextField firstName = new TextField("Имя");
         TextField lastName = new TextField("Фамилия");
@@ -34,16 +34,20 @@ public class BrigEditor extends Div {
         TextField category = new TextField("Категория");
         Button addWorker = new Button("Добавить техника");
         addWorker.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
-        addWorker.addClickListener(buttonClickEvent -> {});
+        addWorker.addClickListener(buttonClickEvent -> {
+            workerList.add(new Worker(firstName.getValue(), lastName.getValue(), fatherName.getValue(), Integer.parseInt(category.getValue())));
+            for (Worker w:workerList
+                 ) {
+                System.out.println(w.toString());
+            }
+        });
         FormLayout formLayout = new FormLayout();
         formLayout.add(firstName, lastName, fatherName, category, addWorker);
         formLayout.setResponsiveSteps(
-                // Use one column by default
                 new ResponsiveStep("0", 1),
-                // Use two columns, if layout's width exceeds 500px
                 new ResponsiveStep("500px", 2));
-        // Stretch the username field over 2 columns
         formLayout.setColspan(fatherName, 2);
+        formLayout.setMaxWidth("500px");
 
 
         add(formLayout);

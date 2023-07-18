@@ -45,7 +45,7 @@ public class MainLayout extends AppLayout {
     private void createDrawer() {
         addToDrawer(new VerticalLayout(
                 new RouterLink("Редактор бригады", BrigEditor.class),
-                new RouterLink("Управление бригадой", DashboardView.class)
+                new RouterLink("Управление бригадой", BrigManage.class)
         ));
     }
 }
