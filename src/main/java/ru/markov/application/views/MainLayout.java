@@ -1,7 +1,9 @@
 package ru.markov.application.views;
 
+import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.PermitAll;
 import ru.markov.application.security.SecurityService;
-import ru.markov.application.views.list.ListView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -11,6 +13,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+@Route("")
+@PermitAll
 
 public class MainLayout extends AppLayout {
     private final SecurityService securityService;
@@ -19,6 +23,7 @@ public class MainLayout extends AppLayout {
         this.securityService = securityService;
         createHeader();
         createDrawer();
+
     }
 
     private void createHeader() {
@@ -28,12 +33,13 @@ public class MainLayout extends AppLayout {
             LumoUtility.Margin.MEDIUM);
 
         String u = securityService.getAuthenticatedUser().getUsername();
-        Button logout = new Button("Log out " + u, e -> securityService.logout()); // <2>
+        Button logout = new Button("Выйти " + u, e -> securityService.logout()); // <2>
 
         var header = new HorizontalLayout(new DrawerToggle(), logo, logout);
 
+
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
-        header.expand(logo); // <4>
+        header.expand(logo);
         header.setWidthFull();
         header.addClassNames(
             LumoUtility.Padding.Vertical.NONE,
@@ -45,8 +51,8 @@ public class MainLayout extends AppLayout {
 
     private void createDrawer() {
         addToDrawer(new VerticalLayout(
-                new RouterLink("List", ListView.class),
-                new RouterLink("Dashboard", DashboardView.class)
+                new RouterLink("Редактор бригады", BrigEditor.class),
+                new RouterLink("Управление бригадой", BrigManage.class)
         ));
     }
 }
