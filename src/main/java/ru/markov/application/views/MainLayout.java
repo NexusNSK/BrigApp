@@ -1,5 +1,6 @@
 package ru.markov.application.views;
 
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 import ru.markov.application.security.SecurityService;
@@ -22,9 +23,6 @@ public class MainLayout extends AppLayout {
         this.securityService = securityService;
         createHeader();
         createDrawer();
-
-    }
-    private void centerView(){
 
     }
 

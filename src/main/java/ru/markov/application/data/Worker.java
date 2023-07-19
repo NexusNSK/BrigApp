@@ -13,7 +13,7 @@ public class Worker implements Serializable {
     private String lastName;
     private String fatherName;
     private int category;
-    private List<Calendar>holidays;
+    private List<Calendar> holidays;
     private boolean isWork;
     private boolean isHospital;
 
@@ -24,12 +24,14 @@ public class Worker implements Serializable {
         this.category = category;
     }
 
-    public String getFullName(){
+    public String getFullName() {
         return firstName + " " + lastName + " " + fatherName;
     }
+
 
     @Override
     public String toString() {
         return firstName + lastName + fatherName + category;
     }
 }
+
