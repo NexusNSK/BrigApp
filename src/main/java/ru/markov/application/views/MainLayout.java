@@ -1,5 +1,7 @@
 package ru.markov.application.views;
 
+import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.PermitAll;
 import ru.markov.application.security.SecurityService;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -10,6 +12,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+@Route("")
+@PermitAll
 
 public class MainLayout extends AppLayout {
     private final SecurityService securityService;
@@ -18,6 +22,10 @@ public class MainLayout extends AppLayout {
         this.securityService = securityService;
         createHeader();
         createDrawer();
+
+    }
+    private void centerView(){
+
     }
 
     private void createHeader() {
@@ -31,8 +39,9 @@ public class MainLayout extends AppLayout {
 
         var header = new HorizontalLayout(new DrawerToggle(), logo, logout);
 
+
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
-        header.expand(logo); // <4>
+        header.expand(logo);
         header.setWidthFull();
         header.addClassNames(
             LumoUtility.Padding.Vertical.NONE,

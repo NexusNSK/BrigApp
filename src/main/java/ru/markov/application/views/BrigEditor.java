@@ -2,6 +2,7 @@ package ru.markov.application.views;
 
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.textfield.TextField;
@@ -21,11 +22,26 @@ import java.util.List;
 @SpringComponent
 @Scope("prototype")
 @PermitAll
-@Route(value = "", layout = MainLayout.class)
+@Route(value = "brigapp", layout = MainLayout.class)
 @PageTitle("BrigApp")
 public class BrigEditor extends Div {
-    List<Worker>workerList = new ArrayList<>();
+    static List<Worker>workerList = new ArrayList<>();
     public BrigEditor() {
+
+        Grid<Worker> workerGrid = new Grid<>(Worker.class, false);
+        workerGrid.addColumn(Worker::getFullName).setHeader("Сотрудник");
+        workerGrid.setItems(workerList);
+
+        Button updateGrid = new Button("Обновить отображение");
+        updateGrid.addThemeVariants(ButtonVariant.LUMO_ICON);
+        updateGrid.addClickListener(buttonClickEvent -> {
+            workerGrid.addColumn(Worker::getFullName).setHeader("Сотрудники");
+            workerGrid.setItems(workerList);
+            workerGrid.getDataProvider().refreshAll();
+        });
+        Button save = new Button("Сохранить");
+        save.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+
 
         Notification addWorkerNotification = new Notification("Техник был добавлен в базу данных");
         TextField firstName = new TextField("Имя");
@@ -40,9 +56,11 @@ public class BrigEditor extends Div {
                  ) {
                 System.out.println(w.toString());
             }
+
+            workerGrid.getDataProvider().refreshAll();
         });
         FormLayout formLayout = new FormLayout();
-        formLayout.add(firstName, lastName, fatherName, category, addWorker);
+        formLayout.add(firstName, lastName, fatherName, category, addWorker, updateGrid);
         formLayout.setResponsiveSteps(
                 new ResponsiveStep("0", 1),
                 new ResponsiveStep("500px", 2));
@@ -51,6 +69,7 @@ public class BrigEditor extends Div {
 
 
         add(formLayout);
+        add(workerGrid);
 
     }
 
