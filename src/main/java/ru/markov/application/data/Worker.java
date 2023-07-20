@@ -17,11 +17,10 @@ public class Worker implements Serializable {
     private boolean isWork;
     private boolean isHospital;
 
-    public Worker(String firstName, String lastName, String fatherName, int category) {
+    public Worker(String firstName, String lastName, String fatherName) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.fatherName = fatherName;
-        this.category = category;
     }
 
     public String getFullName() {
@@ -31,7 +30,7 @@ public class Worker implements Serializable {
 
     @Override
     public String toString() {
-        return firstName + lastName + fatherName + category;
+        return lastName + firstName + fatherName;
     }
 }
 

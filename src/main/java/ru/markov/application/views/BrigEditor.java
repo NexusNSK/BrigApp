@@ -32,18 +32,18 @@ public class BrigEditor extends Div {
         Grid<Worker> workerGrid = new Grid<>(Worker.class, false);
         workerGrid.addColumn(Worker::getFullName).setHeader("Сотрудник");
         workerGrid.setItems(workerList);
+        workerGrid.setWidth("700px");
 
         TextField firstName = new TextField("Имя");
         TextField lastName = new TextField("Фамилия");
         TextField fatherName = new TextField("Отчество");
-        TextField category = new TextField("Категория");
 
         Button addWorker = new Button("Добавить техника");
         addWorker.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
         addWorker.addClickListener(buttonClickEvent -> {
-            workerList.add(new Worker(firstName.getValue(), lastName.getValue(), fatherName.getValue(), Integer.parseInt(category.getValue())));
+            workerList.add(new Worker(firstName.getValue(), lastName.getValue(), fatherName.getValue()));
             workerGrid.getDataProvider().refreshAll();
-            firstName.clear(); lastName.clear(); fatherName.clear(); category.clear();
+            firstName.clear(); lastName.clear(); fatherName.clear();
         });
 
         Button saveWorkers = new Button("Сохранить состав бригады");
@@ -54,7 +54,7 @@ public class BrigEditor extends Div {
 
 
         FormLayout formLayout = new FormLayout();
-        formLayout.add(firstName, lastName, fatherName, category, addWorker, saveWorkers);
+        formLayout.add(firstName, lastName, fatherName, addWorker, saveWorkers);
         formLayout.setResponsiveSteps(
                 new ResponsiveStep("0", 1),
                 new ResponsiveStep("500px", 2));
