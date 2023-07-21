@@ -29,10 +29,10 @@ public class BrigEditor extends Div {
     public static List<Worker>workerList = new ArrayList<>();
     public BrigEditor() {
 
-        Grid<Worker> workerGrid = new Grid<>(Worker.class, false);
-        workerGrid.addColumn(Worker::getFullName).setHeader("Сотрудник");
-        workerGrid.setItems(workerList);
-        workerGrid.setWidth("700px");
+        Grid<Worker> newWorkersGrid = new Grid<>(Worker.class, false);
+        newWorkersGrid.addColumn(Worker::getFullName).setHeader("Сотрудник");
+        newWorkersGrid.setItems(workerList);
+        newWorkersGrid.setWidth("700px");
 
         TextField firstName = new TextField("Имя");
         TextField lastName = new TextField("Фамилия");
@@ -42,7 +42,7 @@ public class BrigEditor extends Div {
         addWorker.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
         addWorker.addClickListener(buttonClickEvent -> {
             workerList.add(new Worker(firstName.getValue(), lastName.getValue(), fatherName.getValue()));
-            workerGrid.getDataProvider().refreshAll();
+            newWorkersGrid.getDataProvider().refreshAll();
             firstName.clear(); lastName.clear(); fatherName.clear();
         });
 
@@ -63,7 +63,7 @@ public class BrigEditor extends Div {
 
 
         add(formLayout);
-        add(workerGrid);
+        add(newWorkersGrid);
 
     }
 

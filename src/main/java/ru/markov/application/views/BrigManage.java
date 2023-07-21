@@ -18,9 +18,11 @@ public class BrigManage extends Div {
 
 
         Grid<Worker> workerGrid = new Grid<>(Worker.class, false);
-        workerGrid.addColumn(Worker::getFullName).
-
-                setHeader("Сотрудники");
+        workerGrid.addColumn(Worker::getFullName).setHeader("Сотрудники");
+        workerGrid.addColumn(Worker::getCategory).setHeader("Категория");
+        workerGrid.addColumn(Worker::getBirthday).setHeader("День рождения");
+        workerGrid.addColumn(Worker::getHoliday).setHeader("Отпуск");
+        workerGrid.addColumn(Worker::isHospital).setHeader("Больничный");
         workerGrid.setItems(BrigEditor.workerList);
         add(workerGrid);
 
