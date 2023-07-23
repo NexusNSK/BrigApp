@@ -23,6 +23,7 @@ public class MainLayout extends AppLayout {
         this.securityService = securityService;
         createHeader();
         createDrawer();
+        addClassName("main-layout-app-layout-1");
 
     }
 
@@ -34,6 +35,8 @@ public class MainLayout extends AppLayout {
 
         String u = securityService.getAuthenticatedUser().getUsername();
         Button logout = new Button("Выйти " + u, e -> securityService.logout()); // <2>
+        //<theme-editor-local-classname>
+        logout.addClassName("main-layout-button-1");
 
         var header = new HorizontalLayout(new DrawerToggle(), logo, logout);
 

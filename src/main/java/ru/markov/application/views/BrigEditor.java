@@ -5,6 +5,7 @@ import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -27,11 +28,12 @@ import java.util.List;
 @PageTitle("BrigApp")
 public class BrigEditor extends Div {
     public static List<Worker>workerList = new ArrayList<>();
+    private static List<Worker>tempList = new ArrayList<>();
     public BrigEditor() {
 
         Grid<Worker> newWorkersGrid = new Grid<>(Worker.class, false);
-        newWorkersGrid.addColumn(Worker::getFullName).setHeader("Сотрудник");
-        newWorkersGrid.setItems(workerList);
+        newWorkersGrid.addColumn(Worker::getFullName).setHeader("Недавно добавленные сотрудники:");
+        newWorkersGrid.setItems(tempList);
         newWorkersGrid.setWidth("700px");
 
         TextField firstName = new TextField("Имя");
@@ -41,9 +43,24 @@ public class BrigEditor extends Div {
         Button addWorker = new Button("Добавить техника");
         addWorker.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
         addWorker.addClickListener(buttonClickEvent -> {
-            workerList.add(new Worker(firstName.getValue(), lastName.getValue(), fatherName.getValue()));
+            if (firstName.getValue()!=""&&lastName.getValue()!=""&&fatherName.getValue()!="")
+            {
+                workerList.add(new Worker(firstName.getValue(), lastName.getValue(), fatherName.getValue()));
+                tempList.add(new Worker(firstName.getValue(), lastName.getValue(), fatherName.getValue()));
+                Notification notification = Notification
+                        .show("Сотрудник был добавлен!");
+                notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                notification.setPosition(Notification.Position.MIDDLE);
+                firstName.clear(); lastName.clear(); fatherName.clear();
+            }else{
+                Notification notification = Notification
+                        .show("Сотрудник не был добавлен!\nНеобходимо заполнить все поля.");
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                notification.setPosition(Notification.Position.MIDDLE);
+            }
             newWorkersGrid.getDataProvider().refreshAll();
-            firstName.clear(); lastName.clear(); fatherName.clear();
+
+
         });
 
         Button saveWorkers = new Button("Сохранить состав бригады");
@@ -54,7 +71,7 @@ public class BrigEditor extends Div {
 
 
         FormLayout formLayout = new FormLayout();
-        formLayout.add(firstName, lastName, fatherName, addWorker, saveWorkers);
+        formLayout.add(lastName, firstName, fatherName, addWorker, saveWorkers);
         formLayout.setResponsiveSteps(
                 new ResponsiveStep("0", 1),
                 new ResponsiveStep("500px", 2));

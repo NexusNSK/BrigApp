@@ -8,7 +8,6 @@ import java.util.List;
 @ComponentScan
 
 public class Worker implements Serializable {
-    private int id;
     private String firstName;
     private String lastName;
     private String fatherName;
@@ -22,7 +21,6 @@ public class Worker implements Serializable {
 
 
     public Worker(String firstName, String lastName, String fatherName) {
-        this.id = firstName.length() + lastName.length()+fatherName.length();
         this.firstName = firstName;
         this.lastName = lastName;
         this.fatherName = fatherName;
