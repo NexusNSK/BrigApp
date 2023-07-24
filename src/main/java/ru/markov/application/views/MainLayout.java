@@ -1,6 +1,5 @@
 package ru.markov.application.views;
 
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 import ru.markov.application.security.SecurityService;
@@ -24,7 +23,6 @@ public class MainLayout extends AppLayout {
         createHeader();
         createDrawer();
         addClassName("main-layout-app-layout-1");
-
     }
 
     private void createHeader() {
@@ -34,8 +32,7 @@ public class MainLayout extends AppLayout {
             LumoUtility.Margin.MEDIUM);
 
         String u = securityService.getAuthenticatedUser().getUsername();
-        Button logout = new Button("Выйти " + u, e -> securityService.logout()); // <2>
-        //<theme-editor-local-classname>
+        Button logout = new Button("Выйти " + u, e -> securityService.logout());
         logout.addClassName("main-layout-button-1");
 
         var header = new HorizontalLayout(new DrawerToggle(), logo, logout);
@@ -55,7 +52,8 @@ public class MainLayout extends AppLayout {
     private void createDrawer() {
         addToDrawer(new VerticalLayout(
                 new RouterLink("Редактор бригады", BrigEditor.class),
-                new RouterLink("Управление бригадой", BrigManage.class)
+                new RouterLink("Управление бригадой", BrigManage.class),
+                new RouterLink("Тест редактор", GridEdit.class)
         ));
     }
 }

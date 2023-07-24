@@ -40,6 +40,7 @@ public class BrigEditor extends Div {
         TextField lastName = new TextField("Фамилия");
         TextField fatherName = new TextField("Отчество");
 
+
         Button addWorker = new Button("Добавить техника");
         addWorker.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
         addWorker.addClickListener(buttonClickEvent -> {

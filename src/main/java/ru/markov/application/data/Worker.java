@@ -1,5 +1,6 @@
 package ru.markov.application.data;
 
+import com.vaadin.flow.component.combobox.ComboBox;
 import org.springframework.context.annotation.ComponentScan;
 
 import java.io.Serializable;
@@ -17,8 +18,6 @@ public class Worker implements Serializable {
     private boolean isWork;
     private boolean isHospital;
     private boolean isHoliday;
-
-
 
     public Worker(String firstName, String lastName, String fatherName) {
         this.firstName = firstName;
@@ -101,6 +100,7 @@ public class Worker implements Serializable {
     public void setHoliday(boolean holiday) {
         isHoliday = holiday;
     }
+
 }
 
 
