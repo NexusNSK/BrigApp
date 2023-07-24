@@ -77,24 +77,40 @@ public class Worker implements Serializable {
         this.holiday = holiday;
     }
 
-    public boolean isWork() {
-        return isWork;
+    public String isWork() {
+        if (this.isWork==true){
+            return "Работает";
+        }else{
+            return "Не работает";
+        }
     }
 
-    public void setWork(boolean work) {
-        isWork = work;
+    public void setWork(String s) {
+        if (s == "1"){
+        isWork = true;
+        }else{
+            isWork=false;
+        }
     }
 
-    public boolean isHospital() {
-        return isHospital;
+    public String isHospital() {
+        if(this.isHospital==true){
+            return "На больничном";
+        }else{
+            return "Не болеет";
+        }
     }
 
     public void setHospital(boolean hospital) {
         isHospital = hospital;
     }
 
-    public boolean isHoliday() {
-        return isHoliday;
+    public String isHoliday() {
+        if(this.isHoliday==true){
+            return "В отпуске";
+        }else{
+            return "Не в отпуске";
+        }
     }
 
     public void setHoliday(boolean holiday) {

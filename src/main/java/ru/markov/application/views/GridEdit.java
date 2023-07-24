@@ -2,8 +2,10 @@ package ru.markov.application.views;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.editor.Editor;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -17,11 +19,30 @@ import ru.markov.application.data.ValidationName;
 @Route(value = "grid_workers", layout = MainLayout.class)
 @PermitAll
 public class GridEdit extends VerticalLayout {
+    /*
+    private Icon createStatusIcon(String status) {
+        boolean isAvailable = "Available".equals(status);
+        Icon icon;
+        if (isAvailable) {
+            icon = VaadinIcon.CHECK.create();
+            icon.getElement().getThemeList().add("badge success");
+        } else {
+            icon = VaadinIcon.CLOSE_SMALL.create();
+            icon.getElement().getThemeList().add("badge error");
+        }
+        icon.getStyle().set("padding", "var(--lumo-space-xs");
+        return icon;
+    }
+
+     */
 
     public GridEdit() {
         ValidationName firstName = new ValidationName();
         ValidationName lastName = new ValidationName();
         ValidationName fatherName = new ValidationName();
+        //ValidationName boxIsWork = new ValidationName();
+
+
 
 
         Grid<Worker> grid = new Grid<>(Worker.class, false);
@@ -34,6 +55,18 @@ public class GridEdit extends VerticalLayout {
                 .setHeader("Имя").setAutoWidth(true).setFlexGrow(1);
         Grid.Column<Worker> fatherNameColumn = grid.addColumn(Worker::getFatherName)
                 .setHeader("Отчество").setAutoWidth(true).setFlexGrow(1);
+        /*
+        grid.addComponentColumn(worker -> createStatusIcon(worker.isWork()))
+                .setTooltipGenerator(worker -> worker.isWork())
+                .setHeader("Работает");
+        grid.addComponentColumn(worker -> createStatusIcon(worker.isWork()))
+                .setTooltipGenerator(worker -> worker.isHospital())
+                .setHeader("Болеет");
+        grid.addComponentColumn(worker -> createStatusIcon(worker.isWork()))
+                .setTooltipGenerator(worker -> worker.isHoliday())
+                .setHeader("В отпуске");
+
+         */
 
         Grid.Column<Worker> editColumn = grid.addComponentColumn(worker -> {
             Button editButton = new Button("Изменить");
