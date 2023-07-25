@@ -4,8 +4,14 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import org.springframework.context.annotation.ComponentScan;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.logging.SimpleFormatter;
+
 @ComponentScan
 
 public class Worker implements Serializable {
@@ -13,7 +19,7 @@ public class Worker implements Serializable {
     private String lastName;
     private String fatherName;
     private int category;
-    private Calendar birthday;
+    private Date birthday;
     private List<Calendar> holiday;
     private boolean isWork;
     private boolean isHospital;
@@ -61,7 +67,22 @@ public class Worker implements Serializable {
         this.category = Integer.parseInt(category);
     }
 
+    public String getBirthday(){
+        if (this.birthday==null){
+            return "Не определено";
+        }else{
+            return this.birthday.toString();
+        }
+    }
+    public void setBirthday(String date_){
+        SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
+        try {
+            this.birthday = format.parse(date_);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
 
+    }
 }
 
 

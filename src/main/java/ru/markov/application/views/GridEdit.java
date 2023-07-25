@@ -18,6 +18,7 @@ import ru.markov.application.data.Serial;
 import ru.markov.application.data.Worker;
 import ru.markov.application.data.ValidationName;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,6 +87,7 @@ public class GridEdit extends VerticalLayout {
         ValidationName lastName = new ValidationName();
         ValidationName fatherName = new ValidationName();
         ValidationName cat = new ValidationName();
+        ValidationName birthD = new ValidationName();
 //добавление столбцов
         Grid.Column<Worker> lastNameColumn = grid
                 .addColumn(Worker::getLastName).setHeader("Фамилия")
@@ -96,6 +98,8 @@ public class GridEdit extends VerticalLayout {
                 .setHeader("Отчество").setAutoWidth(true).setFlexGrow(1);
         Grid.Column<Worker> catColumn = grid.addColumn(Worker::getCategory)
                 .setHeader("Категория").setAutoWidth(true).setFlexGrow(1);
+        Grid.Column<Worker> birthColumn = grid.addColumn(Worker::getBirthday)
+                .setHeader("День рождения").setAutoWidth(true).setFlexGrow(1);
 
 //столбец для изменения сотрудников в таблице. После изменения нужно глобально сохранить состояние бригады через кнопку "Сохранить состав бригады" (saveButton)
         Grid.Column<Worker> editColumn = grid.addComponentColumn(worker -> {
@@ -134,6 +138,13 @@ public class GridEdit extends VerticalLayout {
                 .withStatusLabel(fatherName)
                 .bind(Worker::getFatherName, Worker::setFatherName);
         fatherNameColumn.setEditorComponent(fatherNameField);
+        //при изменении дня рождения
+        TextField birthField = new TextField();
+        birthField.setWidthFull();;
+        binder.forField(birthField).asRequired("День рождения не может быть пустым")
+                .withStatusLabel(birthD)
+                .bind(Worker::getBirthday, Worker::setBirthday);
+        birthColumn.setEditorComponent(birthField);
 //при изменении категории
         TextField catField = new TextField();
         catField.setWidthFull();
@@ -156,10 +167,11 @@ public class GridEdit extends VerticalLayout {
             lastName.setText("");
             fatherName.setText("");
             cat.setText("");
+            birthD.setText("");
         });
 
         getThemeList().clear();
-        add(grid, firstName, lastName, fatherName, cat);
+        add(grid, firstName, lastName, fatherName, cat, birthD);
     }
 
 }

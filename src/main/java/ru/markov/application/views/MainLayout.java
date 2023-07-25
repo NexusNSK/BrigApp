@@ -27,6 +27,8 @@ public class MainLayout extends AppLayout {
         createHeader();
         createDrawer();
         addClassName("main-layout-app-layout-1");
+        //<theme-editor-local-classname>
+        addClassName("main-layout-app-layout-1");
 
     }
 
