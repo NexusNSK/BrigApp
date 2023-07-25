@@ -1,28 +1,28 @@
 package ru.markov.application.data;
 
-import ru.markov.application.views.BrigEditor;
+import ru.markov.application.views.GridEdit;
 
 import java.io.*;
 import java.util.List;
 
-public class Seria {
+public class Serial {
     public static void save() {
         try {
             FileOutputStream fos = new FileOutputStream("worker list.bin");
             ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(BrigEditor.workerList);
+            oos.writeObject(GridEdit.workerList);
             oos.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void load() throws IOException, ClassNotFoundException {
+    public static void load() throws ClassNotFoundException {
         try {
             System.out.println("...Ищу данные о составе бригады...\n / | \\");
             FileInputStream fis = new FileInputStream("worker list.bin");
             ObjectInputStream ois = new ObjectInputStream(fis);
-            BrigEditor.workerList = (List<Worker>) ois.readObject();
+            GridEdit.workerList = (List<Worker>) ois.readObject();
             System.out.println("...Состав бригады был успешно загружен...");
             ois.close();
         } catch (IOException e) {

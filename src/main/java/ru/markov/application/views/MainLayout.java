@@ -1,6 +1,9 @@
 package ru.markov.application.views;
 
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.dom.ThemeList;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.theme.lumo.Lumo;
 import jakarta.annotation.security.PermitAll;
 import ru.markov.application.security.SecurityService;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -12,6 +15,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+
 @Route("")
 @PermitAll
 
@@ -23,6 +27,7 @@ public class MainLayout extends AppLayout {
         createHeader();
         createDrawer();
         addClassName("main-layout-app-layout-1");
+
     }
 
     private void createHeader() {
@@ -35,6 +40,15 @@ public class MainLayout extends AppLayout {
         Button logout = new Button("Выйти " + u, e -> securityService.logout());
         logout.addClassName("main-layout-button-1");
 
+        Button theme = new Button("Переключить тему", buttonClickEvent -> {
+            ThemeList t = UI.getCurrent().getElement().getThemeList();
+            if (t.contains(Lumo.DARK)){
+                t.remove(Lumo.DARK);}
+            else{
+                t.add(Lumo.DARK);
+                }
+        });
+
         var header = new HorizontalLayout(new DrawerToggle(), logo, logout);
 
 
@@ -45,15 +59,12 @@ public class MainLayout extends AppLayout {
             LumoUtility.Padding.Vertical.NONE,
             LumoUtility.Padding.Horizontal.MEDIUM);
 
-        addToNavbar(header); 
-
+        addToNavbar(header, theme);
     }
 
     private void createDrawer() {
         addToDrawer(new VerticalLayout(
-                new RouterLink("Редактор бригады", BrigEditor.class),
-                new RouterLink("Управление бригадой", BrigManage.class),
-                new RouterLink("Тест редактор", GridEdit.class)
+                new RouterLink("Редактор бригады", GridEdit.class)
         ));
     }
 }

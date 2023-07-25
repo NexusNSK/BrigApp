@@ -25,8 +25,8 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 		setAlignItems(Alignment.CENTER);
 		setJustifyContentMode(JustifyContentMode.START);
 		login.setAction("login");
-		Image img = new Image("images/logo_alef.png", "");
-		img.setWidth("200px");
+		Image img = new Image("images/alef_logo_oil_1.png", "");
+		img.setWidth("300px");
 
 
 		add(new H1("BrigApp"),img, login);

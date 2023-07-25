@@ -53,69 +53,14 @@ public class Worker implements Serializable {
         this.fatherName = fatherName;
     }
 
-    public int getCategory() {
-        return category;
+    public String getCategory() {
+        return String.valueOf(category);
     }
 
-    public void setCategory(int category) {
-        this.category = category;
+    public void setCategory(String category) {
+        this.category = Integer.parseInt(category);
     }
 
-    public Calendar getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(Calendar birthday) {
-        this.birthday = birthday;
-    }
-
-    public List<Calendar> getHoliday() {
-        return holiday;
-    }
-
-    public void setHoliday(List<Calendar> holiday) {
-        this.holiday = holiday;
-    }
-
-    public String isWork() {
-        if (this.isWork==true){
-            return "Работает";
-        }else{
-            return "Не работает";
-        }
-    }
-
-    public void setWork(String s) {
-        if (s == "1"){
-        isWork = true;
-        }else{
-            isWork=false;
-        }
-    }
-
-    public String isHospital() {
-        if(this.isHospital==true){
-            return "На больничном";
-        }else{
-            return "Не болеет";
-        }
-    }
-
-    public void setHospital(boolean hospital) {
-        isHospital = hospital;
-    }
-
-    public String isHoliday() {
-        if(this.isHoliday==true){
-            return "В отпуске";
-        }else{
-            return "Не в отпуске";
-        }
-    }
-
-    public void setHoliday(boolean holiday) {
-        isHoliday = holiday;
-    }
 
 }
 
