@@ -20,6 +20,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 @PermitAll
 
 public class MainLayout extends AppLayout {
+
     private final SecurityService securityService;
 
     public MainLayout(SecurityService securityService) {

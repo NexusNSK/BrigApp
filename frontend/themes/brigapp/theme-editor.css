@@ -16,3 +16,5 @@ vaadin-button.main-layout-button-1::part(label) {
   font-size:var(--lumo-font-size-xs);
   font-weight:bold;
 }
+
+vaadin-vertical-layout { gap:var(--lumo-space-xs); }
