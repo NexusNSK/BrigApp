@@ -6,11 +6,14 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.editor.Editor;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.Route;
@@ -22,14 +25,13 @@ import java.util.List;
 
 @Route(value = "grid_workers", layout = MainLayout.class)
 @PermitAll
-public class GridEdit extends VerticalLayout {
+public class GridEdit extends Div {
 
     //в этой коллекции хранятся сохраняемые сотрудники, используется для загрузки данных при старте приложения
     public static List<Worker> workerList = new ArrayList<>();
 
 
     public GridEdit() {
-
         TextField firstNameT = new TextField("Имя"); //поле ввода имени при добавлении сотрудника
         TextField lastNameT = new TextField("Фамилия"); //поле ввода фамилии при добавлении сотрудника
         TextField fatherNameT = new TextField("Отчество"); //поле ввода отчества при добавлении сотрудника
@@ -41,7 +43,7 @@ public class GridEdit extends VerticalLayout {
         postBox.setItems("Бригадир монтажников", "Бригадир сборщиков", "Бригадир техников", "Монтажник", "Сборщик","Техник");
         ComboBox<String> categoryBox = new ComboBox<>("Категория");//поле выборп категории (1, 2, 3. испытательный срок)
         categoryBox.setAllowCustomValue(true);
-        categoryBox.setItems("Бригадир", "1", "2", "3");
+        categoryBox.setItems("Бригадир", "1", "2", "3", "Испытательный срок");
 
 
         Grid<Worker> grid = new Grid<>(Worker.class, false); //основная таблица с сотрудниками
@@ -51,8 +53,8 @@ public class GridEdit extends VerticalLayout {
         grid.setItems(workerList);
 
         //блок добавления сотрудника во временный список без глобального сохранения
-        Button addWorker = new Button("Добавить техника");
-        addWorker.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
+        Button addWorker = new Button("Добавить сотрудника", new Icon(VaadinIcon.AUTOMATION));
+        addWorker.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_PRIMARY);
         addWorker.addClickListener(buttonClickEvent -> {
             if (!(firstNameT.getValue().equals(""))
                     && !(lastNameT.getValue().equals(""))
@@ -86,8 +88,8 @@ public class GridEdit extends VerticalLayout {
         });
 
         //блок глобального сохранения состояния бригады
-        Button saveWorkers = new Button("Сохранить состав бригады");
-        saveWorkers.addThemeVariants(ButtonVariant.LUMO_ICON);
+        Button saveWorkers = new Button("Сохранить изменения", new Icon(VaadinIcon.HANDSHAKE));
+        saveWorkers.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
         saveWorkers.addClickListener(buttonClickEvent -> {
             Serial.save();
             Notification brigNote = Notification.show("Состав бригады сохранён");
@@ -95,20 +97,36 @@ public class GridEdit extends VerticalLayout {
             brigNote.setPosition(Notification.Position.MIDDLE);
         });
 
+        //объявление формы, отвечающей за вывод инструкции
+        TextArea instructArea = new TextArea();
+        instructArea.setMinWidth("500px");
+        instructArea.setMaxWidth("1000px");
+        instructArea.setReadOnly(true);
+        instructArea.setLabel("Подсказки по добавлению и редактированию списка");
+        instructArea.setPrefixComponent(VaadinIcon.QUESTION_CIRCLE.create());
+
         //объявление формы, отвечающей за добавление сотрудников и сохранения бригады
-        FormLayout formLayout = new FormLayout();
-        formLayout.add(lastNameT, firstNameT, fatherNameT, districtBox, postBox, categoryBox, addWorker, saveWorkers);
-        formLayout.setResponsiveSteps(
+        FormLayout formToAddWorkers = new FormLayout();
+        formToAddWorkers.add(lastNameT, firstNameT, fatherNameT, districtBox, postBox, categoryBox, addWorker, saveWorkers);
+        formToAddWorkers.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("0", 1),
                 new FormLayout.ResponsiveStep("500px", 2));
-        formLayout.setColspan(fatherNameT, 2);
-        formLayout.setMaxWidth("500px");
-        add(formLayout);
+        formToAddWorkers.setColspan(fatherNameT, 2);
+        formToAddWorkers.setColspan(saveWorkers, 2);
+        formToAddWorkers.setMaxWidth("500px");
+        add(formToAddWorkers);
+
+        HorizontalLayout topHead = new HorizontalLayout();
+        topHead.add(instructArea);
+
 
         //объявление полей для таблицы со списком соттудников
-        ValidationName firstName = new ValidationName();
-        ValidationName lastName = new ValidationName();
-        ValidationName fatherName = new ValidationName();
+        ValidationName firstNameValid = new ValidationName();
+        ValidationName lastNameValid = new ValidationName();
+        ValidationName fatherNameValid = new ValidationName();
+        ValidationName districtValid = new ValidationName();
+        ValidationName postValid = new ValidationName();
+        ValidationName categoryValid = new ValidationName();
 
         //добавление столбцов
         Grid.Column<Worker> lastNameColumn = grid
@@ -141,7 +159,9 @@ public class GridEdit extends VerticalLayout {
                 .setHeader("Категория")
                 .setAutoWidth(true)
                 .setFlexGrow(1);
-        //столбец для изменения сотрудников в таблице. После изменения нужно глобально сохранить состояние бригады через кнопку "Сохранить состав бригады" (saveButton)
+
+        //столбец для изменения сотрудников в таблице. После изменения нужно глобально сохранить
+        // состояние бригады через кнопку "Сохранить состав бригады" (saveButton)
         Grid.Column<Worker> editColumn = grid.addComponentColumn(worker -> {
             Button editButton = new Button("Изменить");
             editButton.addClickListener(e -> {
@@ -162,15 +182,45 @@ public class GridEdit extends VerticalLayout {
         lastNameField.setWidthFull();
         binder.forField(lastNameField)
                 .asRequired("Фамилия не может быть пустой")
-                .withStatusLabel(lastName)
+                .withStatusLabel(lastNameValid)
                 .bind(Worker::getLastName, Worker::setLastName);
         lastNameColumn.setEditorComponent(lastNameField);
+
+        //при изменении участка
+        ComboBox<String> districtEditCol = new ComboBox<>();
+        districtEditCol.setItems("Бригада монтажники", "Бригада сборщики", "Бригада техники");
+        districtEditCol.setWidthFull();
+        binder.forField(districtEditCol)
+                .asRequired("Участок не может быть пустым")
+                .withStatusLabel(districtValid)
+                .bind(Worker::getDistrict , Worker::setDistrict);
+        districtColumn.setEditorComponent(districtEditCol);
+
+        //при изменении должности
+        ComboBox<String> postEditCol = new ComboBox<>();
+        postEditCol.setItems("Бригадир монтажников", "Бригадир сборщиков", "Бригадир техников", "Монтажник", "Сборщик","Техник");
+        postEditCol.setWidthFull();
+        binder.forField(postEditCol)
+                .asRequired("Должность не может быть пустой")
+                .withStatusLabel(postValid)
+                .bind(Worker::getPost, Worker::setPost);
+        postColumn.setEditorComponent(postEditCol);
+
+        //при изменении категории
+        ComboBox<String> categoryEditCol = new ComboBox<>();
+        categoryEditCol.setItems("Бригадир", "1", "2", "3", "Испытательный срок");
+        categoryEditCol.setWidthFull();
+        binder.forField(categoryEditCol)
+                .asRequired("Категория не может быть пустой")
+                .withStatusLabel(categoryValid)
+                .bind(Worker::getCategory, Worker::setCategory);
+        categoryColumn.setEditorComponent(categoryEditCol);
 
         //при изменении имени
         TextField firstNameField = new TextField();
         firstNameField.setWidthFull();
         binder.forField(firstNameField).asRequired("Имя не может быть пустым")
-                .withStatusLabel(firstName)
+                .withStatusLabel(firstNameValid)
                 .bind(Worker::getFirstName, Worker::setFirstName);
         firstNameColumn.setEditorComponent(firstNameField);
 
@@ -178,7 +228,7 @@ public class GridEdit extends VerticalLayout {
         TextField fatherNameField = new TextField();
         fatherNameField.setWidthFull();
         binder.forField(fatherNameField).asRequired("Отчество не может быть пустым")
-                .withStatusLabel(fatherName)
+                .withStatusLabel(fatherNameValid)
                 .bind(Worker::getFatherName, Worker::setFatherName);
         fatherNameColumn.setEditorComponent(fatherNameField);
 
@@ -194,13 +244,15 @@ public class GridEdit extends VerticalLayout {
         actions.setPadding(false);
         editColumn.setEditorComponent(actions);
         editor.addCancelListener(e -> {
-            firstName.setText("");
-            lastName.setText("");
-            fatherName.setText("");
+            firstNameValid.setText("");
+            lastNameValid.setText("");
+            fatherNameValid.setText("");
         });
 
-        getThemeList().clear();
-        add(grid, firstName, lastName, fatherName);
+        //getThemeList().clear();
+        add(topHead, grid, firstNameValid, lastNameValid, fatherNameValid);
     }
 
 }
+
+

@@ -12,6 +12,9 @@ public class Worker implements Serializable {
     private District district;
     private Post post;
     private Category category;
+    private byte workHours;
+
+
     public void setCategory(Category category){
         this.category = category;
     }
@@ -113,7 +116,6 @@ public class Worker implements Serializable {
         setPost(post);
         setCategory(category);
     }
-
     public String getFullName() {
         return lastName + " " + firstName + " " + fatherName;
     }

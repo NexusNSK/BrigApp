@@ -3,7 +3,6 @@ package ru.markov.application.poi;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -16,7 +15,6 @@ public class Template {
     FileOutputStream fos = new FileOutputStream("Template.xlsx");
     Calendar date = new GregorianCalendar();
     DateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
-
     public Template() throws IOException {
         sdf.format(date.getTime());
 
@@ -45,7 +43,6 @@ public class Template {
         fos.close();
         System.out.println("Файл был записан на диск");
     }
-
     //метод для создания рамки вокруг ячейки
     public void setAroundBorder(Cell cell) {
         CellStyle style = book.createCellStyle();
@@ -55,7 +52,6 @@ public class Template {
         style.setBorderTop(BorderStyle.THIN);
         cell.setCellStyle(style);
     }
-
     //метод  для создания шапки таблицы
     public void createHeaderGrid(Sheet sheet) {
         CellStyle cs = book.createCellStyle();
@@ -83,11 +79,8 @@ public class Template {
         }
         sheet.setColumnWidth(0, 1000);
     }
-
-
-
     public String getMonth() {
-        String month = switch (date.get(Calendar.MONTH)) {
+        return switch (date.get(Calendar.MONTH)) {
             case (0) -> "Январь";
             case (1) -> "Февраль";
             case (2) -> "Март";
@@ -102,7 +95,6 @@ public class Template {
             case (11) -> "Декабрь";
             default -> "";
         };
-        return month;
     }
 }
 

@@ -1,6 +1,9 @@
 package ru.markov.application.views;
 
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.dom.ThemeList;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.Lumo;
@@ -38,10 +41,11 @@ public class MainLayout extends AppLayout {
             LumoUtility.Margin.MEDIUM);
 
         String u = securityService.getAuthenticatedUser().getUsername();
-        Button logout = new Button("Выйти " + u, e -> securityService.logout());
+        Button logout = new Button("Выйти " + u, new Icon(VaadinIcon.EXIT), e -> securityService.logout());
+        logout.addThemeVariants(ButtonVariant.LUMO_ERROR);
         logout.addClassName("main-layout-button-1");
 
-        Button theme = new Button("Переключить тему", buttonClickEvent -> {
+        Button theme = new Button("Переключить тему", new Icon(VaadinIcon.ADJUST), buttonClickEvent -> {
             ThemeList t = UI.getCurrent().getElement().getThemeList();
             if (t.contains(Lumo.DARK)){
                 t.remove(Lumo.DARK);}
@@ -50,7 +54,7 @@ public class MainLayout extends AppLayout {
                 }
         });
 
-        var header = new HorizontalLayout(new DrawerToggle(), logo, logout);
+        var header = new HorizontalLayout(new DrawerToggle(), logo, theme, logout);
 
 
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
@@ -60,7 +64,7 @@ public class MainLayout extends AppLayout {
             LumoUtility.Padding.Vertical.NONE,
             LumoUtility.Padding.Horizontal.MEDIUM);
 
-        addToNavbar(header, theme);
+        addToNavbar(header);
     }
 
     private void createDrawer() {
