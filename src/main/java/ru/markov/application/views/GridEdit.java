@@ -12,7 +12,6 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
@@ -100,24 +99,25 @@ public class GridEdit extends Div {
         //объявление формы, отвечающей за вывод инструкции
         TextArea instructArea = new TextArea();
         instructArea.setMinWidth("500px");
-        instructArea.setMaxWidth("1000px");
+        instructArea.setMaxWidth("1500px");
         instructArea.setReadOnly(true);
         instructArea.setLabel("Подсказки по добавлению и редактированию списка");
         instructArea.setPrefixComponent(VaadinIcon.QUESTION_CIRCLE.create());
+        instructArea.setValue("ВСЕ поля должны быть заполнены. Поля с выпадающими списками " +
+                "должны иметь значения, которые предлагает программа. После заполнения нажать \"Добавить сотрудника\". Проверить, что сотрудник" +
+                "есть в списке и нажать \"Сохранить изменения\"");
 
         //объявление формы, отвечающей за добавление сотрудников и сохранения бригады
         FormLayout formToAddWorkers = new FormLayout();
-        formToAddWorkers.add(lastNameT, firstNameT, fatherNameT, districtBox, postBox, categoryBox, addWorker, saveWorkers);
+        formToAddWorkers.add(lastNameT, firstNameT, fatherNameT, districtBox, postBox, categoryBox, addWorker, saveWorkers, instructArea);
         formToAddWorkers.setResponsiveSteps(
-                new FormLayout.ResponsiveStep("0", 1),
-                new FormLayout.ResponsiveStep("500px", 2));
-        formToAddWorkers.setColspan(fatherNameT, 2);
-        formToAddWorkers.setColspan(saveWorkers, 2);
-        formToAddWorkers.setMaxWidth("500px");
+                new FormLayout.ResponsiveStep("600px", 3),
+                new FormLayout.ResponsiveStep("1500px", 6));
+        formToAddWorkers.setColspan(instructArea, 4);
+        formToAddWorkers.setMaxWidth("1700px");
         add(formToAddWorkers);
 
         HorizontalLayout topHead = new HorizontalLayout();
-        topHead.add(instructArea);
 
 
         //объявление полей для таблицы со списком соттудников

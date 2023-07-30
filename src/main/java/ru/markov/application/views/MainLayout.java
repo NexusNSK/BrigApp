@@ -2,8 +2,11 @@ package ru.markov.application.views;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.tabs.Tab;
+import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.dom.ThemeList;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.Lumo;
@@ -15,7 +18,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
@@ -29,13 +31,13 @@ public class MainLayout extends AppLayout {
     public MainLayout(SecurityService securityService) {
         this.securityService = securityService;
         createHeader();
-        createDrawer();
         addClassName("main-layout-app-layout-1");
-
     }
 
     private void createHeader() {
         H1 logo = new H1("BrigApp");
+        Tabs tabs = getTabs();
+        addToDrawer(tabs);
         logo.addClassNames(
             LumoUtility.FontSize.LARGE,
             LumoUtility.Margin.MEDIUM);
@@ -56,7 +58,6 @@ public class MainLayout extends AppLayout {
 
         var header = new HorizontalLayout(new DrawerToggle(), logo, theme, logout);
 
-
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         header.expand(logo);
         header.setWidthFull();
@@ -67,9 +68,24 @@ public class MainLayout extends AppLayout {
         addToNavbar(header);
     }
 
-    private void createDrawer() {
-        addToDrawer(new VerticalLayout(
-                new RouterLink("Редактор бригады", GridEdit.class)
-        ));
+    private Tabs getTabs() {
+        Tabs tabs = new Tabs();
+        tabs.add(
+                createTab(VaadinIcon.USER_HEART,"Редактор бригады", new RouterLink(GridEdit.class)),
+                createTab(VaadinIcon.TIMER, "Учёт времени", new RouterLink(WorkTime.class)));
+        tabs.setOrientation(Tabs.Orientation.VERTICAL);
+        return tabs;
     }
+    private Tab createTab(VaadinIcon viewIcon, String viewName, RouterLink routerLink) {
+        Icon icon = viewIcon.create();
+        icon.getStyle().set("box-sizing", "border-box")
+                .set("margin-inline-end", "var(--lumo-space-m)")
+                .set("margin-inline-start", "var(--lumo-space-xs)")
+                .set("padding", "var(--lumo-space-xs)");
+
+        routerLink.add(icon, new Span(viewName));
+        routerLink.setTabIndex(-1);
+        return new Tab(routerLink);
+    }
+
 }
