@@ -18,19 +18,16 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 import ru.markov.application.data.*;
-
+import ru.markov.application.security.SecurityService;
 import java.util.ArrayList;
 import java.util.List;
 
 @Route(value = "grid_workers", layout = MainLayout.class)
 @PermitAll
 public class GridEdit extends Div {
-
     //в этой коллекции хранятся сохраняемые сотрудники, используется для загрузки данных при старте приложения
     public static List<Worker> workerList = new ArrayList<>();
-
-
-    public GridEdit() {
+    public GridEdit(SecurityService securityService) {
         TextField firstNameT = new TextField("Имя"); //поле ввода имени при добавлении сотрудника
         TextField lastNameT = new TextField("Фамилия"); //поле ввода фамилии при добавлении сотрудника
         TextField fatherNameT = new TextField("Отчество"); //поле ввода отчества при добавлении сотрудника
@@ -248,6 +245,14 @@ public class GridEdit extends Div {
             lastNameValid.setText("");
             fatherNameValid.setText("");
         });
+        if (securityService.getAuthenticatedUser().getUsername().equals("user")){
+            addWorker.setEnabled(false);
+            addWorker.setAriaLabel("Нет прав доступа");
+            saveWorkers.setEnabled(false);
+            saveWorkers.setAriaLabel("Нет прав доступа");
+            editColumn.setVisible(false);
+            categoryColumn.setVisible(false);
+        }
 
         //getThemeList().clear();
         add(topHead, grid, firstNameValid, lastNameValid, fatherNameValid);
