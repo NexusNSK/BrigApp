@@ -2,6 +2,7 @@ package ru.markov.application.data;
 
 import org.springframework.context.annotation.ComponentScan;
 import java.io.Serializable;
+import java.util.HashMap;
 
 @ComponentScan
 
@@ -12,7 +13,19 @@ public class Worker implements Serializable {
     private District district;
     private Post post;
     private Category category;
-    private byte workHours;
+    private HashMap<Byte, Byte> workTime = new HashMap<>(31);
+
+    public void initWorkTimeMap(){
+       if (workTime.isEmpty()){
+           System.out.println("Создаю карту учета времени работника: " + getFullName());
+           for (byte i = 1; i <= 31; i++) {
+               workTime.put((byte)i, null);
+           }
+       }else{
+           System.out.println("В карте учета времени работника есть данные...");
+           }
+       }
+
 
 
     public void setCategory(Category category){
@@ -54,25 +67,13 @@ public class Worker implements Serializable {
         this.post = post;
     }
     public void setPost(String post){
-        switch (post){
-            case ("Бригадир монтажников"):
-                this.post = Post.BRIG_MOUNT;
-                break;
-            case ("Бригадир сборщиков"):
-                this.post = Post.BRIG_BUILD;
-                break;
-            case ("Бригадир техников"):
-                this.post = Post.BRIG_TECH;
-                break;
-            case ("Монтажник"):
-                this.post = Post.MOUNT;
-                break;
-            case ("Сборщик"):
-                this.post = Post.BUILDER;
-                break;
-            case ("Техник"):
-                this.post = Post.TECHNIC;
-                break;
+        switch (post) {
+            case ("Бригадир монтажников") -> this.post = Post.BRIG_MOUNT;
+            case ("Бригадир сборщиков") -> this.post = Post.BRIG_BUILD;
+            case ("Бригадир техников") -> this.post = Post.BRIG_TECH;
+            case ("Монтажник") -> this.post = Post.MOUNT;
+            case ("Сборщик") -> this.post = Post.BUILDER;
+            case ("Техник") -> this.post = Post.TECHNIC;
         }
     }
     public String getDistrict() {
@@ -85,16 +86,10 @@ public class Worker implements Serializable {
         return ds;
     }
     public void setDistrict(String district){
-        switch (district){
-            case ("Бригада монтажники"):
-                this.district = District.MOUNTING;
-                break;
-            case ("Бригада сборщики"):
-                this.district = District.BUILDING;
-                break;
-            case ("Бригада техники"):
-                this.district = District.TECH;
-                break;
+        switch (district) {
+            case ("Бригада монтажники") -> this.district = District.MOUNTING;
+            case ("Бригада сборщики") -> this.district = District.BUILDING;
+            case ("Бригада техники") -> this.district = District.TECH;
         }
     }
     public void setDistrict(District district) {
@@ -107,6 +102,7 @@ public class Worker implements Serializable {
         this.district = district;
         this.post = post;
         this.category = category;
+        initWorkTimeMap();
     }
     public Worker(String lastName, String firstName, String fatherName, String district, String post, String category) {
         this.lastName = lastName;
@@ -115,6 +111,7 @@ public class Worker implements Serializable {
         setDistrict(district);
         setPost(post);
         setCategory(category);
+        initWorkTimeMap();
     }
     public String getFullName() {
         return lastName + " " + firstName + " " + fatherName;
