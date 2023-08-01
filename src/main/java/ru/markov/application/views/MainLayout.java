@@ -9,6 +9,7 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.dom.ThemeList;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.spring.annotation.UIScope;
 import com.vaadin.flow.theme.lumo.Lumo;
 import jakarta.annotation.security.PermitAll;
 import ru.markov.application.security.SecurityService;
@@ -23,17 +24,15 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 
 @Route("")
 @PermitAll
+@UIScope
 
 public class MainLayout extends AppLayout {
-
     private final SecurityService securityService;
-
     public MainLayout(SecurityService securityService) {
         this.securityService = securityService;
         createHeader();
         addClassName("main-layout-app-layout-1");
     }
-
     private void createHeader() {
         H1 logo = new H1("BrigApp");
         Tabs tabs = getTabs();
@@ -67,7 +66,6 @@ public class MainLayout extends AppLayout {
 
         addToNavbar(header);
     }
-
     private Tabs getTabs() {
         Tabs tabs = new Tabs();
         tabs.add(

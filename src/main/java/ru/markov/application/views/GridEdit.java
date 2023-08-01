@@ -16,6 +16,7 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.spring.annotation.UIScope;
 import jakarta.annotation.security.PermitAll;
 import ru.markov.application.data.*;
 import ru.markov.application.security.SecurityService;
@@ -24,6 +25,7 @@ import java.util.List;
 
 @Route(value = "grid_workers", layout = MainLayout.class)
 @PermitAll
+@UIScope
 public class GridEdit extends Div {
     //в этой коллекции хранятся сохраняемые сотрудники, используется для загрузки данных при старте приложения
     public static List<Worker> workerList = new ArrayList<>();

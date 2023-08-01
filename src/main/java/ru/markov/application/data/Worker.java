@@ -16,6 +16,7 @@ public class Worker implements Serializable {
     private Post post;
     private Category category;
     private HashMap<Integer, Integer> workTime = new HashMap<>(31);
+    private WorkerStatus workerStatus = WorkerStatus.NOTHING;
 
     public void initWorkTimeMap() {
         if (workTime.isEmpty()) {
@@ -27,21 +28,19 @@ public class Worker implements Serializable {
             System.out.println("В карте учета времени работника есть данные...");
         }
     }
-
     public void setWorkTime(int hours) {
         workTime.put(WorkTime.workTimeDatePicker.getValue().getDayOfMonth(), hours);
     }
-
+    public void setWorkTime(String hours) {
+        workTime.put(WorkTime.workTimeDatePicker.getValue().getDayOfMonth(), Integer.parseInt(hours));}
     public int getWorkTime() {
         int day = WorkTime.workTimeDatePicker.getValue().getDayOfMonth();
+        if (workTime.get(day)==null) return 0;
         return workTime.get(day);
-    }
-
-
+    } //not sure
     public void setCategory(Category category) {
         this.category = category;
     }
-
     public void setCategory(String category) {
         switch (category) {
             case ("1") -> this.category = Category.ONE;
@@ -51,7 +50,6 @@ public class Worker implements Serializable {
             case ("Испытательный срок") -> this.category = Category.IC;
         }
     }
-
     public String getCategory() {
         String cat = "";
         switch (category) {
@@ -63,7 +61,6 @@ public class Worker implements Serializable {
         }
         return cat;
     }
-
     public String getPost() {
         String ps = "";
         switch (post) {
@@ -76,11 +73,9 @@ public class Worker implements Serializable {
         }
         return ps;
     }
-
     public void setPost(Post post) {
         this.post = post;
     }
-
     public void setPost(String post) {
         switch (post) {
             case ("Бригадир монтажников") -> this.post = Post.BRIG_MOUNT;
@@ -91,17 +86,13 @@ public class Worker implements Serializable {
             case ("Техник") -> this.post = Post.TECHNIC;
         }
     }
-
     public String getDistrict() {
-        String ds = "";
-        switch (district) {
-            case MOUNTING -> ds = "Бригада монтажники";
-            case BUILDING -> ds = "Бригада сборщики";
-            case TECH -> ds = "Бригада техники";
-        }
-        return ds;
+      return  switch (district) {
+            case MOUNTING -> "Бригада монтажники";
+            case BUILDING -> "Бригада сборщики";
+            case TECH -> "Бригада техники";
+        };
     }
-
     public void setDistrict(String district) {
         switch (district) {
             case ("Бригада монтажники") -> this.district = District.MOUNTING;
@@ -109,11 +100,9 @@ public class Worker implements Serializable {
             case ("Бригада техники") -> this.district = District.TECH;
         }
     }
-
     public void setDistrict(District district) {
         this.district = district;
     }
-
     public Worker(String lastName, String firstName, String fatherName, District district, Post post, Category category) {
         this.lastName = lastName;
         this.firstName = firstName;
@@ -123,7 +112,6 @@ public class Worker implements Serializable {
         this.category = category;
         initWorkTimeMap();
     }
-
     public Worker(String lastName, String firstName, String fatherName, String district, String post, String category) {
         this.lastName = lastName;
         this.firstName = firstName;
@@ -133,35 +121,47 @@ public class Worker implements Serializable {
         setCategory(category);
         initWorkTimeMap();
     }
-
     public String getFullName() {
         return lastName + " " + firstName + " " + fatherName;
     }
-
     public String getFirstName() {
         return firstName;
     }
-
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-
     public String getLastName() {
         return lastName;
     }
-
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
     public String getFatherName() {
         return fatherName;
     }
-
     public void setFatherName(String fatherName) {
         this.fatherName = fatherName;
     }
+    public void setWorkerStatus(WorkerStatus status){
+        this.workerStatus = status;
+    }
+    public void setWorkerStatus(String status){
+        switch (status){
+            case ("Работает") -> {this.workerStatus = WorkerStatus.WORK; setWorkTime(8);}
+            case ("Больничный") -> {this.workerStatus = WorkerStatus.HOSPITAL; setWorkTime(0);}
+            case ("Отпуск") -> {this.workerStatus = WorkerStatus.HOLIDAY; setWorkTime(0);}
+            case ("Не определено") -> {this.workerStatus = WorkerStatus.NOTHING; setWorkTime(0);}
+        }
 
+    }
+    public String getWorkerStatus() {
+        return switch (workerStatus){
+            case WORK -> "Работает";
+            case HOSPITAL -> "Больничный";
+            case HOLIDAY -> "Отпуск";
+            case NOTHING -> "Не определено";
+        };
+    }
 }
 
 
