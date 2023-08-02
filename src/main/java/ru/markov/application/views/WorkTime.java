@@ -13,9 +13,10 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import jakarta.annotation.security.PermitAll;
-import ru.markov.application.data.Serial;
+import ru.markov.application.service.Serial;
 import ru.markov.application.data.ValidationName;
 import ru.markov.application.data.Worker;
+import ru.markov.application.service.TimeAdapter;
 
 import java.time.LocalDate;
 
@@ -24,7 +25,7 @@ import java.time.LocalDate;
 
 @UIScope
 public class WorkTime extends Div {
-    public static DatePicker workTimeDatePicker = new DatePicker();
+    public DatePicker workTimeDatePicker = new DatePicker();
     private Button save = new Button("Записать время");
 
     public WorkTime() {
@@ -37,7 +38,10 @@ public class WorkTime extends Div {
         editor.setBinder(binder);
         editor.setBuffered(true);
 
-        workTimeDatePicker.addClientValidatedEventListener(clientValidatedEvent -> workTimeGrid.getDataProvider().refreshAll());
+        workTimeDatePicker.addClientValidatedEventListener(clientValidatedEvent ->{
+            TimeAdapter.workTimeDatePicker.setValue(workTimeDatePicker.getValue());
+                workTimeGrid.getDataProvider().refreshAll();
+        });
         save.addClickListener(buttonClickEvent -> {
             Serial.save();
             System.out.println("Рабочее время было записано");

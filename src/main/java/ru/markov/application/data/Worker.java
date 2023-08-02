@@ -1,6 +1,10 @@
 package ru.markov.application.data;
 
 import org.springframework.context.annotation.ComponentScan;
+import ru.markov.application.service.Category;
+import ru.markov.application.service.District;
+import ru.markov.application.service.Post;
+import ru.markov.application.service.TimeAdapter;
 import ru.markov.application.views.WorkTime;
 
 import java.io.Serializable;
@@ -29,12 +33,12 @@ public class Worker implements Serializable {
         }
     }
     public void setWorkTime(int hours) {
-        workTime.put(WorkTime.workTimeDatePicker.getValue().getDayOfMonth(), hours);
+        workTime.put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), hours);
     }
     public void setWorkTime(String hours) {
-        workTime.put(WorkTime.workTimeDatePicker.getValue().getDayOfMonth(), Integer.parseInt(hours));}
+        workTime.put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), Integer.parseInt(hours));}
     public int getWorkTime() {
-        int day = WorkTime.workTimeDatePicker.getValue().getDayOfMonth();
+        int day = TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth();
         if (workTime.get(day)==null) return 0;
         return workTime.get(day);
     } //not sure

@@ -20,6 +20,8 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import jakarta.annotation.security.PermitAll;
 import ru.markov.application.data.*;
 import ru.markov.application.security.SecurityService;
+import ru.markov.application.service.Serial;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -249,9 +251,9 @@ public class GridEdit extends Div {
         });
         if (securityService.getAuthenticatedUser().getUsername().equals("user")){
             addWorker.setEnabled(false);
-            addWorker.setAriaLabel("Нет прав доступа");
+           // addWorker.setId("Нет прав доступа");
             saveWorkers.setEnabled(false);
-            saveWorkers.setAriaLabel("Нет прав доступа");
+           // saveWorkers.setAriaLabel("Нет прав доступа");
             editColumn.setVisible(false);
             categoryColumn.setVisible(false);
         }
