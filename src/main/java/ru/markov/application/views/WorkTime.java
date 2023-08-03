@@ -54,12 +54,14 @@ public class WorkTime extends Div {
                 .setAutoWidth(false)
                 .setWidth("400px")
                 .setFlexGrow(0);
+
         Grid.Column<Worker> workTimeColumn = workTimeGrid
                 .addColumn(Worker::getWorkTime)
                 .setHeader("Время")
                 .setAutoWidth(false)
                 .setWidth("200px")
                 .setFlexGrow(1);
+
         Grid.Column<Worker> workerStatusColumn = workTimeGrid.
                 addColumn(Worker::getWorkerStatus)
                 .setHeader("Статус")

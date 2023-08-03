@@ -1,46 +1,49 @@
 package ru.markov.application.data;
 
 import org.springframework.context.annotation.ComponentScan;
-import ru.markov.application.service.Category;
-import ru.markov.application.service.District;
-import ru.markov.application.service.Post;
-import ru.markov.application.service.TimeAdapter;
-import ru.markov.application.views.WorkTime;
-
+import ru.markov.application.service.*;
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.*;
 
 @ComponentScan
 
 public class Worker implements Serializable {
     private String firstName;
     private String lastName;
-    private String fatherName;
+    private String patronymic; //отчество
     private District district;
     private Post post;
     private Category category;
-    private HashMap<Integer, Integer> workTime = new HashMap<>(31);
+    private HashMap<Integer, HashMap<Integer, Integer>> workTimeMassive = new HashMap<>(12);
+    //private HashMap<Integer, Integer> workTime = new HashMap<>(31);
     private WorkerStatus workerStatus = WorkerStatus.NOTHING;
 
     public void initWorkTimeMap() {
-        if (workTime.isEmpty()) {
-            System.out.println("Создаю карту учета времени работника: " + getFullName());
-            for (int i = 1; i <= 31; i++) {
-                workTime.put(i, 0);
+        for (int i = 0; i < 12; i++) {
+            if (workTimeMassive.isEmpty()){
+                System.out.println("Создаю карту учета времени работника: " + getFullName());
+                workTimeMassive.put(i, new HashMap<Integer, Integer>(31));
+                for (int j = 1; j <= 31; i++) {
+                    workTimeMassive.
+                    System.out.println("Создаю " + j+1 + " месяц, " + i + " число...");
+                }
+                System.out.println("Создание карты учета времемни завершено!");
             }
-        } else {
-            System.out.println("В карте учета времени работника есть данные...");
         }
     }
     public void setWorkTime(int hours) {
-        workTime.put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), hours);
+        workTimeMassive[TimeAdapter.workTimeDatePicker.getValue().getMonthValue()]
+                .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), hours);
+        System.out.println(TimeAdapter.workTimeDatePicker.getValue().getMonthValue());
     }
     public void setWorkTime(String hours) {
-        workTime.put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), Integer.parseInt(hours));}
+        workTimeMassive[TimeAdapter.workTimeDatePicker.getValue().getMonthValue()]
+                .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), Integer.parseInt(hours));}
     public int getWorkTime() {
         int day = TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth();
-        if (workTime.get(day)==null) return 0;
-        return workTime.get(day);
+        int mount = ((TimeAdapter.workTimeDatePicker.getValue().getMonthValue())-1);
+        if (workTimeMassive[mount].get(day)==null) return 0;
+        return 1;//workTimeMassive[mount].get(day);
     } //not sure
     public void setCategory(Category category) {
         this.category = category;
@@ -107,26 +110,27 @@ public class Worker implements Serializable {
     public void setDistrict(District district) {
         this.district = district;
     }
-    public Worker(String lastName, String firstName, String fatherName, District district, Post post, Category category) {
+    public Worker(String lastName, String firstName, String patronymic, District district, Post post, Category category) {
         this.lastName = lastName;
         this.firstName = firstName;
-        this.fatherName = fatherName;
+        this.patronymic = patronymic;
         this.district = district;
         this.post = post;
         this.category = category;
         initWorkTimeMap();
     }
-    public Worker(String lastName, String firstName, String fatherName, String district, String post, String category) {
+    public Worker(String lastName, String firstName, String patronymic, String district, String post, String category) {
+        initWorkTimeMap();
         this.lastName = lastName;
         this.firstName = firstName;
-        this.fatherName = fatherName;
+        this.patronymic = patronymic;
         setDistrict(district);
         setPost(post);
         setCategory(category);
-        initWorkTimeMap();
+
     }
     public String getFullName() {
-        return lastName + " " + firstName + " " + fatherName;
+        return lastName + " " + firstName + " " + patronymic;
     }
     public String getFirstName() {
         return firstName;
@@ -140,11 +144,11 @@ public class Worker implements Serializable {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-    public String getFatherName() {
-        return fatherName;
+    public String getPatronymic() {
+        return patronymic;
     }
-    public void setFatherName(String fatherName) {
-        this.fatherName = fatherName;
+    public void setPatronymic(String patronymic) {
+        this.patronymic = patronymic;
     }
     public void setWorkerStatus(WorkerStatus status){
         this.workerStatus = status;

@@ -141,7 +141,7 @@ public class GridEdit extends Div {
                 .setAutoWidth(true)
                 .setFlexGrow(1);
         Grid.Column<Worker> fatherNameColumn = grid
-                .addColumn(Worker::getFatherName)
+                .addColumn(Worker::getPatronymic)
                 .setHeader("Отчество")
                 .setAutoWidth(true)
                 .setFlexGrow(1);
@@ -230,7 +230,7 @@ public class GridEdit extends Div {
         fatherNameField.setWidthFull();
         binder.forField(fatherNameField).asRequired("Отчество не может быть пустым")
                 .withStatusLabel(fatherNameValid)
-                .bind(Worker::getFatherName, Worker::setFatherName);
+                .bind(Worker::getPatronymic, Worker::setPatronymic);
         fatherNameColumn.setEditorComponent(fatherNameField);
 
 
@@ -249,11 +249,11 @@ public class GridEdit extends Div {
             lastNameValid.setText("");
             fatherNameValid.setText("");
         });
+
+        //скрываем доступ к полям и кнопкам для user
         if (securityService.getAuthenticatedUser().getUsername().equals("user")){
             addWorker.setEnabled(false);
-           // addWorker.setId("Нет прав доступа");
             saveWorkers.setEnabled(false);
-           // saveWorkers.setAriaLabel("Нет прав доступа");
             editColumn.setVisible(false);
             categoryColumn.setVisible(false);
         }

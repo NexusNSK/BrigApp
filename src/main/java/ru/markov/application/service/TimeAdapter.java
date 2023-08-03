@@ -1,7 +1,6 @@
 package ru.markov.application.service;
 
 import com.vaadin.flow.component.datepicker.DatePicker;
-
 import java.time.LocalDate;
 
 /**
@@ -19,9 +18,7 @@ public class TimeAdapter {
     public TimeAdapter() {
         initWorkTime();
     }
-
     public static DatePicker workTimeDatePicker = new DatePicker();
-
     public static void initWorkTime() {
         workTimeDatePicker.setValue(LocalDate.now());
     }
