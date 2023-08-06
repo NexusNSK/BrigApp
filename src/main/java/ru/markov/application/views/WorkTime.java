@@ -26,7 +26,6 @@ import java.time.LocalDate;
 @UIScope
 public class WorkTime extends Div {
     public DatePicker workTimeDatePicker = new DatePicker();
-    private Button save = new Button("Записать время");
 
     public WorkTime() {
         workTimeDatePicker.setValue(LocalDate.now());
@@ -42,6 +41,7 @@ public class WorkTime extends Div {
             TimeAdapter.workTimeDatePicker.setValue(workTimeDatePicker.getValue());
                 workTimeGrid.getDataProvider().refreshAll();
         });
+        Button save = new Button("Записать время");
         save.addClickListener(buttonClickEvent -> {
             Serial.save();
             System.out.println("Рабочее время было записано");
@@ -100,14 +100,12 @@ public class WorkTime extends Div {
                 cancelButton);
         actions.setPadding(false);
         editColumn.setEditorComponent(actions);
-        editor.addCancelListener(e -> {
-            timeValid.setText("");
-        });
+        editor.addCancelListener(e -> timeValid.setText(""));
 
         add(workTimeDatePicker, save, workTimeGrid);
     }
 }
-//worktime раздел недоступен под юзером и ломает доступ всем, разобраться
+
 
 
 

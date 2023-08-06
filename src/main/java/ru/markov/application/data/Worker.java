@@ -2,6 +2,7 @@ package ru.markov.application.data;
 
 import org.springframework.context.annotation.ComponentScan;
 import ru.markov.application.service.*;
+
 import java.io.Serializable;
 import java.util.*;
 
@@ -14,40 +15,44 @@ public class Worker implements Serializable {
     private District district;
     private Post post;
     private Category category;
-    private HashMap<Integer, HashMap<Integer, Integer>> workTimeMassive = new HashMap<>(12);
-    //private HashMap<Integer, Integer> workTime = new HashMap<>(31);
-    private WorkerStatus workerStatus = WorkerStatus.NOTHING;
+    private final HashMap<Integer, HashMap<Integer, Integer>> workTimeMassive = new HashMap<>(12);
+    //             <номер месяца : мапа <номер дня : часы>>
+    private final WorkerStatus workerStatus = WorkerStatus.NOTHING;
 
     public void initWorkTimeMap() {
-        for (int i = 0; i < 12; i++) {
-            if (workTimeMassive.isEmpty()){
-                System.out.println("Создаю карту учета времени работника: " + getFullName());
-                workTimeMassive.put(i, new HashMap<Integer, Integer>(31));
-                for (int j = 1; j <= 31; i++) {
-                    workTimeMassive.
-                    System.out.println("Создаю " + j+1 + " месяц, " + i + " число...");
+        if (workTimeMassive.isEmpty()) {
+            // System.out.println("Создаю карту учета времени работника: " + getFullName());
+            for (int i = 0; i <= 12; i++) {
+                workTimeMassive.put(i, new HashMap<>(31));
+                for (int j = 0; j <= 31; j++) {
+                    workTimeMassive.get(i).put(j, 0);
+                    //   System.out.println("Создаю " + (i) + " месяц, " + (j) + " число...");
                 }
-                System.out.println("Создание карты учета времемни завершено!");
             }
+            System.out.println("Создание карты учета времемни завершено!");
         }
     }
+
     public void setWorkTime(int hours) {
-        workTimeMassive[TimeAdapter.workTimeDatePicker.getValue().getMonthValue()]
+        workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), hours);
-        System.out.println(TimeAdapter.workTimeDatePicker.getValue().getMonthValue());
     }
-    public void setWorkTime(String hours) {
-        workTimeMassive[TimeAdapter.workTimeDatePicker.getValue().getMonthValue()]
-                .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), Integer.parseInt(hours));}
+
+    /*public void setWorkTime(String hours) {
+        workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
+                .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), Integer.parseInt(hours));
+    }*/
+
     public int getWorkTime() {
-        int day = TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth();
-        int mount = ((TimeAdapter.workTimeDatePicker.getValue().getMonthValue())-1);
-        if (workTimeMassive[mount].get(day)==null) return 0;
-        return 1;//workTimeMassive[mount].get(day);
-    } //not sure
-    public void setCategory(Category category) {
-        this.category = category;
+        return workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
+                .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth());
+
     }
+
+    /*public void setCategory(Category category) {
+        this.category = category;
+    }*/
+
     public void setCategory(String category) {
         switch (category) {
             case ("1") -> this.category = Category.ONE;
@@ -57,6 +62,7 @@ public class Worker implements Serializable {
             case ("Испытательный срок") -> this.category = Category.IC;
         }
     }
+
     public String getCategory() {
         String cat = "";
         switch (category) {
@@ -68,6 +74,7 @@ public class Worker implements Serializable {
         }
         return cat;
     }
+
     public String getPost() {
         String ps = "";
         switch (post) {
@@ -80,9 +87,11 @@ public class Worker implements Serializable {
         }
         return ps;
     }
-    public void setPost(Post post) {
+
+   /* public void setPost(Post post) {
         this.post = post;
-    }
+    }*/
+
     public void setPost(String post) {
         switch (post) {
             case ("Бригадир монтажников") -> this.post = Post.BRIG_MOUNT;
@@ -93,13 +102,15 @@ public class Worker implements Serializable {
             case ("Техник") -> this.post = Post.TECHNIC;
         }
     }
+
     public String getDistrict() {
-      return  switch (district) {
+        return switch (district) {
             case MOUNTING -> "Бригада монтажники";
             case BUILDING -> "Бригада сборщики";
             case TECH -> "Бригада техники";
         };
     }
+
     public void setDistrict(String district) {
         switch (district) {
             case ("Бригада монтажники") -> this.district = District.MOUNTING;
@@ -107,9 +118,11 @@ public class Worker implements Serializable {
             case ("Бригада техники") -> this.district = District.TECH;
         }
     }
-    public void setDistrict(District district) {
+
+    /*public void setDistrict(District district) {
         this.district = district;
-    }
+    }*/
+
     public Worker(String lastName, String firstName, String patronymic, District district, Post post, Category category) {
         this.lastName = lastName;
         this.firstName = firstName;
@@ -119,51 +132,74 @@ public class Worker implements Serializable {
         this.category = category;
         initWorkTimeMap();
     }
+
     public Worker(String lastName, String firstName, String patronymic, String district, String post, String category) {
-        initWorkTimeMap();
         this.lastName = lastName;
         this.firstName = firstName;
         this.patronymic = patronymic;
         setDistrict(district);
         setPost(post);
         setCategory(category);
+        initWorkTimeMap();
 
     }
+
     public String getFullName() {
         return lastName + " " + firstName + " " + patronymic;
     }
+
     public String getFirstName() {
         return firstName;
     }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
+
     public String getLastName() {
         return lastName;
     }
+
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
     public String getPatronymic() {
         return patronymic;
     }
+
     public void setPatronymic(String patronymic) {
         this.patronymic = patronymic;
     }
-    public void setWorkerStatus(WorkerStatus status){
+
+    /*public void setWorkerStatus(WorkerStatus status) {
         this.workerStatus = status;
-    }
-    public void setWorkerStatus(String status){
-        switch (status){
-            case ("Работает") -> {this.workerStatus = WorkerStatus.WORK; setWorkTime(8);}
-            case ("Больничный") -> {this.workerStatus = WorkerStatus.HOSPITAL; setWorkTime(0);}
-            case ("Отпуск") -> {this.workerStatus = WorkerStatus.HOLIDAY; setWorkTime(0);}
-            case ("Не определено") -> {this.workerStatus = WorkerStatus.NOTHING; setWorkTime(0);}
+    }*/
+
+    /*public void setWorkerStatus(String status) {
+        switch (status) {
+            case ("Работает") -> {
+                this.workerStatus = WorkerStatus.WORK;
+                setWorkTime(8);
+            }
+            case ("Больничный") -> {
+                this.workerStatus = WorkerStatus.HOSPITAL;
+                setWorkTime(0);
+            }
+            case ("Отпуск") -> {
+                this.workerStatus = WorkerStatus.HOLIDAY;
+                setWorkTime(0);
+            }
+            case ("Не определено") -> {
+                this.workerStatus = WorkerStatus.NOTHING;
+                setWorkTime(0);
+            }
         }
 
-    }
+    }*/
+
     public String getWorkerStatus() {
-        return switch (workerStatus){
+        return switch (workerStatus) {
             case WORK -> "Работает";
             case HOSPITAL -> "Больничный";
             case HOLIDAY -> "Отпуск";
