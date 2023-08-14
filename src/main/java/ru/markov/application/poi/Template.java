@@ -3,6 +3,8 @@ package ru.markov.application.poi;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import ru.markov.application.views.GridEdit;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -38,6 +40,7 @@ public class Template {
         }
 
         createHeaderGrid(techSheet);
+        techList(techSheet);
 
         book.write(fos);
         fos.close();
@@ -65,6 +68,7 @@ public class Template {
         sheet.getRow(0).getCell(33).setCellStyle(cs);
         setAroundBorder(sheet.getRow(0).getCell(33));
         sheet.setColumnWidth(33, 3000);
+        sheet.setColumnWidth(1,10000);
         sheet.addMergedRegion(new CellRangeAddress(0, 1, 0, 1));
         sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, 1));
         sheet.getRow(2).getCell(0).setCellValue("ФИО");
@@ -96,5 +100,32 @@ public class Template {
             default -> "";
         };
     }
-}
+    public void techList(Sheet sheet){
+        for (int i = 0; i < GridEdit.workerList.size(); i++) {
+            int days = 0;
+           //if (GridEdit.workerList.get(i).getDistrict().equals(District.TECH)){
+            sheet.getRow(i+3)
+                    .getCell(0)
+                    .setCellValue(i+1);
+                sheet.getRow(i+3)
+                     .getCell(1)
+                     .setCellValue(GridEdit.workerList
+                     .get(i).getFullName());
+               while (days < 31){
+                   if (!(GridEdit.workerList.get(i).getWorkTimeToPOI(days)==0)){
+                       /*switch (GridEdit.workerList.get(i).getWorkerStatus()){
+                           case "Больничный":
+                               sheet.getRow(i + 3).getCell(days + 1)
+                                       .s
+*/
+                       }
+                       sheet.getRow(i + 3).getCell(days + 1)
+                               .setCellValue(GridEdit.workerList.get(i).getWorkTimeToPOI(days));
+                   }
+                   days++;
+                }
+            }
+        }
+   // }
+//}
 

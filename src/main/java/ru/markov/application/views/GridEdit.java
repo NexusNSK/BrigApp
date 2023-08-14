@@ -37,13 +37,28 @@ public class GridEdit extends Div {
         TextField fatherNameT = new TextField("Отчество"); //поле ввода отчества при добавлении сотрудника
         ComboBox<String> districtBox = new ComboBox<>("Участок"); //поле выбора участка (волна, сборка, техники)
         districtBox.setAllowCustomValue(true);
-        districtBox.setItems("Бригада монтажники", "Бригада сборщики", "Бригада техники");
+        districtBox.setItems(
+                "Бригада монтажники",
+                "Бригада сборщики",
+                "Бригада техники"
+        );
         ComboBox<String> postBox = new ComboBox<>("Должность"); //поле выбора должности (бригадир, монтажник, сборщик, техник)
         postBox.setAllowCustomValue(true);
-        postBox.setItems("Бригадир монтажников", "Бригадир сборщиков", "Бригадир техников", "Монтажник", "Сборщик","Техник");
+        postBox.setItems(
+                "Бригадир монтажников",
+                "Бригадир сборщиков",
+                "Бригадир техников",
+                "Монтажник",
+                "Сборщик",
+                "Техник"
+        );
         ComboBox<String> categoryBox = new ComboBox<>("Категория");//поле выборп категории (1, 2, 3. испытательный срок)
         categoryBox.setAllowCustomValue(true);
-        categoryBox.setItems("Бригадир", "1", "2", "3", "Испытательный срок");
+        categoryBox.setItems(
+                "Бригадир",
+                "1", "2", "3",
+                "Испытательный срок"
+        );
 
 
         Grid<Worker> grid = new Grid<>(Worker.class, false); //основная таблица с сотрудниками
@@ -146,7 +161,7 @@ public class GridEdit extends Div {
                 .setAutoWidth(true)
                 .setFlexGrow(1);
         Grid.Column<Worker> districtColumn = grid
-                .addColumn(Worker::getDistrict)
+                .addColumn(Worker::getDistrictToString)
                 .setHeader("Участок")
                 .setAutoWidth(true)
                 .setFlexGrow(1);
@@ -189,17 +204,28 @@ public class GridEdit extends Div {
 
         //при изменении участка
         ComboBox<String> districtEditCol = new ComboBox<>();
-        districtEditCol.setItems("Бригада монтажники", "Бригада сборщики", "Бригада техники");
+        districtEditCol.setItems(
+                "Бригада монтажники",
+                "Бригада сборщики",
+                "Бригада техники"
+        );
         districtEditCol.setWidthFull();
         binder.forField(districtEditCol)
                 .asRequired("Участок не может быть пустым")
                 .withStatusLabel(districtValid)
-                .bind(Worker::getDistrict , Worker::setDistrict);
+                .bind(Worker::getDistrictToString, Worker::setDistrict);
         districtColumn.setEditorComponent(districtEditCol);
 
         //при изменении должности
         ComboBox<String> postEditCol = new ComboBox<>();
-        postEditCol.setItems("Бригадир монтажников", "Бригадир сборщиков", "Бригадир техников", "Монтажник", "Сборщик","Техник");
+        postEditCol.setItems(
+                "Бригадир монтажников",
+                "Бригадир сборщиков",
+                "Бригадир техников",
+                "Монтажник",
+                "Сборщик",
+                "Техник"
+        );
         postEditCol.setWidthFull();
         binder.forField(postEditCol)
                 .asRequired("Должность не может быть пустой")
@@ -209,7 +235,11 @@ public class GridEdit extends Div {
 
         //при изменении категории
         ComboBox<String> categoryEditCol = new ComboBox<>();
-        categoryEditCol.setItems("Бригадир", "1", "2", "3", "Испытательный срок");
+        categoryEditCol.setItems(
+                "Бригадир",
+                "1", "2", "3",
+                "Испытательный срок"
+        );
         categoryEditCol.setWidthFull();
         binder.forField(categoryEditCol)
                 .asRequired("Категория не может быть пустой")

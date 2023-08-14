@@ -4,6 +4,6 @@ import java.io.IOException;
 
 public class TemplateMain {
     public static void main(String[] args) throws IOException {
-      //  Template template = new Template();
+        Template template = new Template();
     }
 }

@@ -2,6 +2,7 @@ package ru.markov.application.views;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.editor.Editor;
@@ -48,6 +49,12 @@ public class WorkTime extends Div {
             workTimeGrid.getDataProvider().refreshAll();
         });
 
+        /*Grid.Column<Worker> statusiconColumn = workTimeGrid
+                .addColumn(Worker::getIcon)
+                .setAutoWidth(false)
+                .setWidth("50px")
+                .setFlexGrow(1);*/
+
         Grid.Column<Worker> fullNameColumn = workTimeGrid
                 .addColumn(Worker::getFullName)
                 .setHeader("ФИО сотрудника")
@@ -90,6 +97,20 @@ public class WorkTime extends Div {
                 .withStatusLabel(timeValid)
                 .bind(Worker::getWorkTime, Worker::setWorkTime);
         workTimeColumn.setEditorComponent(setTimeEdit);
+
+        ComboBox<String> statusEditColumn = new ComboBox<>();
+        ValidationName statusValid = new ValidationName();
+        statusEditColumn.setItems("Работает", "Больничный", "Отпуск", "Не определено");
+        if (statusEditColumn.getValue()=="Работает"){
+            setTimeEdit.setEnabled(false);
+        }else{setTimeEdit.setEnabled(true);}
+        statusEditColumn.setWidthFull();
+        binder.forField(statusEditColumn)
+                .asRequired()
+                .withStatusLabel(statusValid)
+                .bind(Worker::getWorkerStatusMassive, Worker::setWorkerStatusMassive);
+        workerStatusColumn.setEditorComponent(statusEditColumn);
+
 
         Button saveButton = new Button("Сохранить", e -> editor.save());
         Button cancelButton = new Button(VaadinIcon.CLOSE.create(),
