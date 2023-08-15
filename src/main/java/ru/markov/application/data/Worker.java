@@ -1,21 +1,58 @@
 package ru.markov.application.data;
 
 import org.springframework.context.annotation.ComponentScan;
+import ru.markov.application.service.*;
+
 import java.io.Serializable;
+import java.util.*;
 
 @ComponentScan
 
 public class Worker implements Serializable {
     private String firstName;
     private String lastName;
-    private String fatherName;
+    private String patronymic; //отчество
     private District district;
     private Post post;
     private Category category;
-    public void setCategory(Category category){
-        this.category = category;
+    private final HashMap<Integer, HashMap<Integer, WorkerStatus>> workerStatusMassive = new HashMap<>(12);
+    private final HashMap<Integer, HashMap<Integer, Integer>> workTimeMassive = new HashMap<>(12);
+    //             <номер месяца : мапа <номер дня : часы>>
+
+    public void initWorkerStatusMap(){
+        if (workerStatusMassive.isEmpty()){
+            for (int i = 0; i <= 12; i++){
+                workerStatusMassive.put(i, new HashMap<>(31));
+                for (int j = 0; j <= 32; j++){
+                    workerStatusMassive.get(i).put(j, WorkerStatus.NOTHING);
+                }
+            }
+            System.out.println("Создание карты учета статуса работника завершено!");
+        }
     }
-    public void setCategory(String category){
+    public void initWorkTimeMap() {
+        if (workTimeMassive.isEmpty()) {
+            for (int i = 0; i <= 12; i++) {
+                workTimeMassive.put(i, new HashMap<>(31));
+                for (int j = 0; j <= 31; j++) {
+                    workTimeMassive.get(i).put(j, 0);
+                }
+            }
+            System.out.println("Создание карты учета времемни завершено!");
+        }
+    }
+    public void setWorkTime(int hours) {
+        workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
+                .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), hours);
+    }
+    public int getWorkTime() {
+        return workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
+                .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth());
+    }
+    public int getWorkTimeToPOI(int day){
+        return workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue()).get(day);
+    }
+    public void setCategory(String category) {
         switch (category) {
             case ("1") -> this.category = Category.ONE;
             case ("2") -> this.category = Category.TWO;
@@ -24,9 +61,9 @@ public class Worker implements Serializable {
             case ("Испытательный срок") -> this.category = Category.IC;
         }
     }
-    public String getCategory(){
+    public String getCategory() {
         String cat = "";
-        switch (category){
+        switch (category) {
             case ONE -> cat = "1";
             case TWO -> cat = "2";
             case THREE -> cat = "3";
@@ -37,7 +74,7 @@ public class Worker implements Serializable {
     }
     public String getPost() {
         String ps = "";
-        switch (post){
+        switch (post) {
             case BRIG_MOUNT -> ps = "Бригадир монтажников";
             case BRIG_BUILD -> ps = "Бригадир сборщиков";
             case BRIG_TECH -> ps = "Бригадир техников";
@@ -47,95 +84,106 @@ public class Worker implements Serializable {
         }
         return ps;
     }
-    public void setPost(Post post) {
-        this.post = post;
-    }
-    public void setPost(String post){
-        switch (post){
-            case ("Бригадир монтажников"):
-                this.post = Post.BRIG_MOUNT;
-                break;
-            case ("Бригадир сборщиков"):
-                this.post = Post.BRIG_BUILD;
-                break;
-            case ("Бригадир техников"):
-                this.post = Post.BRIG_TECH;
-                break;
-            case ("Монтажник"):
-                this.post = Post.MOUNT;
-                break;
-            case ("Сборщик"):
-                this.post = Post.BUILDER;
-                break;
-            case ("Техник"):
-                this.post = Post.TECHNIC;
-                break;
+    public void setPost(String post) {
+        switch (post) {
+            case ("Бригадир монтажников") -> this.post = Post.BRIG_MOUNT;
+            case ("Бригадир сборщиков") -> this.post = Post.BRIG_BUILD;
+            case ("Бригадир техников") -> this.post = Post.BRIG_TECH;
+            case ("Монтажник") -> this.post = Post.MOUNT;
+            case ("Сборщик") -> this.post = Post.BUILDER;
+            case ("Техник") -> this.post = Post.TECHNIC;
         }
     }
-    public String getDistrict() {
-        String ds = "";
-        switch (district){
-            case MOUNTING -> ds="Бригада монтажники";
-            case BUILDING -> ds="Бригада сборщики";
-            case TECH -> ds="Бригада техники";
-        }
-        return ds;
+    public String getDistrictToString() {
+        return switch (district) {
+            case MOUNTING -> "Бригада монтажники";
+            case BUILDING -> "Бригада сборщики";
+            case TECH -> "Бригада техники";
+        };
     }
-    public void setDistrict(String district){
-        switch (district){
-            case ("Бригада монтажники"):
-                this.district = District.MOUNTING;
-                break;
-            case ("Бригада сборщики"):
-                this.district = District.BUILDING;
-                break;
-            case ("Бригада техники"):
-                this.district = District.TECH;
-                break;
+    public District getDistrict(){
+        return this.district;
+    }
+    public void setDistrict(String district) {
+        switch (district) {
+            case ("Бригада монтажники") -> this.district = District.MOUNTING;
+            case ("Бригада сборщики") -> this.district = District.BUILDING;
+            case ("Бригада техники") -> this.district = District.TECH;
         }
     }
-    public void setDistrict(District district) {
-        this.district = district;
-    }
-    public Worker(String lastName, String firstName, String fatherName, District district, Post post, Category category) {
+    public Worker(String lastName, String firstName, String patronymic, String district, String post, String category) {
         this.lastName = lastName;
         this.firstName = firstName;
-        this.fatherName = fatherName;
-        this.district = district;
-        this.post = post;
-        this.category = category;
-    }
-    public Worker(String lastName, String firstName, String fatherName, String district, String post, String category) {
-        this.lastName = lastName;
-        this.firstName = firstName;
-        this.fatherName = fatherName;
+        this.patronymic = patronymic;
         setDistrict(district);
         setPost(post);
         setCategory(category);
-    }
+        initWorkTimeMap();
+        initWorkerStatusMap();
 
+    }
     public String getFullName() {
-        return lastName + " " + firstName + " " + fatherName;
+        return lastName + " " + firstName + " " + patronymic;
     }
     public String getFirstName() {
-        return firstName;
+        return this.firstName;
     }
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
     public String getLastName() {
-        return lastName;
+        return this.lastName;
     }
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-    public String getFatherName() {
-        return fatherName;
+    public String getPatronymic() {
+        return this.patronymic;
     }
-    public void setFatherName(String fatherName) {
-        this.fatherName = fatherName;
+    public void setPatronymic(String patronymic) {
+        this.patronymic = patronymic;
     }
+    public void setWorkerStatusMassive(String status) {
+        switch (status){
+            case ("Работает") -> {
+                workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
+                        .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.WORK);
+                setWorkTime(8);
+            }
+            case ("Больничный") -> {
+                workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
+                        .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.HOSPITAL);
+                setWorkTime(0);
+            }
+            case ("Отпуск") -> {
+                workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
+                        .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.HOLIDAY);
+                setWorkTime(0);
+            }
+            case ("Не определено") -> {
+                workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
+                        .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.NOTHING);
+                setWorkTime(0);
+            }
 
+    }
+    }
+    public String getWorkerStatusMassive(){
+        return switch (workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
+                .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth())) {
+            case WORK -> "Работает";
+            case HOSPITAL -> "Больничный";
+            case HOLIDAY -> "Отпуск";
+            case NOTHING -> "Не определено";
+        };
+    }
+    public String getWorkerStatusAtDay(int day){
+        return switch (workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue()).get(day)){
+            case WORK -> "Работает";
+            case HOSPITAL -> "Больничный";
+            case HOLIDAY -> "Отпуск";
+            case NOTHING -> "Не определено";
+        };
+    }
 }
-
 

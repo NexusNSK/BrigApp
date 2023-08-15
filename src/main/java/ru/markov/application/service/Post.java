@@ -1,4 +1,4 @@
-package ru.markov.application.data;
+package ru.markov.application.service;
 
 public enum Post {
     BRIG_MOUNT,
