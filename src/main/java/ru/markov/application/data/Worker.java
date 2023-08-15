@@ -1,7 +1,5 @@
 package ru.markov.application.data;
 
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import org.springframework.context.annotation.ComponentScan;
 import ru.markov.application.service.*;
 
@@ -20,7 +18,6 @@ public class Worker implements Serializable {
     private final HashMap<Integer, HashMap<Integer, WorkerStatus>> workerStatusMassive = new HashMap<>(12);
     private final HashMap<Integer, HashMap<Integer, Integer>> workTimeMassive = new HashMap<>(12);
     //             <номер месяца : мапа <номер дня : часы>>
-    private WorkerStatus workerStatus = WorkerStatus.NOTHING;
 
     public void initWorkerStatusMap(){
         if (workerStatusMassive.isEmpty()){
@@ -44,26 +41,16 @@ public class Worker implements Serializable {
             System.out.println("Создание карты учета времемни завершено!");
         }
     }
-
     public void setWorkTime(int hours) {
         workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), hours);
     }
-
-    public void setWorkTime(String hours) {
-        workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
-                .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), Integer.parseInt(hours));
-    }
-
     public int getWorkTime() {
         return workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth());
     }
     public int getWorkTimeToPOI(int day){
         return workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue()).get(day);
-    }
-    public void setCategory(Category category) {
-        this.category = category;
     }
     public void setCategory(String category) {
         switch (category) {
@@ -97,9 +84,6 @@ public class Worker implements Serializable {
         }
         return ps;
     }
-    public void setPost(Post post) {
-        this.post = post;
-    }
     public void setPost(String post) {
         switch (post) {
             case ("Бригадир монтажников") -> this.post = Post.BRIG_MOUNT;
@@ -127,22 +111,6 @@ public class Worker implements Serializable {
             case ("Бригада техники") -> this.district = District.TECH;
         }
     }
-
-    public void setDistrict(District district) {
-        this.district = district;
-    }
-
-    public Worker(String lastName, String firstName, String patronymic, District district, Post post, Category category) {
-        this.lastName = lastName;
-        this.firstName = firstName;
-        this.patronymic = patronymic;
-        this.district = district;
-        this.post = post;
-        this.category = category;
-        initWorkTimeMap();
-        initWorkerStatusMap();
-    }
-
     public Worker(String lastName, String firstName, String patronymic, String district, String post, String category) {
         this.lastName = lastName;
         this.firstName = firstName;
@@ -154,35 +122,27 @@ public class Worker implements Serializable {
         initWorkerStatusMap();
 
     }
-
     public String getFullName() {
         return lastName + " " + firstName + " " + patronymic;
     }
-
     public String getFirstName() {
-        return firstName;
+        return this.firstName;
     }
-
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-
     public String getLastName() {
-        return lastName;
+        return this.lastName;
     }
-
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
     public String getPatronymic() {
-        return patronymic;
+        return this.patronymic;
     }
-
     public void setPatronymic(String patronymic) {
         this.patronymic = patronymic;
     }
-
     public void setWorkerStatusMassive(String status) {
         switch (status){
             case ("Работает") -> {
@@ -217,47 +177,13 @@ public class Worker implements Serializable {
             case NOTHING -> "Не определено";
         };
     }
-
-    public void setWorkerStatus(String status) {
-        switch (status) {
-            case ("Работает") -> {
-                this.workerStatus = WorkerStatus.WORK;
-                //setWorkTime(8);
-            }
-            case ("Больничный") -> {
-                this.workerStatus = WorkerStatus.HOSPITAL;
-                //setWorkTime(0);
-            }
-            case ("Отпуск") -> {
-                this.workerStatus = WorkerStatus.HOLIDAY;
-                //setWorkTime(0);
-            }
-            case ("Не определено") -> {
-                this.workerStatus = WorkerStatus.NOTHING;
-               // setWorkTime(0);
-            }
-        }
-
-    }
-
-    public String getWorkerStatus() {
-        return switch (workerStatus) {
+    public String getWorkerStatusAtDay(int day){
+        return switch (workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue()).get(day)){
             case WORK -> "Работает";
             case HOSPITAL -> "Больничный";
             case HOLIDAY -> "Отпуск";
             case NOTHING -> "Не определено";
         };
     }
-
-
-    public Icon getIcon() {
-        return switch (workerStatus) {
-            case WORK -> new Icon(VaadinIcon.USER_CHECK);
-            case HOLIDAY -> new Icon(VaadinIcon.FLIGHT_TAKEOFF);
-            case HOSPITAL -> new Icon(VaadinIcon.HOSPITAL);
-            case NOTHING -> new Icon(VaadinIcon.QUESTION);
-        };
-    }
 }
-
 

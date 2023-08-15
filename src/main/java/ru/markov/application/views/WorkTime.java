@@ -32,6 +32,7 @@ public class WorkTime extends Div {
         workTimeDatePicker.setValue(LocalDate.now());
 
         Grid<Worker> workTimeGrid = new Grid<>(Worker.class, false);
+        workTimeGrid.setMinHeight("800px");
         workTimeGrid.setItems(GridEdit.workerList);
         Editor<Worker> editor = workTimeGrid.getEditor();
         Binder<Worker> binder = new Binder<>(Worker.class);
@@ -49,12 +50,6 @@ public class WorkTime extends Div {
             workTimeGrid.getDataProvider().refreshAll();
         });
 
-        /*Grid.Column<Worker> statusiconColumn = workTimeGrid
-                .addColumn(Worker::getIcon)
-                .setAutoWidth(false)
-                .setWidth("50px")
-                .setFlexGrow(1);*/
-
         Grid.Column<Worker> fullNameColumn = workTimeGrid
                 .addColumn(Worker::getFullName)
                 .setHeader("ФИО сотрудника")
@@ -70,7 +65,7 @@ public class WorkTime extends Div {
                 .setFlexGrow(1);
 
         Grid.Column<Worker> workerStatusColumn = workTimeGrid.
-                addColumn(Worker::getWorkerStatus)
+                addColumn(Worker::getWorkerStatusMassive)
                 .setHeader("Статус")
                 .setAutoWidth(false)
                 .setWidth("200px")

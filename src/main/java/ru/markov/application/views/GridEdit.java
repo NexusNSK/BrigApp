@@ -77,8 +77,9 @@ public class GridEdit extends Div {
                     && !(districtBox.getValue() == null)
                     && !(postBox.getValue() == null)
                     && !(categoryBox.getValue() == null)) {
-                workerList.add(new Worker(firstNameT.getValue(),
+                workerList.add(new Worker(
                         lastNameT.getValue(),
+                        firstNameT.getValue(),
                         fatherNameT.getValue(),
                         districtBox.getValue(),
                         postBox.getValue(),
