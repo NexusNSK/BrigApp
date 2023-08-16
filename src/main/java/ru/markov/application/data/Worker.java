@@ -120,8 +120,8 @@ public class Worker implements Serializable {
         setCategory(category);
         initWorkTimeMap();
         initWorkerStatusMap();
-
     }
+
     public String getFullName() {
         return lastName + " " + firstName + " " + patronymic;
     }
@@ -145,11 +145,13 @@ public class Worker implements Serializable {
     }
     public void setWorkerStatusMassive(String status) {
         switch (status){
-            case ("Работает") -> {
+            case ("Работает (полный день)") -> {
                 workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                         .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.WORK);
                 setWorkTime(8);
             }
+            case ("Работает (нестандартное время)") -> workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
+                    .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.WORK);
             case ("Больничный") -> {
                 workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                         .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.HOSPITAL);
