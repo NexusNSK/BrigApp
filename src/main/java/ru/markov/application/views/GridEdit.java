@@ -21,6 +21,7 @@ import jakarta.annotation.security.PermitAll;
 import ru.markov.application.data.*;
 import ru.markov.application.security.SecurityService;
 import ru.markov.application.service.Serial;
+import com.vaadin.flow.component.dialog.Dialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -180,7 +181,7 @@ public class GridEdit extends Div {
         //столбец для изменения сотрудников в таблице. После изменения нужно глобально сохранить
         // состояние бригады через кнопку "Сохранить состав бригады" (saveButton)
         Grid.Column<Worker> editColumn = grid.addComponentColumn(worker -> {
-            Button editButton = new Button("Изменить");
+            Button editButton = new Button("Изменить", new Icon(VaadinIcon.EDIT));
             editButton.addClickListener(e -> {
                 if (editor.isOpen())
                     editor.cancel();
@@ -188,6 +189,34 @@ public class GridEdit extends Div {
             });
             return editButton;
         }).setWidth("120px").setFlexGrow(1);
+
+        Grid.Column<Worker> deleteColumn = grid.addComponentColumn(worker -> {
+            Dialog dialog = new Dialog();
+            Button deleteButton = new Button("Удалить", new Icon(VaadinIcon.TRASH), d -> dialog.open());
+
+            dialog.setHeaderTitle(
+                    String.format("Удалить сотрудника \"%s\"?", worker.getFullName()));
+            dialog.add("Вы уверены, что хотите удалить сотрудника из списка бригады?");
+
+            Button deleteButton_ = new Button("Удалить", new Icon(VaadinIcon.TRASH), (t) ->{
+                workerList.remove(worker);
+                grid.getDataProvider().refreshAll();
+                dialog.close();
+            });
+            deleteButton_.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
+            deleteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY,
+                    ButtonVariant.LUMO_ERROR);
+            deleteButton.getStyle().set("margin-right", "auto");
+            dialog.getFooter().add(deleteButton);
+
+            Button cancelButton = new Button("Отмена", (t) -> dialog.close());
+            cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            dialog.getFooter().add(cancelButton);
+            dialog.getFooter().add(deleteButton_);
+
+            return deleteButton;
+        }).setWidth("120px").setFlexGrow(1);
+        deleteColumn.setVisible(true);
 
         //объявление привязки изменяемого поля к объявляемому
         Binder<Worker> binder = new Binder<>(Worker.class);

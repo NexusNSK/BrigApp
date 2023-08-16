@@ -39,13 +39,15 @@ public class Template {
                 setAroundBorder(mountSheet.getRow(i).getCell(j));
             }
         }
+            createHeaderGrid(techSheet);
+            createHeaderGrid(builderSheet);
+            createHeaderGrid(mountSheet);
+            techList(techSheet);
+            builderList(builderSheet);
+            mountList(mountSheet);
 
-        createHeaderGrid(techSheet);
-        createHeaderGrid(builderSheet);
-        createHeaderGrid(mountSheet);
-        techList(techSheet);
-        builderList(builderSheet);
-        mountList(mountSheet);
+
+
 
         book.write(fos);
         fos.close();

@@ -7,6 +7,7 @@ import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.editor.Editor;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
@@ -20,6 +21,7 @@ import ru.markov.application.data.Worker;
 import ru.markov.application.service.TimeAdapter;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @PermitAll
 @Route(value = "worktime", layout = MainLayout.class)
@@ -56,6 +58,7 @@ public class WorkTime extends Div {
                 .setAutoWidth(false)
                 .setWidth("400px")
                 .setFlexGrow(0);
+        fullNameColumn.setFooter("Сотрудников: " + GridEdit.workerList.size());
 
         Grid.Column<Worker> workTimeColumn = workTimeGrid
                 .addColumn(Worker::getWorkTime)
@@ -72,7 +75,7 @@ public class WorkTime extends Div {
                 .setFlexGrow(1);
 
         Grid.Column<Worker> editColumn = workTimeGrid.addComponentColumn(worker -> {
-            Button editButton = new Button("Изменить");
+            Button editButton = new Button("Изменить", new Icon(VaadinIcon.EDIT));
             editButton.addClickListener(e -> {
                 if (editor.isOpen())
                     editor.cancel();
@@ -95,10 +98,12 @@ public class WorkTime extends Div {
 
         ComboBox<String> statusEditColumn = new ComboBox<>();
         ValidationName statusValid = new ValidationName();
-        statusEditColumn.setItems("Работает", "Больничный", "Отпуск", "Не определено");
-        if (statusEditColumn.getValue()=="Работает"){
-            setTimeEdit.setEnabled(false);
-        }else{setTimeEdit.setEnabled(true);}
+        statusEditColumn.setItems("Работает (полный день)",
+                "Работает (нестандартное время)",
+                "Больничный",
+                "Отпуск",
+                "Не определено");
+        setTimeEdit.setEnabled(!Objects.equals(statusEditColumn.getValue(), "Работает"));
         statusEditColumn.setWidthFull();
         binder.forField(statusEditColumn)
                 .asRequired()
