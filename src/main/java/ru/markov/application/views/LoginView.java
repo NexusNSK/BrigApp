@@ -9,19 +9,25 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
+
+import java.util.Locale;
 
 
 @Route("login") 
 @PageTitle("Вход | BrigApp")
 @AnonymousAllowed
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
-
+	 // Alternative to "this.getSession".
 
 	private final LoginForm login = new LoginForm();
 
+
 	public LoginView(){
+
 		addClassName("login-view");
+		login.setForgotPasswordButtonVisible(false);
 		setSizeFull(); 
 		setAlignItems(Alignment.CENTER);
 		setJustifyContentMode(JustifyContentMode.START);

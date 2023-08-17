@@ -19,7 +19,10 @@ public class TimeAdapter {
         initWorkTime();
     }
     public static DatePicker workTimeDatePicker = new DatePicker();
+    public static  DatePicker poiWorkTimeDatePicket = new DatePicker();
+
     public static void initWorkTime() {
         workTimeDatePicker.setValue(LocalDate.now());
+        poiWorkTimeDatePicket.setValue(LocalDate.now());
     }
 }
