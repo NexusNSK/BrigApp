@@ -11,8 +11,6 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import jakarta.annotation.security.PermitAll;
 import ru.markov.application.poi.Template;
-
-import javax.swing.*;
 import java.io.IOException;
 
 @Route(value = "reports", layout = MainLayout.class)

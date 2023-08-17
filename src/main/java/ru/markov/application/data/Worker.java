@@ -181,7 +181,7 @@ public class Worker implements Serializable {
         };
     }
     public String getWorkerStatusAtDay(int day){
-        return switch (workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue()).get(day)){
+        return switch (workerStatusMassive.get(Reports.month).get(day)){
             case WORK -> "Работает";
             case HOSPITAL -> "Больничный";
             case HOLIDAY -> "Отпуск";
