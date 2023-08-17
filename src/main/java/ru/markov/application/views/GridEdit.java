@@ -7,11 +7,16 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.editor.Editor;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.tabs.Tab;
+import com.vaadin.flow.component.tabs.TabSheet;
+import com.vaadin.flow.component.tabs.TabVariant;
+import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
@@ -32,7 +37,32 @@ import java.util.List;
 public class GridEdit extends Div {
     //в этой коллекции хранятся сохраняемые сотрудники, используется для загрузки данных при старте приложения
     public static List<Worker> workerList = new ArrayList<>();
+    public static List<Worker> mountList = new ArrayList<>();
+    public static List<Worker> builderList = new ArrayList<>();
+    public static List<Worker> techList = new ArrayList<>();
+
+    public void initSplitDistrictWorkersList(){
+        mountList.clear();
+        builderList.clear();
+        techList.clear();
+        for (Worker w : workerList) {
+            switch (w.getDistrict()){
+                case MOUNTING -> mountList.add(w);
+                case BUILDING -> builderList.add(w);
+                case TECH -> techList.add(w);
+            }
+
+        }
+    }
+    public void setItemToGrid(Grid grid ,List list){
+        grid.setItems(list);
+    }
+
+
     public GridEdit(SecurityService securityService) {
+        Grid<Worker> grid = new Grid<>(Worker.class, false); //основная таблица с сотрудниками
+        grid.setItems(workerList);
+        initSplitDistrictWorkersList();
         TextField firstNameT = new TextField("Имя"); //поле ввода имени при добавлении сотрудника
         TextField lastNameT = new TextField("Фамилия"); //поле ввода фамилии при добавлении сотрудника
         TextField fatherNameT = new TextField("Отчество"); //поле ввода отчества при добавлении сотрудника
@@ -61,12 +91,61 @@ public class GridEdit extends Div {
                 "Испытательный срок"
         );
 
+        TabSheet gridSheet = new TabSheet();
+        Tab profile = new Tab(VaadinIcon.USER.create(), new Span());
+        profile.add(grid);
+        Tab mountTab = new Tab(VaadinIcon.MAGIC.create(), new Span());
+        Tab buildTab = new Tab(VaadinIcon.SCREWDRIVER.create(),
+                new Span());
+        Tab techTab = new Tab(VaadinIcon.DESKTOP.create(), new Span());
+        for (Tab tab : new Tab[] { profile, mountTab, buildTab, techTab }) {
+            tab.addThemeVariants(TabVariant.LUMO_ICON_ON_TOP);
+        }
 
-        Grid<Worker> grid = new Grid<>(Worker.class, false); //основная таблица с сотрудниками
+
+        gridSheet.add("Все", new Div(profile));
+        gridSheet.add("Монтажники", new Div(mountTab));
+        gridSheet.add("Cборщики", new Div(buildTab));
+        gridSheet.add("Техники", new Div(techTab));
+
+
+
+
+
+
+        gridSheet.addSelectedChangeListener(event -> {
+            switch (gridSheet.getSelectedIndex()) {
+                case 0 -> {
+                    setItemToGrid(grid, workerList);
+                    profile.add(grid);
+                    System.out.println("0");
+                }
+                case 1 -> {
+                    setItemToGrid(grid, mountList);
+                    mountTab.add(grid);
+                    System.out.println("1");
+                }
+                case 2 -> {
+                    setItemToGrid(grid, builderList);
+                    buildTab.add(grid);
+                    System.out.println("2");
+                }
+                case 3 -> {
+                    setItemToGrid(grid, techList);
+                    techTab.add(grid);
+                    System.out.println(3);
+                }
+                default -> {
+                    System.out.println("4");
+                }
+            }
+            grid.getDataProvider().refreshAll();
+        });
         grid.setMinHeight("1000px");
 
         Editor<Worker> editor = grid.getEditor();
-        grid.setItems(workerList);
+
+
 
         //блок добавления сотрудника во временный список без глобального сохранения
         Button addWorker = new Button("Добавить сотрудника", new Icon(VaadinIcon.AUTOMATION));
@@ -95,6 +174,7 @@ public class GridEdit extends Div {
                 districtBox.clear();
                 postBox.clear();
                 categoryBox.clear();
+                initSplitDistrictWorkersList(); //
                 grid.getDataProvider().refreshAll();
             } else {
                 Notification notification = Notification
@@ -200,6 +280,7 @@ public class GridEdit extends Div {
 
             Button deleteButton_ = new Button("Удалить", new Icon(VaadinIcon.TRASH), (t) ->{
                 workerList.remove(worker);
+                initSplitDistrictWorkersList();
                 grid.getDataProvider().refreshAll();
                 dialog.close();
             });
@@ -295,7 +376,10 @@ public class GridEdit extends Div {
 
 
         //объявление и конфигурация кнопки дял сохранения (или отмены) изменений в данных сотрудника
-        Button saveButton = new Button("Сохранить", e -> editor.save());
+        Button saveButton = new Button("Сохранить", e -> {
+                editor.save();
+        initSplitDistrictWorkersList();}
+        );
         Button cancelButton = new Button(VaadinIcon.CLOSE.create(),
                 e -> editor.cancel());
         cancelButton.addThemeVariants(ButtonVariant.LUMO_ICON,
@@ -319,7 +403,7 @@ public class GridEdit extends Div {
         }
 
         //getThemeList().clear();
-        add(topHead, grid, firstNameValid, lastNameValid, fatherNameValid);
+        add(topHead, gridSheet, firstNameValid, lastNameValid, fatherNameValid);
     }
 
 }

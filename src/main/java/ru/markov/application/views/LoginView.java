@@ -19,7 +19,6 @@ import java.util.Locale;
 @PageTitle("Вход | BrigApp")
 @AnonymousAllowed
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
-	 // Alternative to "this.getSession".
 
 	private final LoginForm login = new LoginForm();
 
