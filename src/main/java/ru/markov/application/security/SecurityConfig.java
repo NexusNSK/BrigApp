@@ -20,7 +20,7 @@ public class SecurityConfig extends VaadinWebSecurity {
         http.authorizeHttpRequests()
                 .requestMatchers("/images/*.png").permitAll();
         super.configure(http);
-        setLoginView(http, LoginView.class); // <4>
+        setLoginView(http, LoginView.class);
     }
 
     @Bean
@@ -35,6 +35,21 @@ public class SecurityConfig extends VaadinWebSecurity {
                 .password("{noop}brigadmin")
                 .roles("USER", "ADMIN")
                 .build();
-        return new InMemoryUserDetailsManager(user, admin); // <5>
+        UserDetails mountBrig = User.builder()
+                .username("volna")
+                .password("{noop}volnabrig")
+                .roles("USER", "ADMIN")
+                .build();
+        UserDetails buildBrig = User.builder()
+                .username("sborka")
+                .password("sborkabrig")
+                .roles("USER", "ADMIN")
+                .build();
+        UserDetails techBrig = User.builder()
+                .username("tech")
+                .password("{noop}techbrig")
+                .roles("USER", "ADMIN")
+                .build();
+        return new InMemoryUserDetailsManager(user, admin, mountBrig, buildBrig, techBrig);
     }
 }

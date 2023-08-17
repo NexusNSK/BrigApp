@@ -2,6 +2,7 @@ package ru.markov.application.data;
 
 import org.springframework.context.annotation.ComponentScan;
 import ru.markov.application.service.*;
+import ru.markov.application.views.Reports;
 
 import java.io.Serializable;
 import java.util.*;
@@ -50,7 +51,7 @@ public class Worker implements Serializable {
                 .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth());
     }
     public int getWorkTimeToPOI(int day){
-        return workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue()).get(day);
+        return workTimeMassive.get(Reports.month).get(day);
     }
     public void setCategory(String category) {
         switch (category) {
