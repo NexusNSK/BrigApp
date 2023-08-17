@@ -111,7 +111,7 @@ public class Template {
         sheet.getRow(2).getCell(0).setCellStyle(cs);
         sheet.addMergedRegion(new CellRangeAddress(0, 1, 2, 32));
         sheet.getRow(0).getCell(2).setCellStyle(cs);
-        sheet.getRow(0).getCell(2).setCellValue(Reports.month);
+        sheet.getRow(0).getCell(2).setCellValue(getMonth());
         for (int i = 2, j = 1; i <= 32; i++, j++) {
             sheet.getRow(2).getCell(i).setCellValue(j);
             sheet.getRow(2).getCell(i).setCellStyle(cs);
@@ -120,23 +120,23 @@ public class Template {
         sheet.setColumnWidth(0, 1000);
     }
 
-//    public String getMonth() {
-//        return switch (date.get(Calendar.MONTH)) {
-//            case (0) -> "Январь";
-//            case (1) -> "Февраль";
-//            case (2) -> "Март";
-//            case (3) -> "Апрель";
-//            case (4) -> "Май";
-//            case (5) -> "Июнь";
-//            case (6) -> "Июль";
-//            case (7) -> "Август";
-//            case (8) -> "Сентябрь";
-//            case (9) -> "Октябрь";
-//            case (10) -> "Ноябрь";
-//            case (11) -> "Декабрь";
-//            default -> "";
-//        };
-//    }
+    public String getMonth() {
+        return switch (Reports.month) {
+            case (1) -> "Январь";
+            case (2) -> "Февраль";
+            case (3) -> "Март";
+            case (4) -> "Апрель";
+            case (5) -> "Май";
+            case (6) -> "Июнь";
+            case (7) -> "Июль";
+            case (8) -> "Август";
+            case (9) -> "Сентябрь";
+            case (10) -> "Октябрь";
+            case (11) -> "Ноябрь";
+            case (12) -> "Декабрь";
+            default -> "";
+        };
+    }
 
     public void reportList(String sheet) {
         Sheet curentSheet = null;
