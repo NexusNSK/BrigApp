@@ -25,11 +25,6 @@ public class SecurityConfig extends VaadinWebSecurity {
 
     @Bean
     public UserDetailsService users() {
-        UserDetails user = User.builder()
-                .username("user")
-                .password("{noop}user")
-                .roles("USER")
-                .build();
         UserDetails admin = User.builder()
                 .username("admin")
                 .password("{noop}brigadmin")
@@ -50,6 +45,6 @@ public class SecurityConfig extends VaadinWebSecurity {
                 .password("{noop}techbrig")
                 .roles("USER", "ADMIN")
                 .build();
-        return new InMemoryUserDetailsManager(user, admin, mountBrig, buildBrig, techBrig);
+        return new InMemoryUserDetailsManager(admin, mountBrig, buildBrig, techBrig);
     }
 }

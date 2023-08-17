@@ -15,15 +15,14 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 public class Template {
-    private SXSSFWorkbook book = new SXSSFWorkbook();
-    private FileOutputStream fos = new FileOutputStream("Template.xlsx");
-    private Calendar date = new GregorianCalendar();
-    private DateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
+    private final SXSSFWorkbook book = new SXSSFWorkbook();
+
     public Template(String list) throws IOException {
+        Calendar date = new GregorianCalendar();
+        DateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
         sdf.format(date.getTime());
-
         reportList(list);
-
+        FileOutputStream fos = new FileOutputStream("Template.xlsx");
         book.write(fos);
         fos.close();
         System.out.println("Файл был записан на диск");
