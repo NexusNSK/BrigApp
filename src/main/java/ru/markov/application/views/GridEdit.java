@@ -117,22 +117,18 @@ public class GridEdit extends Div {
                 case 0 -> {
                     setItemToGrid(grid, workerList);
                     profile.add(grid);
-                    System.out.println("0");
                 }
                 case 1 -> {
                     setItemToGrid(grid, mountList);
                     mountTab.add(grid);
-                    System.out.println("1");
                 }
                 case 2 -> {
                     setItemToGrid(grid, builderList);
                     buildTab.add(grid);
-                    System.out.println("2");
                 }
                 case 3 -> {
                     setItemToGrid(grid, techList);
                     techTab.add(grid);
-                    System.out.println(3);
                 }
                 default -> System.out.println("4");
             }
@@ -275,22 +271,22 @@ public class GridEdit extends Div {
                     String.format("Удалить сотрудника \"%s\"?", worker.getFullName()));
             dialog.add("Вы уверены, что хотите удалить сотрудника из списка бригады?");
 
-            Button deleteButton_ = new Button("Удалить", new Icon(VaadinIcon.TRASH), (t) ->{
+            Button dialogDeleteButton = new Button("Удалить", new Icon(VaadinIcon.TRASH), (t) ->{
                 workerList.remove(worker);
                 initSplitDistrictWorkersList();
-                grid.getDataProvider().refreshAll();
                 dialog.close();
+                grid.getDataProvider().refreshAll();
             });
-            deleteButton_.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
+            dialogDeleteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
             deleteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY,
                     ButtonVariant.LUMO_ERROR);
             deleteButton.getStyle().set("margin-right", "auto");
-            dialog.getFooter().add(deleteButton);
+         //   dialog.getFooter().add(deleteButton);
 
             Button cancelButton = new Button("Отмена", (t) -> dialog.close());
             cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             dialog.getFooter().add(cancelButton);
-            dialog.getFooter().add(deleteButton_);
+            dialog.getFooter().add(dialogDeleteButton);
 
             return deleteButton;
         }).setWidth("120px").setFlexGrow(1);

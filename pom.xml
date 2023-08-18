@@ -117,6 +117,13 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.docker-java/docker-java -->
+        <dependency>
+            <groupId>com.github.docker-java</groupId>
+            <artifactId>docker-java</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -141,7 +148,7 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>prepare-frontend</goal>
+                            <goal>build-frontend</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -180,6 +187,13 @@
                                 <phase>compile</phase>
                             </execution>
                         </executions>
+                        <configuration>
+                            <!-- To always force an optimized production bundle build set this configuration to 'true' -->
+                            <!-- To possibly use the pre-compiled production bundle remove or set to 'false' -->
+                            <forceProductionBuild>true</forceProductionBuild>
+                            <!-- To have reproducible build by running 'npm ci' -->
+                            <ciBuild>true</ciBuild>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
