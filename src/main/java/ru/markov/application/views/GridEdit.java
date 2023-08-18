@@ -16,7 +16,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.tabs.TabVariant;
-import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
@@ -135,9 +134,7 @@ public class GridEdit extends Div {
                     techTab.add(grid);
                     System.out.println(3);
                 }
-                default -> {
-                    System.out.println("4");
-                }
+                default -> System.out.println("4");
             }
             grid.getDataProvider().refreshAll();
         });
@@ -395,11 +392,12 @@ public class GridEdit extends Div {
         });
 
         //скрываем доступ к полям и кнопкам для user
-        if (securityService.getAuthenticatedUser().getUsername().equals("user")){
+        if (!(securityService.getAuthenticatedUser().getUsername().equals("admin"))){
             addWorker.setEnabled(false);
             saveWorkers.setEnabled(false);
             editColumn.setVisible(false);
             categoryColumn.setVisible(false);
+            deleteColumn.setVisible(false);
         }
 
         //getThemeList().clear();
