@@ -63,19 +63,15 @@ public class WorkTime extends Div {
                 case 0 -> {
                     setItemToGrid(workTimeGrid, GridEdit.mountList);
                     mountTab.add(workTimeGrid);
-                    System.out.println("0");
                 }
                 case 1 -> {
                     setItemToGrid(workTimeGrid, GridEdit.builderList);
                     buildTab.add(workTimeGrid);
-                    System.out.println("1");
                 }
                 case 2 -> {
                     setItemToGrid(workTimeGrid, GridEdit.techList);
                     techTab.add(workTimeGrid);
-                    System.out.println("2");
                 }
-                default -> System.out.println("3");
             }
             workTimeGrid.getDataProvider().refreshAll();
         });

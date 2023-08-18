@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ru.markov.application.service.Serial;
 import ru.markov.application.service.TimeAdapter;
 
-import java.util.Locale;
 
 
 @SpringBootApplication
