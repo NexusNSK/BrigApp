@@ -7,20 +7,26 @@ import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.editor.Editor;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.tabs.Tab;
+import com.vaadin.flow.component.tabs.TabSheet;
+import com.vaadin.flow.component.tabs.TabVariant;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import jakarta.annotation.security.PermitAll;
+import ru.markov.application.security.SecurityService;
 import ru.markov.application.service.Serial;
 import ru.markov.application.data.ValidationName;
 import ru.markov.application.data.Worker;
 import ru.markov.application.service.TimeAdapter;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 @PermitAll
@@ -29,13 +35,52 @@ import java.util.Objects;
 @UIScope
 public class WorkTime extends Div {
     public DatePicker workTimeDatePicker = new DatePicker();
+    public void setItemToGrid(Grid grid , List list){
+        grid.setItems(list);
+    }
 
-    public WorkTime() {
+    public WorkTime(SecurityService securityService) {
         workTimeDatePicker.setValue(LocalDate.now());
-
         Grid<Worker> workTimeGrid = new Grid<>(Worker.class, false);
         workTimeGrid.setMinHeight("800px");
-        workTimeGrid.setItems(GridEdit.workerList);
+        workTimeGrid.setItems(GridEdit.mountList);
+
+        TabSheet gridSheet = new TabSheet();
+        Tab mountTab = new Tab(VaadinIcon.MAGIC.create(), new Span());
+        mountTab.add(workTimeGrid);
+        Tab buildTab = new Tab(VaadinIcon.SCREWDRIVER.create(),
+                new Span());
+        Tab techTab = new Tab(VaadinIcon.DESKTOP.create(), new Span());
+        for (Tab tab : new Tab[] { mountTab, buildTab, techTab }) {
+            tab.addThemeVariants(TabVariant.LUMO_ICON_ON_TOP);
+        }
+
+        gridSheet.add("Монтажники", new Div(mountTab));
+        gridSheet.add("Cборщики", new Div(buildTab));
+        gridSheet.add("Техники", new Div(techTab));
+        gridSheet.addSelectedChangeListener(event -> {
+            switch (gridSheet.getSelectedIndex()) {
+                case 0 -> {
+                    setItemToGrid(workTimeGrid, GridEdit.mountList);
+                    mountTab.add(workTimeGrid);
+                    System.out.println("0");
+                }
+                case 1 -> {
+                    setItemToGrid(workTimeGrid, GridEdit.builderList);
+                    buildTab.add(workTimeGrid);
+                    System.out.println("1");
+                }
+                case 2 -> {
+                    setItemToGrid(workTimeGrid, GridEdit.techList);
+                    techTab.add(workTimeGrid);
+                    System.out.println("2");
+                }
+                default -> System.out.println("3");
+            }
+            workTimeGrid.getDataProvider().refreshAll();
+        });
+
+
         Editor<Worker> editor = workTimeGrid.getEditor();
         Binder<Worker> binder = new Binder<>(Worker.class);
         editor.setBinder(binder);
@@ -123,7 +168,18 @@ public class WorkTime extends Div {
         editColumn.setEditorComponent(actions);
         editor.addCancelListener(e -> timeValid.setText(""));
 
-        add(workTimeDatePicker, save, workTimeGrid);
+        if (securityService.getAuthenticatedUser().getUsername().equals("volna")){
+            buildTab.setVisible(false);
+            techTab.setVisible(false);
+        } else if (securityService.getAuthenticatedUser().getUsername().equals("sborka")) {
+            mountTab.setVisible(false);
+            techTab.setVisible(false);
+        } else if (securityService.getAuthenticatedUser().getUsername().equals("tech")) {
+            mountTab.setVisible(false);
+            buildTab.setVisible(false);
+        }
+
+        add(workTimeDatePicker, save, gridSheet);
     }
 }
 
