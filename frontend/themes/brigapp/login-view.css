@@ -1,8 +1,7 @@
 .login-view {
-    background-image: url("/META-INF/resources/images/logo.jpg");
+    background-image: url("/images/logo.jpg");
     background-position: center;
     background-size: cover;
-    background-color: red;
     display: flex;
     height: 500px;
 }

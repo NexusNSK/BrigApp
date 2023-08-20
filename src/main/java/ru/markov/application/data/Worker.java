@@ -3,7 +3,6 @@ package ru.markov.application.data;
 import org.springframework.context.annotation.ComponentScan;
 import ru.markov.application.service.*;
 import ru.markov.application.views.Reports;
-
 import java.io.Serializable;
 import java.util.*;
 

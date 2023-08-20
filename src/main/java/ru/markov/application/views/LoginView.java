@@ -9,14 +9,12 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
-import java.util.Locale;
 
 
-@Route("login") 
-@PageTitle("Вход | BrigApp")
+@Route("login")
+@PageTitle("BrigApp א Вход")
 @AnonymousAllowed
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
@@ -27,15 +25,15 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
 		addClassName("login-view");
 		login.setForgotPasswordButtonVisible(false);
-		setSizeFull(); 
+		setSizeFull();
 		setAlignItems(Alignment.CENTER);
-		setJustifyContentMode(JustifyContentMode.START);
+		//setJustifyContentMode(JustifyContentMode.START);
 		login.setAction("login");
-		Image img = new Image("images/alef_logo_oil_1.png", "");
+		Image img = new Image("images/alef.png", "");
 		img.setWidth("300px");
 
 
-		add(new H1("BrigApp"),img, login);
+		add(new H1("BrigApp"), img, login);
 	}
 
 	@Override
@@ -44,7 +42,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
         .getQueryParameters()
         .getParameters()
         .containsKey("error")) {
-            login.setError(true);
+            login.setError(false);
         }
 	}
 }

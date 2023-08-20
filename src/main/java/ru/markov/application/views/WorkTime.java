@@ -16,6 +16,7 @@ import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.tabs.TabVariant;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import jakarta.annotation.security.PermitAll;
@@ -31,11 +32,11 @@ import java.util.Objects;
 
 @PermitAll
 @Route(value = "worktime", layout = MainLayout.class)
-
+@PageTitle("BrigApp א Учёт времени")
 @UIScope
 public class WorkTime extends Div {
     public DatePicker workTimeDatePicker = new DatePicker();
-    public void setItemToGrid(Grid grid , List list){
+    public void setItemToGrid(Grid<Worker> grid , List<Worker> list){
         grid.setItems(list);
     }
 

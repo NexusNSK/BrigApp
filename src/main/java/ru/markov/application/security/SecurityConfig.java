@@ -33,17 +33,17 @@ public class SecurityConfig extends VaadinWebSecurity {
         UserDetails mountBrig = User.builder()
                 .username("volna")
                 .password("{noop}volnabrig")
-                .roles("USER", "ADMIN")
+                .roles("USER")
                 .build();
         UserDetails buildBrig = User.builder()
                 .username("sborka")
                 .password("sborkabrig")
-                .roles("USER", "ADMIN")
+                .roles("USER")
                 .build();
         UserDetails techBrig = User.builder()
                 .username("tech")
                 .password("{noop}techbrig")
-                .roles("USER", "ADMIN")
+                .roles("USER")
                 .build();
         return new InMemoryUserDetailsManager(admin, mountBrig, buildBrig, techBrig);
     }

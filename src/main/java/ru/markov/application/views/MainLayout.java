@@ -8,8 +8,8 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.dom.ThemeList;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.spring.annotation.UIScope;
 import com.vaadin.flow.theme.lumo.Lumo;
 import jakarta.annotation.security.PermitAll;
 import ru.markov.application.security.SecurityService;
@@ -24,8 +24,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 
 @Route("")
 @PermitAll
-@UIScope
-
+@PageTitle("BrigApp א Домашняя страница")
 public class MainLayout extends AppLayout {
     private final SecurityService securityService;
     public MainLayout(SecurityService securityService) {
@@ -33,6 +32,7 @@ public class MainLayout extends AppLayout {
         createHeader();
         addClassName("main-layout-app-layout-1");
     }
+
     private void createHeader() {
         H1 logo = new H1("BrigApp");
         Tabs tabs = getTabs();
@@ -83,7 +83,7 @@ public class MainLayout extends AppLayout {
                 .set("padding", "var(--lumo-space-xs)");
 
         routerLink.add(icon, new Span(viewName));
-        routerLink.setTabIndex(-1);
+        routerLink.setTabIndex(0);
         return new Tab(routerLink);
     }
 
