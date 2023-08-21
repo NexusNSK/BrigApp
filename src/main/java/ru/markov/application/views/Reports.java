@@ -66,17 +66,14 @@ public class Reports extends Div {
                     throw new RuntimeException(e);
                 }
             } catch (NullPointerException npe) {
-                Notification error = Notification.show("Необходимо выбрать отчётный месяц!");
+                Notification error = Notification.show("Необходимо выбрать бригаду и отчётный месяц!");
                 error.addThemeVariants(NotificationVariant.LUMO_ERROR);
                 error.setPosition(Notification.Position.MIDDLE);
             }
             String fileName = "График " + selectReport.getValue() + " за " + selectMonth.getValue() + " " + datePickerForRepo.getValue().getYear() + ".xlsx";
             Anchor download = new Anchor(new StreamResource(fileName, () -> {
-                try {
-                    return new FileInputStream("Template.xlsx");
-                } catch (FileNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
+                try { return new FileInputStream("Template.xlsx"); }
+                catch (FileNotFoundException e) { throw new RuntimeException(e); }
             }), "");
             download.getElement().setAttribute("download", true);
             download.add(new Button(new Icon(VaadinIcon.DOWNLOAD_ALT)));

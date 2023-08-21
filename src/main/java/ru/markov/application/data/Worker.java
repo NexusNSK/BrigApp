@@ -15,6 +15,7 @@ public class Worker implements Serializable {
     private District district;
     private Post post;
     private Category category;
+    private ConveyLine line;
     private final HashMap<Integer, HashMap<Integer, WorkerStatus>> workerStatusMassive = new HashMap<>(12);
     private final HashMap<Integer, HashMap<Integer, Integer>> workTimeMassive = new HashMap<>(12);
     //             <номер месяца : мапа <номер дня : часы>>

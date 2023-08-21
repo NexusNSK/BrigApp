@@ -4,6 +4,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.editor.Editor;
 import com.vaadin.flow.component.html.Div;
@@ -45,6 +46,7 @@ public class WorkTime extends Div {
         Grid<Worker> workTimeGrid = new Grid<>(Worker.class, false);
         workTimeGrid.setMinHeight("800px");
         workTimeGrid.setItems(GridEdit.mountList);
+
 
         TabSheet gridSheet = new TabSheet();
         Tab mountTab = new Tab(VaadinIcon.MAGIC.create(), new Span());
@@ -95,9 +97,11 @@ public class WorkTime extends Div {
         });
 
         Grid.Column<Worker> fullNameColumn = workTimeGrid
-                .addColumn(Worker::getFullName)
+                .addColumn(Worker::getFullName).setTextAlign(ColumnTextAlign.START)
                 .setHeader("ФИО сотрудника")
                 .setAutoWidth(false)
+                .setResizable(true)
+                .setSortable(true)
                 .setWidth("400px")
                 .setFlexGrow(0);
         fullNameColumn.setFooter("Сотрудников: " + GridEdit.workerList.size());
@@ -106,6 +110,7 @@ public class WorkTime extends Div {
                 .addColumn(Worker::getWorkTime)
                 .setHeader("Время")
                 .setAutoWidth(false)
+                .setResizable(true)
                 .setWidth("200px")
                 .setFlexGrow(1);
 
@@ -113,6 +118,7 @@ public class WorkTime extends Div {
                 addColumn(Worker::getWorkerStatusMassive)
                 .setHeader("Статус")
                 .setAutoWidth(false)
+                .setResizable(true)
                 .setWidth("200px")
                 .setFlexGrow(1);
 
@@ -125,6 +131,7 @@ public class WorkTime extends Div {
             });
             return editButton;
         }).setWidth("120px").setFlexGrow(1);
+
 
         IntegerField setTimeEdit = new IntegerField();
         ValidationName timeValid = new ValidationName();
