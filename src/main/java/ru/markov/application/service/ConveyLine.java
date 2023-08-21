@@ -5,5 +5,6 @@ public enum ConveyLine {
     LINE_2,
     LINE_3,
     LINE_4,
-    TECH
+    TECH,
+    COMMON
 }

@@ -6,6 +6,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.editor.Editor;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
@@ -54,8 +55,8 @@ import java.util.List;
 @UIScope
 
 public class GridEdit extends Div {
+    Anchor lineEdit = new Anchor("http://localhost:8080/line_editor", new RouterLink(LineEditor.class));
     //в этой коллекции хранятся сохраняемые сотрудники, используется для загрузки данных при старте приложения
-    Anchor lineEdit = new Anchor("/lineEditor",new RouterLink(LineEditor.class));
     public static List<Worker> workerList = new ArrayList<>();
     public static List<Worker> mountList = new ArrayList<>();
     public static List<Worker> builderList = new ArrayList<>();
@@ -76,17 +77,22 @@ public class GridEdit extends Div {
     }
     public void setItemToGrid(Grid <Worker> grid ,List <Worker> list){
         grid.setItems(list);
+
     }
 
 
     public GridEdit(SecurityService securityService) {
+        lineEdit.add(new Button("Распределение по линиям",new Icon(VaadinIcon.LINES_LIST)));
         Grid<Worker> grid = new Grid<>(Worker.class, false); //основная таблица с сотрудниками
         grid.setItems(workerList);
+        grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         initSplitDistrictWorkersList();
         TextField firstNameT = new TextField("Имя"); //поле ввода имени при добавлении сотрудника
         TextField lastNameT = new TextField("Фамилия"); //поле ввода фамилии при добавлении сотрудника
         TextField fatherNameT = new TextField("Отчество"); //поле ввода отчества при добавлении сотрудника
         ComboBox<String> districtBox = new ComboBox<>("Участок"); //поле выбора участка (волна, сборка, техники)
+        ComboBox<String> lineBox = new ComboBox<>("Линия");
+        lineBox.setItems("1", "2", "3", "4", "Не распределено");
         districtBox.setAllowCustomValue(true);
         districtBox.setItems(
                 "Бригада монтажники",
@@ -103,20 +109,12 @@ public class GridEdit extends Div {
                 "Сборщик",
                 "Техник"
         );
-        ComboBox<String> categoryBox = new ComboBox<>("Категория");//поле выборп категории (1, 2, 3. испытательный срок)
-        categoryBox.setAllowCustomValue(true);
-        categoryBox.setItems(
-                "Бригадир",
-                "1", "2", "3",
-                "Испытательный срок"
-        );
 
         TabSheet gridSheet = new TabSheet();
-        Tab profile = new Tab(VaadinIcon.USER.create(), new Span());
+        Tab profile = new Tab();
         profile.add(grid);
-        Tab mountTab = new Tab(VaadinIcon.MAGIC.create(), new Span());
-        Tab buildTab = new Tab(VaadinIcon.SCREWDRIVER.create(),
-                new Span());
+        Tab mountTab = new Tab();
+        Tab buildTab = new Tab();
         Tab techTab = new Tab(VaadinIcon.DESKTOP.create(), new Span());
         for (Tab tab : new Tab[] { profile, mountTab, buildTab, techTab }) {
             tab.addThemeVariants(TabVariant.LUMO_ICON_ON_TOP);
@@ -165,15 +163,13 @@ public class GridEdit extends Div {
                     && !(lastNameT.getValue().equals(""))
                     && !(fatherNameT.getValue().equals(""))
                     && !(districtBox.getValue() == null)
-                    && !(postBox.getValue() == null)
-                    && !(categoryBox.getValue() == null)) {
+                    && !(postBox.getValue() == null)) {
                 workerList.add(new Worker(
                         lastNameT.getValue(),
                         firstNameT.getValue(),
                         fatherNameT.getValue(),
                         districtBox.getValue(),
-                        postBox.getValue(),
-                        categoryBox.getValue()));
+                        postBox.getValue()));
                 Notification notification = Notification
                         .show("Сотрудник был добавлен!");
                 notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
@@ -183,7 +179,6 @@ public class GridEdit extends Div {
                 fatherNameT.clear();
                 districtBox.clear();
                 postBox.clear();
-                categoryBox.clear();
                 initSplitDistrictWorkersList(); //
                 grid.getDataProvider().refreshAll();
             } else {
@@ -217,7 +212,7 @@ public class GridEdit extends Div {
 
         //объявление формы, отвечающей за добавление сотрудников и сохранения бригады
         FormLayout formToAddWorkers = new FormLayout();
-        formToAddWorkers.add(lastNameT, firstNameT, fatherNameT, districtBox, postBox, categoryBox, addWorker, saveWorkers, instructArea);
+        formToAddWorkers.add(lastNameT, firstNameT, fatherNameT, lineBox, districtBox, postBox, addWorker, saveWorkers, instructArea);
         formToAddWorkers.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("600px", 3),
                 new FormLayout.ResponsiveStep("1500px", 6));
@@ -272,12 +267,7 @@ public class GridEdit extends Div {
                 .setAutoWidth(true)
                 .setResizable(true)
                 .setFlexGrow(1);
-        Grid.Column<Worker> categoryColumn = grid
-                .addColumn(Worker::getCategory)
-                .setHeader("Категория")
-                .setAutoWidth(true)
-                .setResizable(true)
-                .setFlexGrow(1);
+
 
         //столбец для изменения сотрудников в таблице. После изменения нужно глобально сохранить
         // состояние бригады через кнопку "Сохранить состав бригады" (saveButton)
@@ -372,12 +362,6 @@ public class GridEdit extends Div {
                 "1", "2", "3",
                 "Испытательный срок"
         );
-        categoryEditCol.setWidthFull();
-        binder.forField(categoryEditCol)
-                .asRequired("Категория не может быть пустой")
-                .withStatusLabel(categoryValid)
-                .bind(Worker::getCategory, Worker::setCategory);
-        categoryColumn.setEditorComponent(categoryEditCol);
 
         //при изменении имени
         TextField firstNameField = new TextField();
@@ -420,7 +404,6 @@ public class GridEdit extends Div {
             addWorker.setEnabled(false);
             saveWorkers.setEnabled(false);
             editColumn.setVisible(false);
-            categoryColumn.setVisible(false);
             deleteColumn.setVisible(false);
         }
 
