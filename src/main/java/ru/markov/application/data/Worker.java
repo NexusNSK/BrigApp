@@ -14,7 +14,29 @@ public class Worker implements Serializable {
     private String patronymic; //отчество
     private District district;
     private Post post;
-    private Category category;
+
+
+    public String getLine() {
+        return switch (line){
+
+            case LINE_1 -> "1";
+            case LINE_2 -> "2";
+            case LINE_3 -> "3";
+            case LINE_4 -> "4";
+            default -> "Не распределено";
+        };
+    }
+
+    public void setLine(String line) {
+        switch (line){
+            case "Не распределено" -> this.line = ConveyLine.COMMON;
+            case "1" -> this.line = ConveyLine.LINE_1;
+            case "2" -> this.line = ConveyLine.LINE_2;
+            case "3" -> this.line = ConveyLine.LINE_3;
+            case "4" -> this.line = ConveyLine.LINE_4;
+        };
+    }
+
     private ConveyLine line;
     private final HashMap<Integer, HashMap<Integer, WorkerStatus>> workerStatusMassive = new HashMap<>(12);
     private final HashMap<Integer, HashMap<Integer, Integer>> workTimeMassive = new HashMap<>(12);
@@ -53,26 +75,7 @@ public class Worker implements Serializable {
     public int getWorkTimeToPOI(int day){
         return workTimeMassive.get(Reports.month).get(day);
     }
-    public void setCategory(String category) {
-        switch (category) {
-            case ("1") -> this.category = Category.ONE;
-            case ("2") -> this.category = Category.TWO;
-            case ("3") -> this.category = Category.THREE;
-            case ("Бригадир") -> this.category = Category.BRIG;
-            case ("Испытательный срок") -> this.category = Category.IC;
-        }
-    }
-    public String getCategory() {
-        String cat = "";
-        switch (category) {
-            case ONE -> cat = "1";
-            case TWO -> cat = "2";
-            case THREE -> cat = "3";
-            case BRIG -> cat = "Бригадир";
-            case IC -> cat = "Испытательный срок";
-        }
-        return cat;
-    }
+
     public String getPost() {
         String ps = "";
         switch (post) {
@@ -112,13 +115,12 @@ public class Worker implements Serializable {
             case ("Бригада техники") -> this.district = District.TECH;
         }
     }
-    public Worker(String lastName, String firstName, String patronymic, String district, String post, String category) {
+    public Worker(String lastName, String firstName, String patronymic, String district, String post) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.patronymic = patronymic;
         setDistrict(district);
         setPost(post);
-        setCategory(category);
         initWorkTimeMap();
         initWorkerStatusMap();
     }
