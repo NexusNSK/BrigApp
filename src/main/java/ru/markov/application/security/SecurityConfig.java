@@ -30,21 +30,51 @@ public class SecurityConfig extends VaadinWebSecurity {
                 .password("{noop}brigadmin")
                 .roles("USER", "ADMIN")
                 .build();
-        UserDetails mountBrig = User.builder()
-                .username("volna")
-                .password("{noop}volnabrig")
+        UserDetails mountBrig1 = User.builder()
+                .username("volna1")
+                .password("{noop}volna1")
                 .roles("USER")
                 .build();
-        UserDetails buildBrig = User.builder()
-                .username("sborka")
-                .password("sborkabrig")
+        UserDetails mountBrig2 = User.builder()
+                .username("volna2")
+                .password("{noop}volna2")
+                .roles("USER")
+                .build();
+        UserDetails mountBrig3 = User.builder()
+                .username("volna3")
+                .password("{noop}volna3")
+                .roles("USER")
+                .build();
+        UserDetails mountBrig4 = User.builder()
+                .username("volna4")
+                .password("{noop}volna4")
+                .roles("USER")
+                .build();
+        UserDetails buildBrig1 = User.builder()
+                .username("sborka1")
+                .password("sborka1")
+                .roles("USER")
+                .build();
+        UserDetails buildBrig2 = User.builder()
+                .username("sborka2")
+                .password("sborka2")
+                .roles("USER")
+                .build();
+        UserDetails buildBrig3 = User.builder()
+                .username("sborka3")
+                .password("sborka3")
+                .roles("USER")
+                .build();
+        UserDetails buildBrig4 = User.builder()
+                .username("sborka4")
+                .password("sborka4")
                 .roles("USER")
                 .build();
         UserDetails techBrig = User.builder()
                 .username("tech")
-                .password("{noop}techbrig")
+                .password("{noop}tech")
                 .roles("USER")
                 .build();
-        return new InMemoryUserDetailsManager(admin, mountBrig, buildBrig, techBrig);
+        return new InMemoryUserDetailsManager(admin, mountBrig1, mountBrig2 ,mountBrig3 ,mountBrig4 , buildBrig1, buildBrig2, buildBrig3, buildBrig4, techBrig);
     }
 }

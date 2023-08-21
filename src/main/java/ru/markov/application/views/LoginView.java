@@ -2,7 +2,6 @@ package ru.markov.application.views;
 
 
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -22,18 +21,19 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
 
 	public LoginView(){
-
-		addClassName("login-view");
+		getStyle().set("background-color", "var(--lumo-contrast-0pct)")
+				.set("display", "flex").set("justify-content", "center")
+				.set("padding", "var(--lumo-space-l)");
 		login.setForgotPasswordButtonVisible(false);
 		setSizeFull();
 		setAlignItems(Alignment.CENTER);
-		//setJustifyContentMode(JustifyContentMode.START);
+		setJustifyContentMode(JustifyContentMode.START);
 		login.setAction("login");
-		Image img = new Image("images/alef.png", "");
-		img.setWidth("300px");
+		login.getElement().setAttribute("no-autofocus", "");
 
 
-		add(new H1("BrigApp"), img, login);
+
+		add(new H1("BrigApp"), login);
 	}
 
 	@Override

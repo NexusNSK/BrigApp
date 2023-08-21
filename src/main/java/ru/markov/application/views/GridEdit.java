@@ -4,8 +4,10 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.editor.Editor;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -21,6 +23,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.spring.annotation.UIScope;
 import jakarta.annotation.security.RolesAllowed;
 import ru.markov.application.data.*;
@@ -52,6 +55,7 @@ import java.util.List;
 
 public class GridEdit extends Div {
     //в этой коллекции хранятся сохраняемые сотрудники, используется для загрузки данных при старте приложения
+    Anchor lineEdit = new Anchor("/lineEditor",new RouterLink(LineEditor.class));
     public static List<Worker> workerList = new ArrayList<>();
     public static List<Worker> mountList = new ArrayList<>();
     public static List<Worker> builderList = new ArrayList<>();
@@ -235,33 +239,44 @@ public class GridEdit extends Div {
         //добавление столбцов
         Grid.Column<Worker> lastNameColumn = grid
                 .addColumn(Worker::getLastName)
+                .setTextAlign(ColumnTextAlign.START)
                 .setHeader("Фамилия")
+                .setSortable(true)
                 .setAutoWidth(true)
+                .setResizable(true)
                 .setFlexGrow(1);
         Grid.Column<Worker> firstNameColumn = grid
                 .addColumn(Worker::getFirstName)
+                .setTextAlign(ColumnTextAlign.START)
                 .setHeader("Имя")
                 .setAutoWidth(true)
+                .setResizable(true)
                 .setFlexGrow(1);
         Grid.Column<Worker> fatherNameColumn = grid
                 .addColumn(Worker::getPatronymic)
+                .setTextAlign(ColumnTextAlign.START)
                 .setHeader("Отчество")
                 .setAutoWidth(true)
+                .setResizable(true)
                 .setFlexGrow(1);
         Grid.Column<Worker> districtColumn = grid
                 .addColumn(Worker::getDistrictToString)
                 .setHeader("Участок")
+                .setSortable(true)
                 .setAutoWidth(true)
+                .setResizable(true)
                 .setFlexGrow(1);
         Grid.Column<Worker> postColumn = grid
                 .addColumn(Worker::getPost)
                 .setHeader("Должность")
                 .setAutoWidth(true)
+                .setResizable(true)
                 .setFlexGrow(1);
         Grid.Column<Worker> categoryColumn = grid
                 .addColumn(Worker::getCategory)
                 .setHeader("Категория")
                 .setAutoWidth(true)
+                .setResizable(true)
                 .setFlexGrow(1);
 
         //столбец для изменения сотрудников в таблице. После изменения нужно глобально сохранить
@@ -410,7 +425,7 @@ public class GridEdit extends Div {
         }
 
         //getThemeList().clear();
-        add(topHead, gridSheet, firstNameValid, lastNameValid, fatherNameValid);
+        add(lineEdit, topHead, gridSheet, firstNameValid, lastNameValid, fatherNameValid);
     }
 
 }
