@@ -145,16 +145,18 @@ public class WorkTime extends Div {
     }
 
     public void setItemforGrid(String sc, Grid <Worker> grid){
-        if (sc.equals("admin")) grid.setItems(GridEdit.workerList);
-        else if (sc.equals("volna1")) grid.setItems(GridEdit.mountMap.get(ConveyLine.LINE_1));
-        else if (sc.equals("volna2")) grid.setItems(GridEdit.mountMap.get(ConveyLine.LINE_2));
-        else if (sc.equals("volna3")) grid.setItems(GridEdit.mountMap.get(ConveyLine.LINE_3));
-        else if (sc.equals("volna4")) grid.setItems(GridEdit.mountMap.get(ConveyLine.LINE_4));
-        else if (sc.equals("sborka1")) grid.setItems(GridEdit.builderMap.get(ConveyLine.LINE_1));
-        else if (sc.equals("sborka2")) grid.setItems(GridEdit.builderMap.get(ConveyLine.LINE_2));
-        else if (sc.equals("sborka3")) grid.setItems(GridEdit.builderMap.get(ConveyLine.LINE_3));
-        else if (sc.equals("sborka4")) grid.setItems(GridEdit.builderMap.get(ConveyLine.LINE_4));
-        else if (sc.equals("tech")) grid.setItems(GridEdit.techList);
+        switch (sc) {
+            case "admin" -> grid.setItems(GridEdit.workerList);
+            case "volna1" -> grid.setItems(GridEdit.mountMap.get(ConveyLine.LINE_1));
+            case "volna2" -> grid.setItems(GridEdit.mountMap.get(ConveyLine.LINE_2));
+            case "volna3" -> grid.setItems(GridEdit.mountMap.get(ConveyLine.LINE_3));
+            case "volna4" -> grid.setItems(GridEdit.mountMap.get(ConveyLine.LINE_4));
+            case "sborka1" -> grid.setItems(GridEdit.builderMap.get(ConveyLine.LINE_1));
+            case "sborka2" -> grid.setItems(GridEdit.builderMap.get(ConveyLine.LINE_2));
+            case "sborka3" -> grid.setItems(GridEdit.builderMap.get(ConveyLine.LINE_3));
+            case "sborka4" -> grid.setItems(GridEdit.builderMap.get(ConveyLine.LINE_4));
+            case "tech" -> grid.setItems(GridEdit.techList);
+        }
 
     }
 }
