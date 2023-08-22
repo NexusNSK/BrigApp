@@ -1,20 +1,14 @@
 package ru.markov.application.views;
 
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Focusable;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.editor.Editor;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.tabs.Tab;
-import com.vaadin.flow.component.tabs.TabSheet;
-import com.vaadin.flow.component.tabs.TabVariant;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.PageTitle;
@@ -27,21 +21,19 @@ import ru.markov.application.service.Serial;
 import ru.markov.application.data.ValidationName;
 import ru.markov.application.data.Worker;
 import ru.markov.application.service.TimeAdapter;
-
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
+
 
 @PermitAll
 @Route(value = "worktime", layout = MainLayout.class)
 @PageTitle("BrigApp א Учёт времени")
 @UIScope
-public class WorkTime extends Div {
+public class WorkTime extends VerticalLayout {
     public DatePicker workTimeDatePicker = new DatePicker();
 
     public WorkTime(SecurityService securityService) {
         String username = securityService.getAuthenticatedUser().getUsername();
-        System.out.println(username);
+
         workTimeDatePicker.setValue(LocalDate.now());
         Grid<Worker> workTimeGrid = new Grid<>(Worker.class, false);
         workTimeGrid.setMinHeight("800px");
@@ -52,7 +44,7 @@ public class WorkTime extends Div {
         Editor<Worker> editor = workTimeGrid.getEditor();
         Binder<Worker> binder = new Binder<>(Worker.class);
         editor.setBinder(binder);
-        editor.setBuffered(true);
+        editor.setBuffered(false);
 
         workTimeDatePicker.addClientValidatedEventListener(clientValidatedEvent ->{
             TimeAdapter.workTimeDatePicker.setValue(workTimeDatePicker.getValue());
@@ -73,7 +65,18 @@ public class WorkTime extends Div {
                 .setSortable(true)
                 .setWidth("400px")
                 .setFlexGrow(0);
-        fullNameColumn.setFooter("Сотрудников: " + GridEdit.workerList.size());
+        switch (username){
+            case "admin" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.workerList.size());
+            case "volna1" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.mountMap.get(ConveyLine.LINE_1).size());
+            case "volna2" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.mountMap.get(ConveyLine.LINE_2).size());
+            case "volna3" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.mountMap.get(ConveyLine.LINE_3).size());
+            case "volna4" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.mountMap.get(ConveyLine.LINE_4).size());
+            case "sborka1" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.builderMap.get(ConveyLine.LINE_1).size());
+            case "sborka2" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.builderMap.get(ConveyLine.LINE_2).size());
+            case "sborka3" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.builderMap.get(ConveyLine.LINE_3).size());
+            case "sborka4" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.builderMap.get(ConveyLine.LINE_4).size());
+            case "tech" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.techList.size());
+        }
 
         Grid.Column<Worker> workTimeColumn = workTimeGrid
                 .addColumn(Worker::getWorkTime)
@@ -91,16 +94,6 @@ public class WorkTime extends Div {
                 .setWidth("200px")
                 .setFlexGrow(1);
 
-        Grid.Column<Worker> editColumn = workTimeGrid.addComponentColumn(worker -> {
-            Button editButton = new Button("Изменить", new Icon(VaadinIcon.EDIT));
-            editButton.addClickListener(e -> {
-                if (editor.isOpen())
-                    editor.cancel();
-                workTimeGrid.getEditor().editItem(worker);
-            });
-            return editButton;
-        }).setWidth("120px").setFlexGrow(1);
-
 
         IntegerField setTimeEdit = new IntegerField();
         ValidationName timeValid = new ValidationName();
@@ -108,6 +101,7 @@ public class WorkTime extends Div {
         setTimeEdit.setStepButtonsVisible(true);
         setTimeEdit.setMin(0);
         setTimeEdit.setMax(12);
+        addCloseHandler(setTimeEdit, editor);
         binder.forField(setTimeEdit)
                 .asRequired()
                 .withStatusLabel(timeValid)
@@ -121,32 +115,39 @@ public class WorkTime extends Div {
                 "Больничный",
                 "Отпуск",
                 "Не определено");
-        setTimeEdit.setEnabled(!Objects.equals(statusEditColumn.getValue(), "Работает"));
         statusEditColumn.setWidthFull();
+        addCloseHandler(statusEditColumn, editor);
         binder.forField(statusEditColumn)
                 .asRequired()
                 .withStatusLabel(statusValid)
                 .bind(Worker::getWorkerStatusMassive, Worker::setWorkerStatusMassive);
         workerStatusColumn.setEditorComponent(statusEditColumn);
 
+        statusEditColumn.addCustomValueSetListener(event -> setTimeEdit.setEnabled(statusEditColumn.getValue().equals("Работает (нестандартное время)")));
+        workTimeGrid.addItemDoubleClickListener(e -> {
+            editor.editItem(e.getItem());
 
-        Button saveButton = new Button("Сохранить", e -> editor.save());
-        Button cancelButton = new Button(VaadinIcon.CLOSE.create(),
-                e -> editor.cancel());
-        cancelButton.addThemeVariants(ButtonVariant.LUMO_ICON,
-                ButtonVariant.LUMO_ERROR);
-        HorizontalLayout actions = new HorizontalLayout(saveButton,
-                cancelButton);
-        actions.setPadding(false);
-        editColumn.setEditorComponent(actions);
-        editor.addCancelListener(e -> timeValid.setText(""));
+            Component editorComponent = e.getColumn().getEditorComponent();
+            if (editorComponent instanceof Focusable) {
+                ((Focusable<?>) editorComponent).focus();
+            }
+            workTimeGrid.getDataProvider().refreshAll();
+        });
 
+
+
+        editor.addCancelListener(e -> {
+            timeValid.setText("");
+            workTimeGrid.getDataProvider().refreshAll();});
+
+        getThemeList().clear();
+        getThemeList().add("spacing-s");
         add(workTimeDatePicker, save, workTimeGrid);
     }
 
     public void setItemforGrid(String sc, Grid <Worker> grid){
         switch (sc) {
-            case "admin" -> grid.setItems(GridEdit.workerList);
+            case "admin", "owner" -> grid.setItems(GridEdit.workerList);
             case "volna1" -> grid.setItems(GridEdit.mountMap.get(ConveyLine.LINE_1));
             case "volna2" -> grid.setItems(GridEdit.mountMap.get(ConveyLine.LINE_2));
             case "volna3" -> grid.setItems(GridEdit.mountMap.get(ConveyLine.LINE_3));
@@ -158,6 +159,11 @@ public class WorkTime extends Div {
             case "tech" -> grid.setItems(GridEdit.techList);
         }
 
+    }
+    private static void addCloseHandler(Component textField, Editor<Worker> editor) {
+        textField.getElement()
+                .addEventListener("keydown", e -> editor.cancel())
+                .setFilter("event.code === 'Escape'");
     }
 }
 

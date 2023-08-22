@@ -1,5 +1,7 @@
 package ru.markov.application.views;
 
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Focusable;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -9,15 +11,11 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.editor.Editor;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.tabs.Tab;
-import com.vaadin.flow.component.tabs.TabSheet;
-import com.vaadin.flow.component.tabs.TabVariant;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
@@ -26,15 +24,16 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import jakarta.annotation.security.RolesAllowed;
 import ru.markov.application.data.*;
-import ru.markov.application.security.SecurityService;
 import ru.markov.application.service.ConveyLine;
 import ru.markov.application.service.Serial;
 import com.vaadin.flow.component.dialog.Dialog;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/** GridEdit.java класс реализует интерфейс веб страницы для управления составом бригад.
+/**
+ * GridEdit.java класс реализует интерфейс веб страницы для управления составом бригад.
  * Состав хранится в публичном статичной коллекции GridEdit.workerList, что позволяет обратиться
  * к ней из любой точки программы для взаимодействия с данными.
  * GridEdit.workerList является источником данных для публичных статических коллеций
@@ -51,7 +50,7 @@ import java.util.List;
 
 @Route(value = "grid_edit", layout = MainLayout.class)
 @PageTitle("BrigApp א Редактор бригады")
-@RolesAllowed("ADMIN")
+@RolesAllowed({"ADMIN", "OWNER"})
 @UIScope
 
 public class GridEdit extends Div {
@@ -63,38 +62,23 @@ public class GridEdit extends Div {
     public static List<Worker> techList = new ArrayList<>();
 
 
-    public void initSplitDistrictWorkersList(){
+    public static void initSplitDistrictWorkersList() {
         mountMap.clear();
         builderMap.clear();
         techList.clear();
         startInitSplitMap(mountMap);
         startInitSplitMap(builderMap);
         for (Worker w : workerList) {
-            switch (w.getDistrictToString()){
-                case "Бригада монтажники" -> {
-                    switch (w.getLine()){
-                        case "1": mountMap.get(ConveyLine.LINE_1).add(w);
-                        case "2": mountMap.get(ConveyLine.LINE_2).add(w);
-                        case "3": mountMap.get(ConveyLine.LINE_3).add(w);
-                        case "4": mountMap.get(ConveyLine.LINE_4).add(w);
-                        default: mountMap.get(ConveyLine.COMMON).add(w);
-                    }
-                }
-                case "Бригада сборщики" -> {
-                    switch (w.getLine()){
-                        case "1": builderMap.get(ConveyLine.LINE_1).add(w);
-                        case "2": builderMap.get(ConveyLine.LINE_2).add(w);
-                        case "3": builderMap.get(ConveyLine.LINE_3).add(w);
-                        case "4": builderMap.get(ConveyLine.LINE_4).add(w);
-                        default: builderMap.get(ConveyLine.COMMON).add(w);
-                    }
-                }
-                case "Бригада техники" -> techList.add(w);
+            switch (w.getDistrict()) {
+                case MOUNTING -> mountMap.get(w.getLine()).add(w);
+                case BUILDING -> builderMap.get(w.getLine()).add(w);
+                case TECH -> techList.add(w);
             }
         }
     }
 
-    private void startInitSplitMap(HashMap<ConveyLine, List<Worker>> map) {
+
+    private static void startInitSplitMap(HashMap<ConveyLine, List<Worker>> map) {
         map.put(ConveyLine.COMMON, new ArrayList<>());
         map.put(ConveyLine.LINE_1, new ArrayList<>());
         map.put(ConveyLine.LINE_2, new ArrayList<>());
@@ -103,13 +87,11 @@ public class GridEdit extends Div {
     }
 
 
-
-    public GridEdit(SecurityService securityService) {
-
+    public GridEdit() {
+        if (workerList.isEmpty()) FillMap.fillArray();
         Grid<Worker> grid = new Grid<>(Worker.class, false); //основная таблица с сотрудниками
         grid.setItems(workerList);
         grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
-        initSplitDistrictWorkersList();
         TextField firstNameT = new TextField("Имя"); //поле ввода имени при добавлении сотрудника
         TextField lastNameT = new TextField("Фамилия"); //поле ввода фамилии при добавлении сотрудника
         TextField fatherNameT = new TextField("Отчество"); //поле ввода отчества при добавлении сотрудника
@@ -136,7 +118,6 @@ public class GridEdit extends Div {
         grid.setMinHeight("1000px");
 
         Editor<Worker> editor = grid.getEditor();
-
 
 
         //блок добавления сотрудника во временный список без глобального сохранения
@@ -240,8 +221,9 @@ public class GridEdit extends Div {
                 .setResizable(true)
                 .setFlexGrow(1);
         Grid.Column<Worker> lineColumn = grid
-                .addColumn(Worker::getLine)
+                .addColumn(Worker::getLineToString)
                 .setHeader("Линия")
+                .setSortable(true)
                 .setAutoWidth(true)
                 .setResizable(true)
                 .setFlexGrow(1);
@@ -262,15 +244,15 @@ public class GridEdit extends Div {
 
         //столбец для изменения сотрудников в таблице. После изменения нужно глобально сохранить
         // состояние бригады через кнопку "Сохранить состав бригады" (saveButton)
-        Grid.Column<Worker> editColumn = grid.addComponentColumn(worker -> {
-            Button editButton = new Button("Изменить", new Icon(VaadinIcon.EDIT));
-            editButton.addClickListener(e -> {
-                if (editor.isOpen())
-                    editor.cancel();
-                grid.getEditor().editItem(worker);
-            });
-            return editButton;
-        }).setWidth("120px").setFlexGrow(1);
+//        Grid.Column<Worker> editColumn = grid.addComponentColumn(worker -> {
+//            Button editButton = new Button("Изменить", new Icon(VaadinIcon.EDIT));
+//            editButton.addClickListener(e -> {
+//                if (editor.isOpen())
+//                    editor.cancel();
+//                grid.getEditor().editItem(worker);
+//            });
+//            return editButton;
+//        }).setWidth("120px").setFlexGrow(1);
 
         Grid.Column<Worker> deleteColumn = grid.addComponentColumn(worker -> {
             Dialog dialog = new Dialog();
@@ -280,7 +262,7 @@ public class GridEdit extends Div {
                     String.format("Удалить сотрудника \"%s\"?", worker.getFullName()));
             dialog.add("Вы уверены, что хотите удалить сотрудника из списка бригады?");
 
-            Button dialogDeleteButton = new Button("Удалить", new Icon(VaadinIcon.TRASH), (t) ->{
+            Button dialogDeleteButton = new Button("Удалить", new Icon(VaadinIcon.TRASH), (t) -> {
                 workerList.remove(worker);
                 initSplitDistrictWorkersList();
                 dialog.close();
@@ -290,7 +272,7 @@ public class GridEdit extends Div {
             deleteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY,
                     ButtonVariant.LUMO_ERROR);
             deleteButton.getStyle().set("margin-right", "auto");
-         //   dialog.getFooter().add(deleteButton);
+            //   dialog.getFooter().add(deleteButton);
 
             Button cancelButton = new Button("Отмена", (t) -> dialog.close());
             cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -299,16 +281,16 @@ public class GridEdit extends Div {
 
             return deleteButton;
         }).setWidth("120px").setFlexGrow(1);
-        deleteColumn.setVisible(true);
 
         //объявление привязки изменяемого поля к объявляемому
         Binder<Worker> binder = new Binder<>(Worker.class);
         editor.setBinder(binder);
-        editor.setBuffered(true);
+       // editor.setBuffered(true);
 
         //при изменении фамилии
         TextField lastNameField = new TextField();
         lastNameField.setWidthFull();
+        addCloseHandler(lastNameField, editor);
         binder.forField(lastNameField)
                 .asRequired("Фамилия не может быть пустой")
                 .withStatusLabel(lastNameValid)
@@ -319,9 +301,10 @@ public class GridEdit extends Div {
         ComboBox<String> lineEditCol = new ComboBox<>();
         lineEditCol.setItems("Не распределено", "1", "2", "3", "4");
         lineEditCol.setWidthFull();
+        addCloseHandler(lineEditCol, editor);
         binder.forField(lineEditCol)
                 .withStatusLabel(lineValid)
-                .bind(Worker::getLine, Worker::setLine);
+                .bind(Worker::getLineToString, Worker::setLine);
         lineColumn.setEditorComponent(lineEditCol);
 
         //при изменении участка
@@ -332,6 +315,7 @@ public class GridEdit extends Div {
                 "Бригада техники"
         );
         districtEditCol.setWidthFull();
+        addCloseHandler(districtEditCol, editor);
         binder.forField(districtEditCol)
                 .asRequired("Участок не может быть пустым")
                 .withStatusLabel(districtValid)
@@ -349,23 +333,18 @@ public class GridEdit extends Div {
                 "Техник"
         );
         postEditCol.setWidthFull();
+        addCloseHandler(postEditCol, editor);
         binder.forField(postEditCol)
                 .asRequired("Должность не может быть пустой")
                 .withStatusLabel(postValid)
                 .bind(Worker::getPost, Worker::setPost);
         postColumn.setEditorComponent(postEditCol);
 
-        //при изменении категории
-        ComboBox<String> categoryEditCol = new ComboBox<>();
-        categoryEditCol.setItems(
-                "Бригадир",
-                "1", "2", "3",
-                "Испытательный срок"
-        );
 
         //при изменении имени
         TextField firstNameField = new TextField();
         firstNameField.setWidthFull();
+        addCloseHandler(firstNameField, editor);
         binder.forField(firstNameField).asRequired("Имя не может быть пустым")
                 .withStatusLabel(firstNameValid)
                 .bind(Worker::getFirstName, Worker::setFirstName);
@@ -374,6 +353,7 @@ public class GridEdit extends Div {
         //при изменении отчества
         TextField fatherNameField = new TextField();
         fatherNameField.setWidthFull();
+        addCloseHandler(fatherNameField, editor);
         binder.forField(fatherNameField).asRequired("Отчество не может быть пустым")
                 .withStatusLabel(fatherNameValid)
                 .bind(Worker::getPatronymic, Worker::setPatronymic);
@@ -382,33 +362,39 @@ public class GridEdit extends Div {
 
         //объявление и конфигурация кнопки дял сохранения (или отмены) изменений в данных сотрудника
         Button saveButton = new Button("Сохранить", e -> {
-                editor.save();
-        initSplitDistrictWorkersList();}
+            editor.save();
+            initSplitDistrictWorkersList();
+        }
         );
+        grid.addItemDoubleClickListener(e -> {
+            editor.editItem(e.getItem());
+            Component editorComponent = e.getColumn().getEditorComponent();
+            if (editorComponent instanceof Focusable) {
+                ((Focusable<?>) editorComponent).focus();
+            }
+        });
         Button cancelButton = new Button(VaadinIcon.CLOSE.create(),
                 e -> editor.cancel());
+
         cancelButton.addThemeVariants(ButtonVariant.LUMO_ICON,
                 ButtonVariant.LUMO_ERROR);
         HorizontalLayout actions = new HorizontalLayout(saveButton,
                 cancelButton);
         actions.setPadding(false);
-        editColumn.setEditorComponent(actions);
+ //       editColumn.setEditorComponent(actions);
         editor.addCancelListener(e -> {
             firstNameValid.setText("");
             lastNameValid.setText("");
             fatherNameValid.setText("");
+            grid.getDataProvider().refreshAll();
         });
 
-        //скрываем доступ к полям и кнопкам для user
-        if (!(securityService.getAuthenticatedUser().getUsername().equals("admin"))){
-            addWorker.setEnabled(false);
-            saveWorkers.setEnabled(false);
-            editColumn.setVisible(false);
-            deleteColumn.setVisible(false);
-        }
-
-        //getThemeList().clear();
         add(topHead, grid, firstNameValid, lastNameValid, fatherNameValid);
+    }
+    private static void addCloseHandler(Component textField,
+                                        Editor<Worker> editor) {
+        textField.getElement().addEventListener("keydown", e -> editor.cancel())
+                .setFilter("event.code === 'Escape'");
     }
 
 }

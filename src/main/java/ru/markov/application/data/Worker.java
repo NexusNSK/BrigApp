@@ -11,14 +11,10 @@ import java.util.*;
 public class Worker implements Serializable {
     private String firstName;
     private String lastName;
-    private String patronymic; //отчество
+    private String patronymic;
     private District district;
     private Post post;
     private ConveyLine line;
-
-
-
-
 
     private final HashMap<Integer, HashMap<Integer, WorkerStatus>> workerStatusMassive = new HashMap<>(12);
     private final HashMap<Integer, HashMap<Integer, Integer>> workTimeMassive = new HashMap<>(12);
@@ -57,7 +53,6 @@ public class Worker implements Serializable {
     public int getWorkTimeToPOI(int day){
         return workTimeMassive.get(Reports.month).get(day);
     }
-
     public String getPost() {
         String ps = "";
         switch (post) {
@@ -173,7 +168,7 @@ public class Worker implements Serializable {
             case NOTHING -> "Не определено";
         };
     }
-    public String getLine() {
+    public String getLineToString() {
         return switch (line){
             case LINE_1 -> "1";
             case LINE_2 -> "2";
@@ -182,15 +177,18 @@ public class Worker implements Serializable {
             default -> "Не распределено";
         };
     }
+    public ConveyLine getLine(){
+        return this.line;
+    }
 
     public void setLine(String line) {
         switch (line){
-            case "Не распределено" -> this.line = ConveyLine.COMMON;
+            default -> this.line = ConveyLine.COMMON;
             case "1" -> this.line = ConveyLine.LINE_1;
             case "2" -> this.line = ConveyLine.LINE_2;
             case "3" -> this.line = ConveyLine.LINE_3;
             case "4" -> this.line = ConveyLine.LINE_4;
-        };
+        }
     }
 }
 
