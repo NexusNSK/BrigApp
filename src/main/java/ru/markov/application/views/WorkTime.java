@@ -22,6 +22,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import jakarta.annotation.security.PermitAll;
 import ru.markov.application.security.SecurityService;
+import ru.markov.application.service.ConveyLine;
 import ru.markov.application.service.Serial;
 import ru.markov.application.data.ValidationName;
 import ru.markov.application.data.Worker;
@@ -37,47 +38,15 @@ import java.util.Objects;
 @UIScope
 public class WorkTime extends Div {
     public DatePicker workTimeDatePicker = new DatePicker();
-    public void setItemToGrid(Grid<Worker> grid , List<Worker> list){
-        grid.setItems(list);
-    }
 
     public WorkTime(SecurityService securityService) {
+        String username = securityService.getAuthenticatedUser().getUsername();
+        System.out.println(username);
         workTimeDatePicker.setValue(LocalDate.now());
         Grid<Worker> workTimeGrid = new Grid<>(Worker.class, false);
         workTimeGrid.setMinHeight("800px");
-        workTimeGrid.setItems(GridEdit.mountList);
+        setItemforGrid(username, workTimeGrid);
 
-
-        TabSheet gridSheet = new TabSheet();
-        Tab mountTab = new Tab(VaadinIcon.MAGIC.create(), new Span());
-        mountTab.add(workTimeGrid);
-        Tab buildTab = new Tab(VaadinIcon.SCREWDRIVER.create(),
-                new Span());
-        Tab techTab = new Tab(VaadinIcon.DESKTOP.create(), new Span());
-        for (Tab tab : new Tab[] { mountTab, buildTab, techTab }) {
-            tab.addThemeVariants(TabVariant.LUMO_ICON_ON_TOP);
-        }
-
-        gridSheet.add("Монтажники", new Div(mountTab));
-        gridSheet.add("Cборщики", new Div(buildTab));
-        gridSheet.add("Техники", new Div(techTab));
-        gridSheet.addSelectedChangeListener(event -> {
-            switch (gridSheet.getSelectedIndex()) {
-                case 0 -> {
-                    setItemToGrid(workTimeGrid, GridEdit.mountList);
-                    mountTab.add(workTimeGrid);
-                }
-                case 1 -> {
-                    setItemToGrid(workTimeGrid, GridEdit.builderList);
-                    buildTab.add(workTimeGrid);
-                }
-                case 2 -> {
-                    setItemToGrid(workTimeGrid, GridEdit.techList);
-                    techTab.add(workTimeGrid);
-                }
-            }
-            workTimeGrid.getDataProvider().refreshAll();
-        });
 
 
         Editor<Worker> editor = workTimeGrid.getEditor();
@@ -172,18 +141,21 @@ public class WorkTime extends Div {
         editColumn.setEditorComponent(actions);
         editor.addCancelListener(e -> timeValid.setText(""));
 
-        if (securityService.getAuthenticatedUser().getUsername().equals("volna")){
-            buildTab.setVisible(false);
-            techTab.setVisible(false);
-        } else if (securityService.getAuthenticatedUser().getUsername().equals("sborka")) {
-            mountTab.setVisible(false);
-            techTab.setVisible(false);
-        } else if (securityService.getAuthenticatedUser().getUsername().equals("tech")) {
-            mountTab.setVisible(false);
-            buildTab.setVisible(false);
-        }
+        add(workTimeDatePicker, save, workTimeGrid);
+    }
 
-        add(workTimeDatePicker, save, gridSheet);
+    public void setItemforGrid(String sc, Grid <Worker> grid){
+        if (sc.equals("admin")) grid.setItems(GridEdit.workerList);
+        else if (sc.equals("volna1")) grid.setItems(GridEdit.mountMap.get(ConveyLine.LINE_1));
+        else if (sc.equals("volna2")) grid.setItems(GridEdit.mountMap.get(ConveyLine.LINE_2));
+        else if (sc.equals("volna3")) grid.setItems(GridEdit.mountMap.get(ConveyLine.LINE_3));
+        else if (sc.equals("volna4")) grid.setItems(GridEdit.mountMap.get(ConveyLine.LINE_4));
+        else if (sc.equals("sborka1")) grid.setItems(GridEdit.builderMap.get(ConveyLine.LINE_1));
+        else if (sc.equals("sborka2")) grid.setItems(GridEdit.builderMap.get(ConveyLine.LINE_2));
+        else if (sc.equals("sborka3")) grid.setItems(GridEdit.builderMap.get(ConveyLine.LINE_3));
+        else if (sc.equals("sborka4")) grid.setItems(GridEdit.builderMap.get(ConveyLine.LINE_4));
+        else if (sc.equals("tech")) grid.setItems(GridEdit.techList);
+
     }
 }
 

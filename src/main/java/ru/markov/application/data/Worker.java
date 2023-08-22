@@ -14,30 +14,12 @@ public class Worker implements Serializable {
     private String patronymic; //отчество
     private District district;
     private Post post;
-
-
-    public String getLine() {
-        return switch (line){
-
-            case LINE_1 -> "1";
-            case LINE_2 -> "2";
-            case LINE_3 -> "3";
-            case LINE_4 -> "4";
-            default -> "Не распределено";
-        };
-    }
-
-    public void setLine(String line) {
-        switch (line){
-            case "Не распределено" -> this.line = ConveyLine.COMMON;
-            case "1" -> this.line = ConveyLine.LINE_1;
-            case "2" -> this.line = ConveyLine.LINE_2;
-            case "3" -> this.line = ConveyLine.LINE_3;
-            case "4" -> this.line = ConveyLine.LINE_4;
-        };
-    }
-
     private ConveyLine line;
+
+
+
+
+
     private final HashMap<Integer, HashMap<Integer, WorkerStatus>> workerStatusMassive = new HashMap<>(12);
     private final HashMap<Integer, HashMap<Integer, Integer>> workTimeMassive = new HashMap<>(12);
     //             <номер месяца : мапа <номер дня : часы>>
@@ -115,10 +97,11 @@ public class Worker implements Serializable {
             case ("Бригада техники") -> this.district = District.TECH;
         }
     }
-    public Worker(String lastName, String firstName, String patronymic, String district, String post) {
+    public Worker(String lastName, String firstName, String patronymic, String line ,String district, String post) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.patronymic = patronymic;
+        setLine(line);
         setDistrict(district);
         setPost(post);
         initWorkTimeMap();
@@ -188,6 +171,25 @@ public class Worker implements Serializable {
             case HOSPITAL -> "Больничный";
             case HOLIDAY -> "Отпуск";
             case NOTHING -> "Не определено";
+        };
+    }
+    public String getLine() {
+        return switch (line){
+            case LINE_1 -> "1";
+            case LINE_2 -> "2";
+            case LINE_3 -> "3";
+            case LINE_4 -> "4";
+            default -> "Не распределено";
+        };
+    }
+
+    public void setLine(String line) {
+        switch (line){
+            case "Не распределено" -> this.line = ConveyLine.COMMON;
+            case "1" -> this.line = ConveyLine.LINE_1;
+            case "2" -> this.line = ConveyLine.LINE_2;
+            case "3" -> this.line = ConveyLine.LINE_3;
+            case "4" -> this.line = ConveyLine.LINE_4;
         };
     }
 }
