@@ -8,7 +8,6 @@ import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.editor.Editor;
-import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -24,14 +23,15 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.spring.annotation.UIScope;
 import jakarta.annotation.security.RolesAllowed;
 import ru.markov.application.data.*;
 import ru.markov.application.security.SecurityService;
+import ru.markov.application.service.ConveyLine;
 import ru.markov.application.service.Serial;
 import com.vaadin.flow.component.dialog.Dialog;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /** GridEdit.java класс реализует интерфейс веб страницы для управления составом бригад.
@@ -55,34 +55,57 @@ import java.util.List;
 @UIScope
 
 public class GridEdit extends Div {
-    Anchor lineEdit = new Anchor("http://localhost:8080/line_editor", new RouterLink(LineEditor.class));
+
     //в этой коллекции хранятся сохраняемые сотрудники, используется для загрузки данных при старте приложения
     public static List<Worker> workerList = new ArrayList<>();
-    public static List<Worker> mountList = new ArrayList<>();
-    public static List<Worker> builderList = new ArrayList<>();
+    public static HashMap<ConveyLine, List<Worker>> mountMap = new HashMap<>();
+    public static HashMap<ConveyLine, List<Worker>> builderMap = new HashMap<>();
     public static List<Worker> techList = new ArrayList<>();
 
-    public void initSplitDistrictWorkersList(){
-        mountList.clear();
-        builderList.clear();
-        techList.clear();
-        for (Worker w : workerList) {
-            switch (w.getDistrict()){
-                case MOUNTING -> mountList.add(w);
-                case BUILDING -> builderList.add(w);
-                case TECH -> techList.add(w);
-            }
 
+    public void initSplitDistrictWorkersList(){
+        mountMap.clear();
+        builderMap.clear();
+        techList.clear();
+        startInitSplitMap(mountMap);
+        startInitSplitMap(builderMap);
+        for (Worker w : workerList) {
+            switch (w.getDistrictToString()){
+                case "Бригада монтажники" -> {
+                    switch (w.getLine()){
+                        case "1": mountMap.get(ConveyLine.LINE_1).add(w);
+                        case "2": mountMap.get(ConveyLine.LINE_2).add(w);
+                        case "3": mountMap.get(ConveyLine.LINE_3).add(w);
+                        case "4": mountMap.get(ConveyLine.LINE_4).add(w);
+                        default: mountMap.get(ConveyLine.COMMON).add(w);
+                    }
+                }
+                case "Бригада сборщики" -> {
+                    switch (w.getLine()){
+                        case "1": builderMap.get(ConveyLine.LINE_1).add(w);
+                        case "2": builderMap.get(ConveyLine.LINE_2).add(w);
+                        case "3": builderMap.get(ConveyLine.LINE_3).add(w);
+                        case "4": builderMap.get(ConveyLine.LINE_4).add(w);
+                        default: builderMap.get(ConveyLine.COMMON).add(w);
+                    }
+                }
+                case "Бригада техники" -> techList.add(w);
+            }
         }
     }
-    public void setItemToGrid(Grid <Worker> grid ,List <Worker> list){
-        grid.setItems(list);
 
+    private void startInitSplitMap(HashMap<ConveyLine, List<Worker>> map) {
+        map.put(ConveyLine.COMMON, new ArrayList<>());
+        map.put(ConveyLine.LINE_1, new ArrayList<>());
+        map.put(ConveyLine.LINE_2, new ArrayList<>());
+        map.put(ConveyLine.LINE_3, new ArrayList<>());
+        map.put(ConveyLine.LINE_4, new ArrayList<>());
     }
+
 
 
     public GridEdit(SecurityService securityService) {
-        lineEdit.add(new Button("Распределение по линиям",new Icon(VaadinIcon.LINES_LIST)));
+
         Grid<Worker> grid = new Grid<>(Worker.class, false); //основная таблица с сотрудниками
         grid.setItems(workerList);
         grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
@@ -110,45 +133,6 @@ public class GridEdit extends Div {
                 "Техник"
         );
 
-        TabSheet gridSheet = new TabSheet();
-        Tab profile = new Tab();
-        profile.add(grid);
-        Tab mountTab = new Tab();
-        Tab buildTab = new Tab();
-        Tab techTab = new Tab(VaadinIcon.DESKTOP.create(), new Span());
-        for (Tab tab : new Tab[] { profile, mountTab, buildTab, techTab }) {
-            tab.addThemeVariants(TabVariant.LUMO_ICON_ON_TOP);
-        }
-
-
-        gridSheet.add("Все", new Div(profile));
-        gridSheet.add("Монтажники", new Div(mountTab));
-        gridSheet.add("Cборщики", new Div(buildTab));
-        gridSheet.add("Техники", new Div(techTab));
-
-
-        gridSheet.addSelectedChangeListener(event -> {
-            switch (gridSheet.getSelectedIndex()) {
-                case 0 -> {
-                    setItemToGrid(grid, workerList);
-                    profile.add(grid);
-                }
-                case 1 -> {
-                    setItemToGrid(grid, mountList);
-                    mountTab.add(grid);
-                }
-                case 2 -> {
-                    setItemToGrid(grid, builderList);
-                    buildTab.add(grid);
-                }
-                case 3 -> {
-                    setItemToGrid(grid, techList);
-                    techTab.add(grid);
-                }
-                default -> System.out.println("4");
-            }
-            grid.getDataProvider().refreshAll();
-        });
         grid.setMinHeight("1000px");
 
         Editor<Worker> editor = grid.getEditor();
@@ -168,6 +152,7 @@ public class GridEdit extends Div {
                         lastNameT.getValue(),
                         firstNameT.getValue(),
                         fatherNameT.getValue(),
+                        lineBox.getValue(),
                         districtBox.getValue(),
                         postBox.getValue()));
                 Notification notification = Notification
@@ -229,7 +214,7 @@ public class GridEdit extends Div {
         ValidationName fatherNameValid = new ValidationName();
         ValidationName districtValid = new ValidationName();
         ValidationName postValid = new ValidationName();
-        ValidationName categoryValid = new ValidationName();
+        ValidationName lineValid = new ValidationName();
 
         //добавление столбцов
         Grid.Column<Worker> lastNameColumn = grid
@@ -251,6 +236,12 @@ public class GridEdit extends Div {
                 .addColumn(Worker::getPatronymic)
                 .setTextAlign(ColumnTextAlign.START)
                 .setHeader("Отчество")
+                .setAutoWidth(true)
+                .setResizable(true)
+                .setFlexGrow(1);
+        Grid.Column<Worker> lineColumn = grid
+                .addColumn(Worker::getLine)
+                .setHeader("Линия")
                 .setAutoWidth(true)
                 .setResizable(true)
                 .setFlexGrow(1);
@@ -323,6 +314,15 @@ public class GridEdit extends Div {
                 .withStatusLabel(lastNameValid)
                 .bind(Worker::getLastName, Worker::setLastName);
         lastNameColumn.setEditorComponent(lastNameField);
+
+        //при изменении линии
+        ComboBox<String> lineEditCol = new ComboBox<>();
+        lineEditCol.setItems("Не распределено", "1", "2", "3", "4");
+        lineEditCol.setWidthFull();
+        binder.forField(lineEditCol)
+                .withStatusLabel(lineValid)
+                .bind(Worker::getLine, Worker::setLine);
+        lineColumn.setEditorComponent(lineEditCol);
 
         //при изменении участка
         ComboBox<String> districtEditCol = new ComboBox<>();
@@ -408,7 +408,7 @@ public class GridEdit extends Div {
         }
 
         //getThemeList().clear();
-        add(lineEdit, topHead, gridSheet, firstNameValid, lastNameValid, fatherNameValid);
+        add(topHead, grid, firstNameValid, lastNameValid, fatherNameValid);
     }
 
 }

@@ -52,22 +52,22 @@ public class SecurityConfig extends VaadinWebSecurity {
                 .build();
         UserDetails buildBrig1 = User.builder()
                 .username("sborka1")
-                .password("sborka1")
+                .password("{noop}sborka1")
                 .roles("USER")
                 .build();
         UserDetails buildBrig2 = User.builder()
                 .username("sborka2")
-                .password("sborka2")
+                .password("{noop}sborka2")
                 .roles("USER")
                 .build();
         UserDetails buildBrig3 = User.builder()
                 .username("sborka3")
-                .password("sborka3")
+                .password("{noop}sborka3")
                 .roles("USER")
                 .build();
         UserDetails buildBrig4 = User.builder()
                 .username("sborka4")
-                .password("sborka4")
+                .password("{noop}sborka4")
                 .roles("USER")
                 .build();
         UserDetails techBrig = User.builder()
