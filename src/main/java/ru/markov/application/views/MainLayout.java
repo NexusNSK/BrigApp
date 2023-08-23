@@ -61,8 +61,7 @@ public class MainLayout extends AppLayout {
         header.expand(logo);
         header.setWidthFull();
         header.addClassNames(
-            LumoUtility.Padding.Vertical.NONE,
-            LumoUtility.Padding.Horizontal.MEDIUM);
+                "app-header");
 
         addToNavbar(header);
     }

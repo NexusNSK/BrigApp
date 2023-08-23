@@ -176,7 +176,7 @@ public class GridEdit extends Div {
         instructArea.setPrefixComponent(VaadinIcon.QUESTION_CIRCLE.create());
         instructArea.setValue("ВСЕ поля должны быть заполнены. Поля с выпадающими списками " +
                 "должны иметь значения, которые предлагает программа. После заполнения нажать \"Добавить сотрудника\". Проверить, что сотрудник" +
-                "есть в списке и нажать \"Сохранить изменения\"");
+                " есть в списке и нажать \"Сохранить изменения\"");
 
         //объявление формы, отвечающей за добавление сотрудников и сохранения бригады
         FormLayout formToAddWorkers = new FormLayout();
@@ -244,18 +244,6 @@ public class GridEdit extends Div {
                 .setResizable(true)
                 .setFlexGrow(1);
 
-
-        //столбец для изменения сотрудников в таблице. После изменения нужно глобально сохранить
-        // состояние бригады через кнопку "Сохранить состав бригады" (saveButton)
-//        Grid.Column<Worker> editColumn = grid.addComponentColumn(worker -> {
-//            Button editButton = new Button("Изменить", new Icon(VaadinIcon.EDIT));
-//            editButton.addClickListener(e -> {
-//                if (editor.isOpen())
-//                    editor.cancel();
-//                grid.getEditor().editItem(worker);
-//            });
-//            return editButton;
-//        }).setWidth("120px").setFlexGrow(1);
 
         Grid.Column<Worker> deleteColumn = grid.addComponentColumn(worker -> {
             Dialog dialog = new Dialog();
