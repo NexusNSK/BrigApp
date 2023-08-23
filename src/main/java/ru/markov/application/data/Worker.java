@@ -46,6 +46,7 @@ public class Worker implements Serializable {
         workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), hours);
     }
+
     public int getWorkTime() {
         return workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth());

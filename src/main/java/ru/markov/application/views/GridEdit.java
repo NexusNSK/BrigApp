@@ -63,6 +63,7 @@ public class GridEdit extends Div {
 
 
     public static void initSplitDistrictWorkersList() {
+        System.out.println("начинаю обновлять");
         mountMap.clear();
         builderMap.clear();
         techList.clear();
@@ -75,6 +76,7 @@ public class GridEdit extends Div {
                 case TECH -> techList.add(w);
             }
         }
+        System.out.println("обновил");
     }
 
 
@@ -184,6 +186,7 @@ public class GridEdit extends Div {
                 new FormLayout.ResponsiveStep("1500px", 6));
         formToAddWorkers.setColspan(instructArea, 4);
         formToAddWorkers.setMaxWidth("1700px");
+
         add(formToAddWorkers);
 
         HorizontalLayout topHead = new HorizontalLayout();
@@ -387,7 +390,10 @@ public class GridEdit extends Div {
             lastNameValid.setText("");
             fatherNameValid.setText("");
             grid.getDataProvider().refreshAll();
+
         });
+        grid.getElement().getThemeList().clear();
+        grid.getElement().getThemeList().add("spacing-m");
 
         add(topHead, grid, firstNameValid, lastNameValid, fatherNameValid);
     }

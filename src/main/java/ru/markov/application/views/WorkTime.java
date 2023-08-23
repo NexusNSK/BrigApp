@@ -32,6 +32,7 @@ public class WorkTime extends VerticalLayout {
     public DatePicker workTimeDatePicker = new DatePicker();
 
     public WorkTime(SecurityService securityService) {
+        GridEdit.initSplitDistrictWorkersList();
         String username = securityService.getAuthenticatedUser().getUsername();
 
         workTimeDatePicker.setValue(LocalDate.now());
@@ -53,6 +54,7 @@ public class WorkTime extends VerticalLayout {
         Button save = new Button("Записать время");
         save.addClickListener(buttonClickEvent -> {
             Serial.save();
+            GridEdit.initSplitDistrictWorkersList();
             System.out.println("Рабочее время было записано");
             workTimeGrid.getDataProvider().refreshAll();
         });
@@ -123,7 +125,7 @@ public class WorkTime extends VerticalLayout {
                 .bind(Worker::getWorkerStatusMassive, Worker::setWorkerStatusMassive);
         workerStatusColumn.setEditorComponent(statusEditColumn);
 
-        statusEditColumn.addCustomValueSetListener(event -> setTimeEdit.setEnabled(statusEditColumn.getValue().equals("Работает (нестандартное время)")));
+
         workTimeGrid.addItemDoubleClickListener(e -> {
             editor.editItem(e.getItem());
 
@@ -131,6 +133,10 @@ public class WorkTime extends VerticalLayout {
             if (editorComponent instanceof Focusable) {
                 ((Focusable<?>) editorComponent).focus();
             }
+            GridEdit.initSplitDistrictWorkersList();
+            System.out.println("update");
+            Serial.save();
+            System.out.println("save");
             workTimeGrid.getDataProvider().refreshAll();
         });
 

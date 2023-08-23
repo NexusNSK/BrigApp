@@ -14,6 +14,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.spring.annotation.UIScope;
 import jakarta.annotation.security.PermitAll;
+import ru.markov.application.poi.MountRepoPOI;
 import ru.markov.application.poi.Template;
 import java.io.*;
 import java.time.LocalDate;
@@ -58,7 +59,7 @@ public class Reports extends Div {
                     case "Декабрь" -> month = 12;
                 }
                 try {
-                    new Template(selectReport.getValue());
+                    new MountRepoPOI();
                     Notification n = Notification.show("Отчёт был создан. \nТеперь можно скачать файл!");
                     n.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
                     n.setPosition(Notification.Position.MIDDLE);
