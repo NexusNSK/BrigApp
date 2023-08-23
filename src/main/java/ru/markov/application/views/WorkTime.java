@@ -37,7 +37,9 @@ public class WorkTime extends VerticalLayout {
 
         workTimeDatePicker.setValue(LocalDate.now());
         Grid<Worker> workTimeGrid = new Grid<>(Worker.class, false);
-        workTimeGrid.setMinHeight("800px");
+        workTimeGrid.setMinHeight("500px");
+        workTimeGrid.setWidth("800px");
+        workTimeGrid.setHeight("800px");
         setItemforGrid(username, workTimeGrid);
 
 
@@ -85,7 +87,7 @@ public class WorkTime extends VerticalLayout {
                 .setHeader("Время")
                 .setAutoWidth(false)
                 .setResizable(true)
-                .setWidth("200px")
+                .setWidth("100px")
                 .setFlexGrow(1);
 
         Grid.Column<Worker> workerStatusColumn = workTimeGrid.
@@ -147,7 +149,7 @@ public class WorkTime extends VerticalLayout {
             workTimeGrid.getDataProvider().refreshAll();});
 
         getThemeList().clear();
-        getThemeList().add("spacing-s");
+        getThemeList().add("spacing-l");
         add(workTimeDatePicker, save, workTimeGrid);
     }
 

@@ -15,7 +15,6 @@ import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.spring.annotation.UIScope;
 import jakarta.annotation.security.PermitAll;
 import ru.markov.application.poi.MountRepoPOI;
-import ru.markov.application.poi.Template;
 import java.io.*;
 import java.time.LocalDate;
 
@@ -30,6 +29,7 @@ public class Reports extends Div {
     public static int month;
 
     public Reports() {
+        GridEdit.initSplitDistrictWorkersList();
         ComboBox<String> selectReport = new ComboBox<>("Выбор бригады для отчета");
         ComboBox<String> selectMonth = new ComboBox<>("Месяц");
 
