@@ -18,3 +18,15 @@ vaadin-button.main-layout-button-1::part(label) {
 }
 
 vaadin-vertical-layout { gap:var(--lumo-space-xs); }
+
+vaadin-grid::part(high-rating) {
+  background-color: var(--lumo-success-color-10pct);
+}
+
+vaadin-grid::part(low-rating) {
+  background-color: var(--lumo-error-color-10pct);
+}
+
+vaadin-grid::part(font-weight-bold) {
+  font-weight: bold;
+}

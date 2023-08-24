@@ -9,6 +9,7 @@ import java.util.*;
 @ComponentScan
 
 public class Worker implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String firstName;
     private String lastName;
     private String patronymic;
