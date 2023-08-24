@@ -7,7 +7,10 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.editor.Editor;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.data.binder.Binder;
@@ -38,7 +41,7 @@ public class WorkTime extends VerticalLayout {
         workTimeDatePicker.setValue(LocalDate.now());
         Grid<Worker> workTimeGrid = new Grid<>(Worker.class, false);
         workTimeGrid.setMinHeight("500px");
-        workTimeGrid.setWidth("800px");
+        workTimeGrid.setWidth("1200px");
         workTimeGrid.setHeight("800px");
         setItemforGrid(username, workTimeGrid);
 
@@ -98,6 +101,13 @@ public class WorkTime extends VerticalLayout {
                 .setWidth("200px")
                 .setFlexGrow(1);
 
+        Grid.Column<Worker> ballast = workTimeGrid.addComponentColumn(worker -> {
+            Button button = new Button("", new Icon(VaadinIcon.AUTOMATION));
+            button.setEnabled(false);
+            return button;
+        });
+
+
 
         IntegerField setTimeEdit = new IntegerField();
         ValidationName timeValid = new ValidationName();
@@ -128,6 +138,7 @@ public class WorkTime extends VerticalLayout {
         workerStatusColumn.setEditorComponent(statusEditColumn);
 
 
+
         workTimeGrid.addItemDoubleClickListener(e -> {
             editor.editItem(e.getItem());
 
@@ -139,6 +150,13 @@ public class WorkTime extends VerticalLayout {
             System.out.println("update");
             Serial.save();
             System.out.println("save");
+            workTimeGrid.setPartNameGenerator(worker -> {
+                if (worker.getWorkerStatusMassive().equals("Отпуск"))
+                    return "high-rating";
+                if (worker.getWorkerStatusMassive().equals("Больничный"))
+                    return "low-rating";
+                return null;
+            });
             workTimeGrid.getDataProvider().refreshAll();
         });
 
@@ -148,8 +166,7 @@ public class WorkTime extends VerticalLayout {
             timeValid.setText("");
             workTimeGrid.getDataProvider().refreshAll();});
 
-        getThemeList().clear();
-        getThemeList().add("spacing-l");
+        workTimeGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         add(workTimeDatePicker, save, workTimeGrid);
     }
 

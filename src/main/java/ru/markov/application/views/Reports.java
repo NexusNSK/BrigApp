@@ -14,7 +14,11 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.spring.annotation.UIScope;
 import jakarta.annotation.security.PermitAll;
+import ru.markov.application.poi.AllBrigRepoPOI;
+import ru.markov.application.poi.BuildRepoPOI;
 import ru.markov.application.poi.MountRepoPOI;
+import ru.markov.application.poi.TechRepoPOI;
+
 import java.io.*;
 import java.time.LocalDate;
 
@@ -37,7 +41,7 @@ public class Reports extends Div {
         selectReport.setAllowCustomValue(true);
 
         selectReport.setMinWidth("220px");
-        selectReport.setItems("Бригада техники", "Бригада сборщики", "Бригада монтажники", "Все бригады", "Пустой шаблон");
+        selectReport.setItems("Бригада техники", "Бригада сборщики", "Бригада монтажники", "Все бригады");
 
         Button currentReport = new Button("Сформировать отчет за выбранный месяц", new Icon(VaadinIcon.FILE_TEXT));
         currentReport.setIconAfterText(true);
@@ -58,33 +62,47 @@ public class Reports extends Div {
                     case "Ноябрь" -> month = 11;
                     case "Декабрь" -> month = 12;
                 }
-                try {
-                    new MountRepoPOI();
-                    Notification n = Notification.show("Отчёт был создан. \nТеперь можно скачать файл!");
-                    n.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-                    n.setPosition(Notification.Position.MIDDLE);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                switch (selectReport.getValue()) {
+                    case "Бригада монтажники" -> {
+                        new MountRepoPOI();
+                    }
+                    case "Бригада сборщики" -> {
+                        new BuildRepoPOI();
+                    }
+                    case "Бригада техники" -> {
+                        new TechRepoPOI();
+                    }
+                    case "Все бригады" -> {
+                        new AllBrigRepoPOI();
+                    }
                 }
-            } catch (NullPointerException npe) {
-                Notification error = Notification.show("Необходимо выбрать бригаду и отчётный месяц!");
-                error.addThemeVariants(NotificationVariant.LUMO_ERROR);
-                error.setPosition(Notification.Position.MIDDLE);
+                Notification n = Notification.show("Отчёт был создан. \nТеперь можно скачать файл!");
+                n.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                n.setPosition(Notification.Position.MIDDLE);
+        } catch(NullPointerException npe){
+            Notification error = Notification.show("Необходимо выбрать бригаду и отчётный месяц!");
+            error.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            error.setPosition(Notification.Position.MIDDLE);
+        } catch (IOException e) {
+                throw new RuntimeException(e);
             }
             String fileName = "График " + selectReport.getValue() + " за " + selectMonth.getValue() + " " + datePickerForRepo.getValue().getYear() + ".xlsx";
-            Anchor download = new Anchor(new StreamResource(fileName, () -> {
-                try { return new FileInputStream("Template.xlsx"); }
-                catch (FileNotFoundException e) { throw new RuntimeException(e); }
-            }), "");
-            download.getElement().setAttribute("download", true);
-            download.add(new Button(new Icon(VaadinIcon.DOWNLOAD_ALT)));
-            add(download);
-        });
+        Anchor download = new Anchor(new StreamResource(fileName, () -> {
+            try {
+                return new FileInputStream("Template.xlsx");
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }), "");
+        download.getElement().setAttribute("download", true);
+        download.add(new Button(new Icon(VaadinIcon.DOWNLOAD_ALT)));
+        add(download);
+    });
 
 
-        add(selectReport, selectMonth, currentReport);
+    add(selectReport, selectMonth, currentReport);
 
-    }
+}
 
 
 
