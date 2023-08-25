@@ -14,10 +14,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.spring.annotation.UIScope;
 import jakarta.annotation.security.PermitAll;
-import ru.markov.application.poi.AllBrigRepoPOI;
-import ru.markov.application.poi.BuildRepoPOI;
-import ru.markov.application.poi.MountRepoPOI;
-import ru.markov.application.poi.TechRepoPOI;
+import ru.markov.application.poi.*;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -83,6 +80,7 @@ public class Reports extends Div {
             Notification error = Notification.show("Необходимо выбрать бригаду и отчётный месяц!");
             error.addThemeVariants(NotificationVariant.LUMO_ERROR);
             error.setPosition(Notification.Position.MIDDLE);
+            npe.printStackTrace();
         } catch (IOException e) {
                 throw new RuntimeException(e);
             }

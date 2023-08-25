@@ -188,6 +188,7 @@ public class AllBrigRepoPOI {
             sheet.createRow(i);
             for (int j = 0; j <= 33; j++) {
                 sheet.getRow(i).createCell(j);
+                sheet.getRow(i).getCell(j).setCellValue("1");
                 setAroundBorder(sheet.getRow(i).getCell(j));
             }
         }
@@ -210,6 +211,13 @@ public class AllBrigRepoPOI {
         };
     }
     public void createHeaderGrid(Sheet sheet) {
+        for (int i = 0; i < 4; i++) {
+            sheet.createRow(i);
+            for (int j = 0; j <= 33; j++) {
+                sheet.getRow(i).createCell(j);
+                setAroundBorder(sheet.getRow(i).getCell(j));
+            }
+        }
         CellStyle cs = allBook.createCellStyle();
         Font bold = allBook.createFont();
         bold.setBold(true);
@@ -241,9 +249,8 @@ public class AllBrigRepoPOI {
     }
     public void reportList() {
         Sheet allBrigSheet = allBook.createSheet("Все бригады");
-        initSheet(allBrigSheet);
         createHeaderGrid(allBrigSheet);
-        repoAllLineBuild();
+        repoAllLineBuild(allBrigSheet);
     }
     public AllBrigRepoPOI() throws IOException {
         Calendar date = new GregorianCalendar();
@@ -255,7 +262,7 @@ public class AllBrigRepoPOI {
         fos.close();
         System.out.println("Файл был записан на диск");
     }
-    public void repoAllLineBuild(){
+    public void repoAllLineBuild(Sheet sheets){
         CellStyle cs = allBook.createCellStyle();
         Font bold = allBook.createFont();
         bold.setBold(true);
@@ -265,6 +272,13 @@ public class AllBrigRepoPOI {
 
         //бригада монтажники
 
+        for (int i = 4; i <= 4+GridEdit.mountMap.get(ConveyLine.LINE_1).size()+1; i++) {
+            sheets.createRow(i);
+            for (int j = 0; j <= 33; j++) {
+                sheets.getRow(i).createCell(j);
+                setAroundBorder(sheets.getRow(i).getCell(j));
+            }
+        }
         String sheet = "Все бригады";
         allBook.getSheet(sheet).addMergedRegion(new CellRangeAddress(3, 3, 0, 1));
         allBook.getSheet(sheet).getRow(3).getCell(0).setCellValue("Монтажники");
@@ -312,6 +326,14 @@ public class AllBrigRepoPOI {
         allBook.getSheet(sheet).getRow(4+GridEdit.mountMap.get(ConveyLine.LINE_1).size()+1).getCell(0).setCellValue("Итого в бригаде:");
         //завершен отчёт по 1 линии
 
+        for (int i = line2IndexMount; i <= line2IndexMount+GridEdit.mountMap.get(ConveyLine.LINE_2).size()+1; i++) {
+            sheets.createRow(i);
+            for (int j = 0; j <= 33; j++) {
+                sheets.getRow(i).createCell(j);
+                setAroundBorder(sheets.getRow(i).getCell(j));
+            }
+        }
+
         allBook.getSheet(sheet).addMergedRegion(new CellRangeAddress(line2IndexMount, line2IndexMount, 0, 1));
         setAroundBorderCenterAlignment(allBook.getSheet(sheet).getRow(line2IndexMount).getCell(0));
         allBook.getSheet(sheet).getRow(line2IndexMount).getCell(0).setCellValue("Волна 2");
@@ -347,6 +369,14 @@ public class AllBrigRepoPOI {
         setAroundBorderCenterAlignment(allBook.getSheet(sheet).getRow(line2IndexMount+GridEdit.mountMap.get(ConveyLine.LINE_2).size()+1).getCell(0));
         allBook.getSheet(sheet).getRow(line2IndexMount+GridEdit.mountMap.get(ConveyLine.LINE_2).size()+1).getCell(0).setCellValue("Итого в бригаде:");
         //завершен отчёт по 2 линии
+
+        for (int i = line2IndexMount+GridEdit.mountMap.get(ConveyLine.LINE_2).size()+2; i <= line3IndexMount+GridEdit.mountMap.get(ConveyLine.LINE_3).size()+1; i++) {
+            sheets.createRow(i);
+            for (int j = 0; j <= 33; j++) {
+                sheets.getRow(i).createCell(j);
+                setAroundBorder(sheets.getRow(i).getCell(j));
+            }
+        }
 
         allBook.getSheet(sheet).addMergedRegion(new CellRangeAddress(line3IndexMount, line3IndexMount, 0, 1));
         setAroundBorderCenterAlignment(allBook.getSheet(sheet).getRow(line3IndexMount).getCell(0));
@@ -384,6 +414,14 @@ public class AllBrigRepoPOI {
         allBook.getSheet(sheet).getRow(line3IndexMount+GridEdit.mountMap.get(ConveyLine.LINE_3).size()+1).getCell(0).setCellValue("Итого в бригаде:");
 
         //завершен отчёт по 3 линии
+
+        for (int i = line3IndexMount+GridEdit.mountMap.get(ConveyLine.LINE_3).size()+2; i <= line4IndexMount+GridEdit.mountMap.get(ConveyLine.LINE_4).size()+1; i++) {
+            sheets.createRow(i);
+            for (int j = 0; j <= 33; j++) {
+                sheets.getRow(i).createCell(j);
+                setAroundBorder(sheets.getRow(i).getCell(j));
+            }
+        }
 
         allBook.getSheet(sheet).addMergedRegion(new CellRangeAddress(line4IndexMount, line4IndexMount, 0, 1));
         setAroundBorderCenterAlignment(allBook.getSheet(sheet).getRow(line4IndexMount).getCell(0));
@@ -424,19 +462,28 @@ public class AllBrigRepoPOI {
 
 
         //бригада сборщики
-
-
         int buildHeaderIndex = line4IndexMount+GridEdit.mountMap.get(ConveyLine.LINE_4).size()+2;
+        int line1IndexBuild = buildHeaderIndex+2;
+        int line2IndexBuild = line1IndexBuild+GridEdit.builderMap.get(ConveyLine.LINE_1).size()+1;
+        int line3IndexBuild = line2IndexBuild+GridEdit.builderMap.get(ConveyLine.LINE_2).size()+2;
+        int line4IndexBuild = line3IndexBuild+GridEdit.builderMap.get(ConveyLine.LINE_3).size()+2;
+
+        for (int i = line4IndexMount+GridEdit.mountMap.get(ConveyLine.LINE_4).size()+2; i <= line1IndexBuild+GridEdit.builderMap.get(ConveyLine.LINE_1).size(); i++) {
+            sheets.createRow(i);
+            for (int j = 0; j <= 33; j++) {
+                sheets.getRow(i).createCell(j);
+                setAroundBorder(sheets.getRow(i).getCell(j));
+            }
+        }
+
+
         allBook.getSheet(sheet).addMergedRegion(new CellRangeAddress(buildHeaderIndex, buildHeaderIndex, 0, 1));
         allBook.getSheet(sheet).getRow(buildHeaderIndex).getCell(0).setCellValue("Сборщики");
         allBook.getSheet(sheet).getRow(buildHeaderIndex).getCell(0).setCellStyle(cs);
         setAroundBorderCenterAlignment(allBook.getSheet(sheet).getRow(buildHeaderIndex).getCell(0));
         setAroundBorderCenterAlignment(allBook.getSheet(sheet).getRow(buildHeaderIndex).getCell(1));
 
-        int line1IndexBuild = buildHeaderIndex+2;
-        int line2IndexBuild = line1IndexBuild+GridEdit.builderMap.get(ConveyLine.LINE_1).size()+1;
-        int line3IndexBuild = line2IndexBuild+GridEdit.builderMap.get(ConveyLine.LINE_2).size()+2;
-        int line4IndexBuild = line3IndexBuild+GridEdit.builderMap.get(ConveyLine.LINE_3).size()+2;
+
         allBook.getSheet(sheet).addMergedRegion(new CellRangeAddress(buildHeaderIndex+1, buildHeaderIndex+1, 0, 1));
         setAroundBorderCenterAlignment(allBook.getSheet(sheet).getRow(buildHeaderIndex+1).getCell(0));
         allBook.getSheet(sheet).getRow(buildHeaderIndex+1).getCell(0).setCellValue("Бригадная сборка 1");
@@ -474,6 +521,14 @@ public class AllBrigRepoPOI {
         allBook.getSheet(sheet).getRow(line1IndexBuild+GridEdit.builderMap.get(ConveyLine.LINE_1).size()).getCell(0).setCellValue("Итого в бригаде:");
         //завершен отчёт по 1 линии
 
+        for (int i = line1IndexBuild+GridEdit.builderMap.get(ConveyLine.LINE_1).size()+1; i <= line2IndexBuild+GridEdit.builderMap.get(ConveyLine.LINE_2).size()+1; i++) {
+            sheets.createRow(i);
+            for (int j = 0; j <= 33; j++) {
+                sheets.getRow(i).createCell(j);
+                setAroundBorder(sheets.getRow(i).getCell(j));
+            }
+        }
+
         allBook.getSheet(sheet).addMergedRegion(new CellRangeAddress(line2IndexBuild, line2IndexBuild, 0, 1));
         setAroundBorderCenterAlignment(allBook.getSheet(sheet).getRow(line2IndexBuild).getCell(0));
         allBook.getSheet(sheet).getRow(line2IndexBuild).getCell(0).setCellValue("Бригадная сборка 2");
@@ -509,6 +564,14 @@ public class AllBrigRepoPOI {
         setAroundBorderCenterAlignment(allBook.getSheet(sheet).getRow(line2IndexBuild+GridEdit.builderMap.get(ConveyLine.LINE_2).size()+1).getCell(0));
         allBook.getSheet(sheet).getRow(line2IndexBuild+GridEdit.builderMap.get(ConveyLine.LINE_2).size()+1).getCell(0).setCellValue("Итого в бригаде:");
         //завершен отчёт по 2 линии
+
+        for (int i = line2IndexBuild+GridEdit.builderMap.get(ConveyLine.LINE_2).size()+2; i <= line3IndexBuild+GridEdit.builderMap.get(ConveyLine.LINE_3).size()+1; i++) {
+            sheets.createRow(i);
+            for (int j = 0; j <= 33; j++) {
+                sheets.getRow(i).createCell(j);
+                setAroundBorder(sheets.getRow(i).getCell(j));
+            }
+        }
 
         allBook.getSheet(sheet).addMergedRegion(new CellRangeAddress(line3IndexBuild, line3IndexBuild, 0, 1));
         setAroundBorderCenterAlignment(allBook.getSheet(sheet).getRow(line3IndexBuild).getCell(0));
@@ -546,6 +609,14 @@ public class AllBrigRepoPOI {
         allBook.getSheet(sheet).getRow(line3IndexBuild+GridEdit.builderMap.get(ConveyLine.LINE_3).size()+1).getCell(0).setCellValue("Итого в бригаде:");
 
         //завершен отчёт по 3 линии
+
+        for (int i = line3IndexBuild+GridEdit.builderMap.get(ConveyLine.LINE_3).size()+2; i <= line4IndexBuild+GridEdit.builderMap.get(ConveyLine.LINE_4).size()+1; i++) {
+            sheets.createRow(i);
+            for (int j = 0; j <= 33; j++) {
+                sheets.getRow(i).createCell(j);
+                setAroundBorder(sheets.getRow(i).getCell(j));
+            }
+        }
 
         allBook.getSheet(sheet).addMergedRegion(new CellRangeAddress(line4IndexBuild, line4IndexBuild, 0, 1));
         setAroundBorderCenterAlignment(allBook.getSheet(sheet).getRow(line4IndexBuild).getCell(0));
@@ -585,15 +656,25 @@ public class AllBrigRepoPOI {
         //завершен отчёт по 4 линии
 
         //бригада техники
-
         int techHeaderIndex = line4IndexBuild+GridEdit.builderMap.get(ConveyLine.LINE_4).size()+2;
+        int techIndex = techHeaderIndex+1;
+
+        for (int i = line4IndexBuild+GridEdit.builderMap.get(ConveyLine.LINE_4).size()+2; i <= techIndex+GridEdit.techList.size(); i++) {
+            sheets.createRow(i);
+            for (int j = 0; j <= 33; j++) {
+                sheets.getRow(i).createCell(j);
+                setAroundBorder(sheets.getRow(i).getCell(j));
+            }
+        }
+
+
         allBook.getSheet(sheet).addMergedRegion(new CellRangeAddress(techHeaderIndex, techHeaderIndex, 0, 1));
         allBook.getSheet(sheet).getRow(techHeaderIndex).getCell(0).setCellValue("Техники");
         allBook.getSheet(sheet).getRow(techHeaderIndex).getCell(0).setCellStyle(cs);
         setAroundBorderCenterAlignment(allBook.getSheet(sheet).getRow(techHeaderIndex).getCell(0));
         setAroundBorderCenterAlignment(allBook.getSheet(sheet).getRow(techHeaderIndex).getCell(1));
 
-        int techIndex = techHeaderIndex+1;
+
         for (int i = 0; i < GridEdit.techList.size(); i++) {
             allBook.getSheet(sheet).getRow(i + techIndex).getCell(0).setCellValue(i + 1); // порядковый номер сотрудника
             setAroundBorder(allBook.getSheet(sheet).getRow(i + techIndex).getCell(0));

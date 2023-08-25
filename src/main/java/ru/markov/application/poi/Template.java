@@ -214,6 +214,7 @@ public class Template {
                         }
                     }
                 }
+                createHeaderGrid(mountSheet);
             }
             case "Пустой шаблон" -> {
                 Sheet temp = book.createSheet("Шаблон");
