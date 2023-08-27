@@ -34,7 +34,7 @@ import java.util.List;
 
 /**
  * GridEdit.java класс реализует интерфейс веб страницы для управления составом бригад.
- * Состав хранится в публичном статичной коллекции GridEdit.workerList, что позволяет обратиться
+ * Состав хранится в публичной статичной коллекции GridEdit.workerList, что позволяет обратиться
  * к ней из любой точки программы для взаимодействия с данными.
  * GridEdit.workerList является источником данных для публичных статических коллеций
  * GridEdit.mountList, GridEdit.builderList и GridEdit.builderList,
@@ -382,6 +382,8 @@ public class GridEdit extends Div {
         });
         grid.getElement().getThemeList().clear();
         grid.getElement().getThemeList().add("spacing-m");
+
+        //добавляем возможность устанавливать диапазон отпусков для автозаполнения в табеле
 
         add(topHead, grid, firstNameValid, lastNameValid, fatherNameValid);
     }

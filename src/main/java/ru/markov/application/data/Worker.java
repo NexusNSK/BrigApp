@@ -3,12 +3,15 @@ package ru.markov.application.data;
 import org.springframework.context.annotation.ComponentScan;
 import ru.markov.application.service.*;
 import ru.markov.application.views.Reports;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 
 @ComponentScan
 
 public class Worker implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
     private String firstName;
     private String lastName;

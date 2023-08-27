@@ -3,6 +3,7 @@ package ru.markov.application.views;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Focusable;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
@@ -11,38 +12,36 @@ import com.vaadin.flow.component.grid.editor.Editor;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import jakarta.annotation.security.PermitAll;
-import ru.markov.application.data.ValidationName;
-import ru.markov.application.data.Worker;
 import ru.markov.application.security.SecurityService;
 import ru.markov.application.service.ConveyLine;
 import ru.markov.application.service.Serial;
+import ru.markov.application.data.ValidationName;
+import ru.markov.application.data.Worker;
 import ru.markov.application.service.TimeAdapter;
-
 import java.time.LocalDate;
 
 
 @PermitAll
-@Route(value = "worktime", layout = MainLayout.class)
+@Route(value = "worktime_deprecated", layout = MainLayout.class)
 @PageTitle("BrigApp א Учёт времени")
 @UIScope
-public class WorkTime extends VerticalLayout {
+public class WorkTimeDeprecated extends VerticalLayout {
     public DatePicker workTimeDatePicker = new DatePicker();
 
-    public WorkTime(SecurityService securityService) {
+    public WorkTimeDeprecated(SecurityService securityService) {
         GridEdit.initSplitDistrictWorkersList();
         String username = securityService.getAuthenticatedUser().getUsername();
 
         workTimeDatePicker.setValue(LocalDate.now());
         Grid<Worker> workTimeGrid = new Grid<>(Worker.class, false);
-        workTimeGrid.setWidthFull();
         workTimeGrid.setMinHeight("500px");
+        workTimeGrid.setWidth("1200px");
         workTimeGrid.setHeight("800px");
         setItemforGrid(username, workTimeGrid);
 
@@ -70,7 +69,7 @@ public class WorkTime extends VerticalLayout {
                 .setAutoWidth(false)
                 .setResizable(true)
                 .setSortable(true)
-                .setWidth("350px")
+                .setWidth("400px")
                 .setFlexGrow(0);
         switch (username){
             case "admin" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.workerList.size());
@@ -98,7 +97,7 @@ public class WorkTime extends VerticalLayout {
                 .setHeader("Статус")
                 .setAutoWidth(false)
                 .setResizable(true)
-                .setWidth("800px")
+                .setWidth("200px")
                 .setFlexGrow(1);
 
         Grid.Column<Worker> ballast = workTimeGrid.addComponentColumn(worker -> {
@@ -106,7 +105,6 @@ public class WorkTime extends VerticalLayout {
             button.setEnabled(false);
             return button;
         });
-        ballast.setWidth("1px");
 
 
 
@@ -124,7 +122,7 @@ public class WorkTime extends VerticalLayout {
                 .bind(Worker::getWorkTime, Worker::setWorkTime);
         workTimeColumn.setEditorComponent(setTimeEdit);
 
-        RadioButtonGroup<String> statusEditColumn = new RadioButtonGroup<>();
+        ComboBox<String> statusEditColumn = new ComboBox<>();
         ValidationName statusValid = new ValidationName();
         statusEditColumn.setItems("Работает (полный день)",
                 "Работает (нестандартное время)",

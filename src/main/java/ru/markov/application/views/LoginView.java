@@ -42,7 +42,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
         .getQueryParameters()
         .getParameters()
         .containsKey("error")) {
-            login.setError(false);
+            login.setError(true);
         }
 	}
 }

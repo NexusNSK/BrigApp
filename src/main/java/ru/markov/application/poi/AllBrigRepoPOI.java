@@ -182,17 +182,6 @@ public class AllBrigRepoPOI {
             case ("Не определено") -> cell.setCellStyle(nothingStatusCell);
         }
     }
-    public void initSheet(Sheet sheet) {
-        int totalSize = GridEdit.workerList.size()+19;
-        for (int i = 0; i < totalSize + 1 + 3; i++) {
-            sheet.createRow(i);
-            for (int j = 0; j <= 33; j++) {
-                sheet.getRow(i).createCell(j);
-                sheet.getRow(i).getCell(j).setCellValue("1");
-                setAroundBorder(sheet.getRow(i).getCell(j));
-            }
-        }
-    }
     public String getMonth() {
         return switch (Reports.month) {
             case (1) -> "Январь";
@@ -707,7 +696,5 @@ public class AllBrigRepoPOI {
         setAroundBorderCenterAlignment(allBook.getSheet(sheet).getRow(techIndex+GridEdit.techList.size()).getCell(0));
         allBook.getSheet(sheet).getRow(techIndex+GridEdit.techList.size()).getCell(0).setCellValue("Итого в бригаде:");
         //завершен отчёт
-
     }
-
 }

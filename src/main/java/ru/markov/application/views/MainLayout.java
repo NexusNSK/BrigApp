@@ -31,6 +31,8 @@ public class MainLayout extends AppLayout {
         this.securityService = securityService;
         createHeader();
         addClassName("main-layout-app-layout-1");
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        addToDrawer(horizontalLayout);
     }
 
     private void createHeader() {
@@ -85,5 +87,6 @@ public class MainLayout extends AppLayout {
         routerLink.setTabIndex(0);
         return new Tab(routerLink);
     }
+
 
 }
