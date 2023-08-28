@@ -21,6 +21,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
 
 	public LoginView(){
+		addClassName("login-view");
 		getStyle().set("background-color", "var(--lumo-contrast-0pct)")
 				.set("display", "flex").set("justify-content", "center")
 				.set("padding", "var(--lumo-space-l)");

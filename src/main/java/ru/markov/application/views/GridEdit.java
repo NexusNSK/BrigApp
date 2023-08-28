@@ -9,6 +9,8 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.grid.HeaderRow;
+import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.grid.editor.Editor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
@@ -16,9 +18,12 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
@@ -28,9 +33,11 @@ import ru.markov.application.service.ConveyLine;
 import ru.markov.application.service.Serial;
 import com.vaadin.flow.component.dialog.Dialog;
 
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * GridEdit.java класс реализует интерфейс веб страницы для управления составом бригад.
@@ -93,6 +100,9 @@ public class GridEdit extends Div {
         if (workerList.isEmpty()) FillMap.fillArray();
         Grid<Worker> grid = new Grid<>(Worker.class, false); //основная таблица с сотрудниками
         grid.setItems(workerList);
+        grid.getHeaderRows().clear();
+
+
         grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         TextField firstNameT = new TextField("Имя"); //поле ввода имени при добавлении сотрудника
         TextField lastNameT = new TextField("Фамилия"); //поле ввода фамилии при добавлении сотрудника
@@ -117,7 +127,7 @@ public class GridEdit extends Div {
                 "Техник"
         );
 
-        grid.setMinHeight("1000px");
+        grid.setMinHeight("710px");
 
         Editor<Worker> editor = grid.getEditor();
 
@@ -244,11 +254,22 @@ public class GridEdit extends Div {
                 .setResizable(true)
                 .setFlexGrow(1);
 
+        //добавляем фильтры в таблицу
+        HeaderRow headerRow = grid.appendHeaderRow();
+        GridListDataView<Worker> dataView = grid.setItems(workerList);
+        PersonFilter personFilter = new PersonFilter(dataView);
+
+        headerRow.getCell(lineColumn).setComponent(createFilterHeader(personFilter::setLine));
+        headerRow.getCell(districtColumn).setComponent(createFilterHeader(personFilter::setDistrict));
+        headerRow.getCell(postColumn).setComponent(createFilterHeader(personFilter::setPost));
+        headerRow.getCell(lastNameColumn).setComponent(createFilterHeader(personFilter::setSecondName));
+        headerRow.getCell(firstNameColumn).setComponent(createFilterHeader(personFilter::setFirstName));
+        headerRow.getCell(fatherNameColumn).setComponent(createFilterHeader(personFilter::setFatherName));
+
 
         Grid.Column<Worker> deleteColumn = grid.addComponentColumn(worker -> {
             Dialog dialog = new Dialog();
             Button deleteButton = new Button("", new Icon(VaadinIcon.TRASH), d -> dialog.open());
-
             dialog.setHeaderTitle(
                     String.format("Удалить сотрудника \"%s\"?", worker.getFullName()));
             dialog.add("Вы уверены, что хотите удалить сотрудника из списка бригады?");
@@ -271,12 +292,13 @@ public class GridEdit extends Div {
             dialog.getFooter().add(dialogDeleteButton);
 
             return deleteButton;
-        }).setWidth("120px").setFlexGrow(1);
+        });
+        deleteColumn.setWidth("120px").setFlexGrow(1);
 
         //объявление привязки изменяемого поля к объявляемому
         Binder<Worker> binder = new Binder<>(Worker.class);
         editor.setBinder(binder);
-       // editor.setBuffered(true);
+        // editor.setBuffered(true);
 
         //при изменении фамилии
         TextField lastNameField = new TextField();
@@ -372,7 +394,7 @@ public class GridEdit extends Div {
         HorizontalLayout actions = new HorizontalLayout(saveButton,
                 cancelButton);
         actions.setPadding(false);
- //       editColumn.setEditorComponent(actions);
+        //       editColumn.setEditorComponent(actions);
         editor.addCancelListener(e -> {
             firstNameValid.setText("");
             lastNameValid.setText("");
@@ -387,12 +409,92 @@ public class GridEdit extends Div {
 
         add(topHead, grid, firstNameValid, lastNameValid, fatherNameValid);
     }
+
     private static void addCloseHandler(Component textField,
                                         Editor<Worker> editor) {
         textField.getElement().addEventListener("keydown", e -> editor.cancel())
                 .setFilter("event.code === 'Escape'");
     }
 
+    private static Component createFilterHeader(Consumer<String> filterChangeConsumer) {
+        TextField textField = new TextField();
+        textField.setValueChangeMode(ValueChangeMode.EAGER);
+        textField.setClearButtonVisible(true);
+        textField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        textField.setWidthFull();
+        textField.getStyle().set("max-width", "100%");
+        textField.addValueChangeListener(
+                e -> filterChangeConsumer.accept(e.getValue()));
+        VerticalLayout layout = new VerticalLayout(textField);
+        layout.getThemeList().clear();
+        layout.getThemeList().add("spacing-xs");
+
+        return layout;
+    }
+
+    private static class PersonFilter {
+        private final GridListDataView<Worker> dataView;
+
+        private String secondName;
+        private String firstName;
+        private String fatherName;
+        private String post;
+        private String line;
+        private String district;
+
+        public PersonFilter(GridListDataView<Worker> dataView) {
+            this.dataView = dataView;
+            this.dataView.addFilter(this::test);
+        }
+
+        public void setFatherName(String fatherName) {
+            this.fatherName = fatherName;
+            this.dataView.refreshAll();
+        }
+
+        public void setSecondName(String secondName) {
+            this.secondName = secondName;
+            this.dataView.refreshAll();
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+            this.dataView.refreshAll();
+        }
+
+        public void setPost(String post) {
+            this.post = post;
+            this.dataView.refreshAll();
+        }
+
+        public void setLine(String line) {
+            this.line = line;
+            this.dataView.refreshAll();
+        }
+
+        public void setDistrict(String district) {
+            this.district = district;
+            this.dataView.refreshAll();
+        }
+
+        public boolean test(Worker worker) {
+            boolean matchesLine = matches(worker.getLineToString(), line);
+            boolean matchesDistrict = matches(worker.getDistrictToString(), district);
+            boolean matchesSecondName = matches(worker.getLastName(), secondName);
+            boolean matchesFirstName = matches(worker.getFirstName(), firstName);
+            boolean matchesFatherName = matches(worker.getPatronymic(), fatherName);
+            boolean matchesPost = matches(worker.getPost(), post);
+
+            return matchesLine && matchesDistrict && matchesSecondName && matchesFirstName && matchesFatherName && matchesPost;
+        }
+
+        private boolean matches(String value, String searchTerm) {
+            return searchTerm == null || searchTerm.isEmpty()
+                    || value.toLowerCase().contains(searchTerm.toLowerCase());
+        }
+    }
+
 }
+
 
 
