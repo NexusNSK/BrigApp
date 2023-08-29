@@ -10,6 +10,7 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.grid.editor.Editor;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -29,7 +30,6 @@ import ru.markov.application.security.SecurityService;
 import ru.markov.application.service.ConveyLine;
 import ru.markov.application.service.Serial;
 import ru.markov.application.service.TimeAdapter;
-
 import java.time.LocalDate;
 import java.util.function.Consumer;
 
@@ -38,7 +38,8 @@ import java.util.function.Consumer;
 @Route(value = "worktime", layout = MainLayout.class)
 @PageTitle("BrigApp א Учёт времени")
 @UIScope
-public class WorkTime extends VerticalLayout {
+public class WorkTime extends Div {
+
     public DatePicker workTimeDatePicker = new DatePicker();
 
     public WorkTime(SecurityService securityService) {
@@ -70,6 +71,14 @@ public class WorkTime extends VerticalLayout {
         save.addClickListener(buttonClickEvent -> {
             Serial.save();
             System.out.println("Рабочее время было записано");
+            workTimeGrid.getDataProvider().refreshAll();
+        });
+        Button likeYesterday = new Button("\"как вчера\"");
+        likeYesterday.addClickListener(buttonClickEvent -> {
+            for (Worker w : GridEdit.workerList) {
+                w.setWorkTimeLikeYesterday();
+                w.setWorkerStatusMassiveLikeYesterday();
+            }
             workTimeGrid.getDataProvider().refreshAll();
         });
 
@@ -221,7 +230,7 @@ public class WorkTime extends VerticalLayout {
         });
 
         workTimeGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
-        add(workTimeDatePicker, save, workTimeGrid);
+        add(workTimeDatePicker, save, likeYesterday, workTimeGrid);
     }
 
     public void setItemforGrid(String sc, Grid<Worker> grid) {
