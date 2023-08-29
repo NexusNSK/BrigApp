@@ -79,7 +79,7 @@ public class MainLayout extends AppLayout {
     private Tab createTab(VaadinIcon viewIcon, String viewName, RouterLink routerLink) {
         Icon icon = viewIcon.create();
         icon.getStyle().set("box-sizing", "border-box")
-                .set("margin-inline-end", "var(--lumo-space-m)")
+                .set("margin-inline-end", "var(--lumo-space-xs)")
                 .set("margin-inline-start", "var(--lumo-space-xs)")
                 .set("padding", "var(--lumo-space-xs)");
 

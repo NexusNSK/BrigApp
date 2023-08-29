@@ -131,24 +131,43 @@ public class Worker implements Serializable {
     }
     public void setWorkerStatusMassive(String status) {
         switch (status){
-            case ("Работает (полный день)") -> {
+            case ("10") -> {
+                workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
+                        .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.WORK);
+                setWorkTime(10);
+            }
+            case ("9") -> {
+                workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
+                        .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.WORK);
+                setWorkTime(9);
+            }
+            case ("8") -> {
                 workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                         .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.WORK);
                 setWorkTime(8);
             }
-            case ("Работает (нестандартное время)") -> workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
-                    .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.WORK);
-            case ("Больничный") -> {
+
+            case ("БОЛ") -> {
                 workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                         .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.HOSPITAL);
                 setWorkTime(0);
             }
-            case ("Отпуск") -> {
+            case ("ОТП") -> {
                 workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                         .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.HOLIDAY);
                 setWorkTime(0);
             }
-            case ("Не определено") -> {
+            case ("ОТГ") -> {
+                workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
+                        .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.OTRABOTKA);
+                setWorkTime(0);
+            }
+            case ("АДМ") -> {
+                workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
+                        .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.ADMINOTP);
+                setWorkTime(0);
+            }
+            case ("0") -> {
                 workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                         .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.NOTHING);
                 setWorkTime(0);
@@ -159,19 +178,25 @@ public class Worker implements Serializable {
     public String getWorkerStatusMassive(){
         return switch (workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth())) {
-            case WORK -> "Работает";
+            case WORK, OTRABOTKA -> "Работает";
             case HOSPITAL -> "Больничный";
             case HOLIDAY -> "Отпуск";
-            case NOTHING -> "Не определено";
+            case NOTHING -> "---";
+            case ADMINOTP -> "Админ. отпуск";
         };
     }
     public String getWorkerStatusAtDay(int day){
         return switch (workerStatusMassive.get(Reports.month).get(day)){
-            case WORK -> "Работает";
+            case WORK, OTRABOTKA -> "Работает";
             case HOSPITAL -> "Больничный";
             case HOLIDAY -> "Отпуск";
-            case NOTHING -> "Не определено";
+            case NOTHING -> "---";
+            case ADMINOTP -> "Админ. отпуск";
         };
+    }
+
+    public WorkerStatus getWorkerStatusAtDayToRepo(int day){
+        return workerStatusMassive.get(Reports.month).get(day);
     }
     public String getLineToString() {
         return switch (line){
@@ -179,7 +204,7 @@ public class Worker implements Serializable {
             case LINE_2 -> "2";
             case LINE_3 -> "3";
             case LINE_4 -> "4";
-            default -> "Не распределено";
+            default -> "---";
         };
     }
     public ConveyLine getLine(){

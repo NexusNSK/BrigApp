@@ -15,6 +15,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 @Route("login")
 @PageTitle("BrigApp א Вход")
 @AnonymousAllowed
+
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
 	private final LoginForm login = new LoginForm();
@@ -31,6 +32,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 		setJustifyContentMode(JustifyContentMode.START);
 		login.setAction("login");
 		login.getElement().setAttribute("no-autofocus", "");
+
 
 
 
