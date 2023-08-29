@@ -6,6 +6,7 @@ import ru.markov.application.views.Reports;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.*;
 
 @ComponentScan
@@ -24,17 +25,18 @@ public class Worker implements Serializable {
     private final HashMap<Integer, HashMap<Integer, Integer>> workTimeMassive = new HashMap<>(12);
     //             <номер месяца : мапа <номер дня : часы>>
 
-    public void initWorkerStatusMap(){
-        if (workerStatusMassive.isEmpty()){
-            for (int i = 0; i <= 12; i++){
+    public void initWorkerStatusMap() {
+        if (workerStatusMassive.isEmpty()) {
+            for (int i = 0; i <= 12; i++) {
                 workerStatusMassive.put(i, new HashMap<>(31));
-                for (int j = 0; j <= 32; j++){
+                for (int j = 0; j <= 32; j++) {
                     workerStatusMassive.get(i).put(j, WorkerStatus.NOTHING);
                 }
             }
             System.out.println("Создание карты учета статуса работника завершено!");
         }
     }
+
     public void initWorkTimeMap() {
         if (workTimeMassive.isEmpty()) {
             for (int i = 0; i <= 12; i++) {
@@ -46,18 +48,30 @@ public class Worker implements Serializable {
             System.out.println("Создание карты учета времемни завершено!");
         }
     }
+
     public void setWorkTime(int hours) {
         workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), hours);
+    }
+
+    public void setWorkTimeLikeYesterday() {
+        workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
+                .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), getWorkTimeLikeYesterday());
     }
 
     public int getWorkTime() {
         return workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth());
     }
-    public int getWorkTimeToPOI(int day){
+    public int getWorkTimeLikeYesterday() {
+        return workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
+                .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth()-1);
+    }
+
+    public int getWorkTimeToPOI(int day) {
         return workTimeMassive.get(Reports.month).get(day);
     }
+
     public String getPost() {
         String ps = "";
         switch (post) {
@@ -70,6 +84,7 @@ public class Worker implements Serializable {
         }
         return ps;
     }
+
     public void setPost(String post) {
         switch (post) {
             case ("Бригадир монтажников") -> this.post = Post.BRIG_MOUNT;
@@ -80,6 +95,7 @@ public class Worker implements Serializable {
             case ("Техник") -> this.post = Post.TECHNIC;
         }
     }
+
     public String getDistrictToString() {
         return switch (district) {
             case MOUNTING -> "Бригада монтажники";
@@ -87,9 +103,11 @@ public class Worker implements Serializable {
             case TECH -> "Бригада техники";
         };
     }
-    public District getDistrict(){
+
+    public District getDistrict() {
         return this.district;
     }
+
     public void setDistrict(String district) {
         switch (district) {
             case ("Бригада монтажники") -> this.district = District.MOUNTING;
@@ -97,7 +115,8 @@ public class Worker implements Serializable {
             case ("Бригада техники") -> this.district = District.TECH;
         }
     }
-    public Worker(String lastName, String firstName, String patronymic, String line ,String district, String post) {
+
+    public Worker(String lastName, String firstName, String patronymic, String line, String district, String post) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.patronymic = patronymic;
@@ -111,26 +130,33 @@ public class Worker implements Serializable {
     public String getFullName() {
         return lastName + " " + firstName + " " + patronymic;
     }
+
     public String getFirstName() {
         return this.firstName;
     }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
+
     public String getLastName() {
         return this.lastName;
     }
+
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
     public String getPatronymic() {
         return this.patronymic;
     }
+
     public void setPatronymic(String patronymic) {
         this.patronymic = patronymic;
     }
+
     public void setWorkerStatusMassive(String status) {
-        switch (status){
+        switch (status) {
             case ("10") -> {
                 workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                         .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.WORK);
@@ -173,9 +199,18 @@ public class Worker implements Serializable {
                 setWorkTime(0);
             }
 
+        }
     }
+
+    public void setWorkerStatusMassiveLikeYesterday() {
+        workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
+                .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), getWorkerStatusLikeYesterday());
     }
-    public String getWorkerStatusMassive(){
+    private WorkerStatus getWorkerStatusLikeYesterday() {
+        return workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue()).get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth()-1);
+    }
+
+    public String getWorkerStatusMassive() {
         return switch (workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth())) {
             case WORK, OTRABOTKA -> "Работает";
@@ -185,8 +220,9 @@ public class Worker implements Serializable {
             case ADMINOTP -> "Админ. отпуск";
         };
     }
-    public String getWorkerStatusAtDay(int day){
-        return switch (workerStatusMassive.get(Reports.month).get(day)){
+
+    public String getWorkerStatusAtDay(int day) {
+        return switch (workerStatusMassive.get(Reports.month).get(day)) {
             case WORK, OTRABOTKA -> "Работает";
             case HOSPITAL -> "Больничный";
             case HOLIDAY -> "Отпуск";
@@ -195,11 +231,12 @@ public class Worker implements Serializable {
         };
     }
 
-    public WorkerStatus getWorkerStatusAtDayToRepo(int day){
+    public WorkerStatus getWorkerStatusAtDayToRepo(int day) {
         return workerStatusMassive.get(Reports.month).get(day);
     }
+
     public String getLineToString() {
-        return switch (line){
+        return switch (line) {
             case LINE_1 -> "1";
             case LINE_2 -> "2";
             case LINE_3 -> "3";
@@ -207,12 +244,13 @@ public class Worker implements Serializable {
             default -> "---";
         };
     }
-    public ConveyLine getLine(){
+
+    public ConveyLine getLine() {
         return this.line;
     }
 
     public void setLine(String line) {
-        switch (line){
+        switch (line) {
             default -> this.line = ConveyLine.COMMON;
             case "1" -> this.line = ConveyLine.LINE_1;
             case "2" -> this.line = ConveyLine.LINE_2;
