@@ -42,16 +42,19 @@ public class WorkTime extends VerticalLayout {
     public DatePicker workTimeDatePicker = new DatePicker();
 
     public WorkTime(SecurityService securityService) {
+
         GridEdit.initSplitDistrictWorkersList();
         String username = securityService.getAuthenticatedUser().getUsername();
 
         workTimeDatePicker.setValue(LocalDate.now());
         Grid<Worker> workTimeGrid = new Grid<>(Worker.class, false);
+
+        initPage(workTimeGrid); //метод служит для предотвращения бага отображения, когда по LocalDate.now() в таблице были не актуальыне данные
+
         workTimeGrid.setWidthFull();
         workTimeGrid.setMinHeight("500px");
         workTimeGrid.setHeight("800px");
         setItemforGrid(username, workTimeGrid);
-
 
 
         Editor<Worker> editor = workTimeGrid.getEditor();
@@ -59,9 +62,9 @@ public class WorkTime extends VerticalLayout {
         editor.setBinder(binder);
         editor.setBuffered(false);
 
-        workTimeDatePicker.addClientValidatedEventListener(clientValidatedEvent ->{
+        workTimeDatePicker.addClientValidatedEventListener(clientValidatedEvent -> {
             TimeAdapter.workTimeDatePicker.setValue(workTimeDatePicker.getValue());
-                workTimeGrid.getDataProvider().refreshAll();
+            workTimeGrid.getDataProvider().refreshAll();
         });
         Button save = new Button("Записать время");
         save.addClickListener(buttonClickEvent -> {
@@ -78,16 +81,24 @@ public class WorkTime extends VerticalLayout {
                 .setSortable(true)
                 .setWidth("350px")
                 .setFlexGrow(0);
-        switch (username){
+        switch (username) {
             case "admin" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.workerList.size());
-            case "volna1" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.mountMap.get(ConveyLine.LINE_1).size());
-            case "volna2" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.mountMap.get(ConveyLine.LINE_2).size());
-            case "volna3" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.mountMap.get(ConveyLine.LINE_3).size());
-            case "volna4" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.mountMap.get(ConveyLine.LINE_4).size());
-            case "sborka1" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.builderMap.get(ConveyLine.LINE_1).size());
-            case "sborka2" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.builderMap.get(ConveyLine.LINE_2).size());
-            case "sborka3" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.builderMap.get(ConveyLine.LINE_3).size());
-            case "sborka4" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.builderMap.get(ConveyLine.LINE_4).size());
+            case "volna1" ->
+                    fullNameColumn.setFooter("Сотрудников: " + GridEdit.mountMap.get(ConveyLine.LINE_1).size());
+            case "volna2" ->
+                    fullNameColumn.setFooter("Сотрудников: " + GridEdit.mountMap.get(ConveyLine.LINE_2).size());
+            case "volna3" ->
+                    fullNameColumn.setFooter("Сотрудников: " + GridEdit.mountMap.get(ConveyLine.LINE_3).size());
+            case "volna4" ->
+                    fullNameColumn.setFooter("Сотрудников: " + GridEdit.mountMap.get(ConveyLine.LINE_4).size());
+            case "sborka1" ->
+                    fullNameColumn.setFooter("Сотрудников: " + GridEdit.builderMap.get(ConveyLine.LINE_1).size());
+            case "sborka2" ->
+                    fullNameColumn.setFooter("Сотрудников: " + GridEdit.builderMap.get(ConveyLine.LINE_2).size());
+            case "sborka3" ->
+                    fullNameColumn.setFooter("Сотрудников: " + GridEdit.builderMap.get(ConveyLine.LINE_3).size());
+            case "sborka4" ->
+                    fullNameColumn.setFooter("Сотрудников: " + GridEdit.builderMap.get(ConveyLine.LINE_4).size());
             case "tech" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.techList.size());
         }
 
@@ -115,8 +126,12 @@ public class WorkTime extends VerticalLayout {
                 .setAutoWidth(false)
                 .setResizable(true)
                 .setWidth("100px")
-                .setFlexGrow(1);
-        if (!(username.equals("admin"))) {districtColumn.setVisible(false); workTimeColumn.setWidth("300px");}
+                .setFlexGrow(0);
+
+        if (!(username.equals("admin"))) {
+            districtColumn.setVisible(false);
+            workTimeColumn.setWidth("100px");
+        }
 
 
         Grid.Column<Worker> workerStatusColumn = workTimeGrid.
@@ -135,8 +150,8 @@ public class WorkTime extends VerticalLayout {
         ballast.setWidth("1px");
 
         //добавляем фильтры
-        if (username.equals("admin")){
-            try{
+        if (username.equals("admin")) {
+            try {
                 HeaderRow headerRow = workTimeGrid.appendHeaderRow();
                 GridListDataView<Worker> dataView = workTimeGrid.setItems(GridEdit.workerList);
                 PersonFilter personFilter = new WorkTime.PersonFilter(dataView);
@@ -153,11 +168,10 @@ public class WorkTime extends VerticalLayout {
         }
 
 
-
-
         IntegerField setTimeEdit = new IntegerField();
         ValidationName timeValid = new ValidationName();
         setTimeEdit.setValue(8);
+        setTimeEdit.setWidth("90px");
         setTimeEdit.setStepButtonsVisible(true);
         setTimeEdit.setMin(0);
         setTimeEdit.setMax(12);
@@ -170,11 +184,11 @@ public class WorkTime extends VerticalLayout {
 
         RadioButtonGroup<String> statusEditColumn = new RadioButtonGroup<>();
         ValidationName statusValid = new ValidationName();
-        statusEditColumn.setItems("Работает (полный день)",
-                "Работает (нестандартное время)",
-                "Больничный",
-                "Отпуск",
-                "Не определено");
+        statusEditColumn.setItems("10",
+                "9", "8", "0",
+                "БОЛ",
+                "ОТП",
+                "ОТГ", "АДМ");
         statusEditColumn.setWidthFull();
         addCloseHandler(statusEditColumn, editor);
         binder.forField(statusEditColumn)
@@ -182,7 +196,6 @@ public class WorkTime extends VerticalLayout {
                 .withStatusLabel(statusValid)
                 .bind(Worker::getWorkerStatusMassive, Worker::setWorkerStatusMassive);
         workerStatusColumn.setEditorComponent(statusEditColumn);
-
 
 
         workTimeGrid.addItemDoubleClickListener(e -> {
@@ -202,16 +215,16 @@ public class WorkTime extends VerticalLayout {
         });
 
 
-
         editor.addCancelListener(e -> {
             timeValid.setText("");
-            workTimeGrid.getDataProvider().refreshAll();});
+            workTimeGrid.getDataProvider().refreshAll();
+        });
 
         workTimeGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         add(workTimeDatePicker, save, workTimeGrid);
     }
 
-    public void setItemforGrid(String sc, Grid <Worker> grid){
+    public void setItemforGrid(String sc, Grid<Worker> grid) {
         switch (sc) {
             case "admin", "owner" -> grid.setItems(GridEdit.workerList);
             case "volna1" -> grid.setItems(GridEdit.mountMap.get(ConveyLine.LINE_1));
@@ -226,6 +239,7 @@ public class WorkTime extends VerticalLayout {
         }
 
     }
+
     private static void addCloseHandler(Component textField, Editor<Worker> editor) {
         textField.getElement()
                 .addEventListener("keydown", e -> editor.cancel())
@@ -267,11 +281,13 @@ public class WorkTime extends VerticalLayout {
             this.fullName = fullName;
             this.dataView.refreshAll();
         }
-        public void setTime(String time){
+
+        public void setTime(String time) {
             this.time = time;
             this.dataView.refreshAll();
         }
-        public void setStatus(String status){
+
+        public void setStatus(String status) {
             this.status = status;
             this.dataView.refreshAll();
         }
@@ -301,6 +317,11 @@ public class WorkTime extends VerticalLayout {
             return searchTerm == null || searchTerm.isEmpty()
                     || value.toLowerCase().contains(searchTerm.toLowerCase());
         }
+    }
+
+    private void initPage(Grid<Worker> grid) {
+        TimeAdapter.workTimeDatePicker.setValue(workTimeDatePicker.getValue());
+        grid.getDataProvider().refreshAll();
     }
 }
 

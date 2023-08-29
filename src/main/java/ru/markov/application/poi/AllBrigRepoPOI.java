@@ -75,23 +75,55 @@ public class AllBrigRepoPOI {
         nothingStatusCell.setBorderRight(BorderStyle.THIN);
         nothingStatusCell.setBorderTop(BorderStyle.THIN);
 
+        CellStyle adminOtpyskStatusCell = allBook.createCellStyle();
+        adminOtpyskStatusCell.setBorderBottom(BorderStyle.THIN);
+        adminOtpyskStatusCell.setBorderLeft(BorderStyle.THIN);
+        adminOtpyskStatusCell.setBorderRight(BorderStyle.THIN);
+        adminOtpyskStatusCell.setBorderTop(BorderStyle.THIN);
+
+        CellStyle otrabotkaStatusCell = allBook.createCellStyle();
+        otrabotkaStatusCell.setBorderBottom(BorderStyle.THIN);
+        otrabotkaStatusCell.setBorderLeft(BorderStyle.THIN);
+        otrabotkaStatusCell.setBorderRight(BorderStyle.THIN);
+        otrabotkaStatusCell.setBorderTop(BorderStyle.THIN);
+
+        otrabotkaStatusCell.setFillForegroundColor(IndexedColors.PALE_BLUE.getIndex());
+        otrabotkaStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        otrabotkaStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        otrabotkaStatusCell.setAlignment(HorizontalAlignment.CENTER);
+
+        adminOtpyskStatusCell.setFillForegroundColor(IndexedColors.PLUM.getIndex());
+        adminOtpyskStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        adminOtpyskStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        adminOtpyskStatusCell.setAlignment(HorizontalAlignment.CENTER);
+
         workStatusCell.setFillForegroundColor(IndexedColors.WHITE.getIndex());
         workStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        workStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        workStatusCell.setAlignment(HorizontalAlignment.CENTER);
 
         holidayStatusCell.setFillForegroundColor(IndexedColors.GREEN.getIndex());
         holidayStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        holidayStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        holidayStatusCell.setAlignment(HorizontalAlignment.CENTER);
 
         hospitalStatusCell.setFillForegroundColor(IndexedColors.RED.getIndex());
         hospitalStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        hospitalStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        hospitalStatusCell.setAlignment(HorizontalAlignment.CENTER);
 
         nothingStatusCell.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
         nothingStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        nothingStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        nothingStatusCell.setAlignment(HorizontalAlignment.CENTER);
 
-        switch (GridEdit.mountMap.get(line).get(workerIndex).getWorkerStatusAtDay(day)) {
-            case ("Работает") -> cell.setCellStyle(workStatusCell);
-            case ("Больничный") -> cell.setCellStyle(hospitalStatusCell);
-            case ("Отпуск") -> cell.setCellStyle(holidayStatusCell);
-            case ("Не определено") -> cell.setCellStyle(nothingStatusCell);
+        switch (GridEdit.mountMap.get(line).get(workerIndex).getWorkerStatusAtDayToRepo(day)) {
+            case WORK -> cell.setCellStyle(workStatusCell);
+            case HOSPITAL -> cell.setCellStyle(hospitalStatusCell);
+            case HOLIDAY -> cell.setCellStyle(holidayStatusCell);
+            case NOTHING -> cell.setCellStyle(nothingStatusCell);
+            case ADMINOTP -> cell.setCellStyle(adminOtpyskStatusCell);
+            case OTRABOTKA -> cell.setCellStyle(otrabotkaStatusCell);
         }
     }
     public void setStatusCellColorBuild(int workerIndex, int day, Cell cell, ConveyLine line) {
@@ -119,23 +151,55 @@ public class AllBrigRepoPOI {
         nothingStatusCell.setBorderRight(BorderStyle.THIN);
         nothingStatusCell.setBorderTop(BorderStyle.THIN);
 
+        CellStyle adminOtpyskStatusCell = allBook.createCellStyle();
+        adminOtpyskStatusCell.setBorderBottom(BorderStyle.THIN);
+        adminOtpyskStatusCell.setBorderLeft(BorderStyle.THIN);
+        adminOtpyskStatusCell.setBorderRight(BorderStyle.THIN);
+        adminOtpyskStatusCell.setBorderTop(BorderStyle.THIN);
+
+        CellStyle otrabotkaStatusCell = allBook.createCellStyle();
+        otrabotkaStatusCell.setBorderBottom(BorderStyle.THIN);
+        otrabotkaStatusCell.setBorderLeft(BorderStyle.THIN);
+        otrabotkaStatusCell.setBorderRight(BorderStyle.THIN);
+        otrabotkaStatusCell.setBorderTop(BorderStyle.THIN);
+
+        otrabotkaStatusCell.setFillForegroundColor(IndexedColors.PALE_BLUE.getIndex());
+        otrabotkaStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        otrabotkaStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        otrabotkaStatusCell.setAlignment(HorizontalAlignment.CENTER);
+
+        adminOtpyskStatusCell.setFillForegroundColor(IndexedColors.PLUM.getIndex());
+        adminOtpyskStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        adminOtpyskStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        adminOtpyskStatusCell.setAlignment(HorizontalAlignment.CENTER);
+
         workStatusCell.setFillForegroundColor(IndexedColors.WHITE.getIndex());
         workStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        workStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        workStatusCell.setAlignment(HorizontalAlignment.CENTER);
 
         holidayStatusCell.setFillForegroundColor(IndexedColors.GREEN.getIndex());
         holidayStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        holidayStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        holidayStatusCell.setAlignment(HorizontalAlignment.CENTER);
 
         hospitalStatusCell.setFillForegroundColor(IndexedColors.RED.getIndex());
         hospitalStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        hospitalStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        hospitalStatusCell.setAlignment(HorizontalAlignment.CENTER);
 
         nothingStatusCell.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
         nothingStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        nothingStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        nothingStatusCell.setAlignment(HorizontalAlignment.CENTER);
 
-        switch (GridEdit.builderMap.get(line).get(workerIndex).getWorkerStatusAtDay(day)) {
-            case ("Работает") -> cell.setCellStyle(workStatusCell);
-            case ("Больничный") -> cell.setCellStyle(hospitalStatusCell);
-            case ("Отпуск") -> cell.setCellStyle(holidayStatusCell);
-            case ("Не определено") -> cell.setCellStyle(nothingStatusCell);
+        switch (GridEdit.builderMap.get(line).get(workerIndex).getWorkerStatusAtDayToRepo(day)) {
+            case WORK -> cell.setCellStyle(workStatusCell);
+            case HOSPITAL -> cell.setCellStyle(hospitalStatusCell);
+            case HOLIDAY -> cell.setCellStyle(holidayStatusCell);
+            case NOTHING -> cell.setCellStyle(nothingStatusCell);
+            case ADMINOTP -> cell.setCellStyle(adminOtpyskStatusCell);
+            case OTRABOTKA -> cell.setCellStyle(otrabotkaStatusCell);
         }
     }
     public void setStatusCellColorTech(int workerIndex, int day, Cell cell) {
@@ -163,23 +227,55 @@ public class AllBrigRepoPOI {
         nothingStatusCell.setBorderRight(BorderStyle.THIN);
         nothingStatusCell.setBorderTop(BorderStyle.THIN);
 
+        CellStyle adminOtpyskStatusCell = allBook.createCellStyle();
+        adminOtpyskStatusCell.setBorderBottom(BorderStyle.THIN);
+        adminOtpyskStatusCell.setBorderLeft(BorderStyle.THIN);
+        adminOtpyskStatusCell.setBorderRight(BorderStyle.THIN);
+        adminOtpyskStatusCell.setBorderTop(BorderStyle.THIN);
+
+        CellStyle otrabotkaStatusCell = allBook.createCellStyle();
+        otrabotkaStatusCell.setBorderBottom(BorderStyle.THIN);
+        otrabotkaStatusCell.setBorderLeft(BorderStyle.THIN);
+        otrabotkaStatusCell.setBorderRight(BorderStyle.THIN);
+        otrabotkaStatusCell.setBorderTop(BorderStyle.THIN);
+
+        otrabotkaStatusCell.setFillForegroundColor(IndexedColors.PALE_BLUE.getIndex());
+        otrabotkaStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        otrabotkaStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        otrabotkaStatusCell.setAlignment(HorizontalAlignment.CENTER);
+
+        adminOtpyskStatusCell.setFillForegroundColor(IndexedColors.PLUM.getIndex());
+        adminOtpyskStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        adminOtpyskStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        adminOtpyskStatusCell.setAlignment(HorizontalAlignment.CENTER);
+
         workStatusCell.setFillForegroundColor(IndexedColors.WHITE.getIndex());
         workStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        workStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        workStatusCell.setAlignment(HorizontalAlignment.CENTER);
 
         holidayStatusCell.setFillForegroundColor(IndexedColors.GREEN.getIndex());
         holidayStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        holidayStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        holidayStatusCell.setAlignment(HorizontalAlignment.CENTER);
 
         hospitalStatusCell.setFillForegroundColor(IndexedColors.RED.getIndex());
         hospitalStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        hospitalStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        hospitalStatusCell.setAlignment(HorizontalAlignment.CENTER);
 
         nothingStatusCell.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
         nothingStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        nothingStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        nothingStatusCell.setAlignment(HorizontalAlignment.CENTER);
 
-        switch (GridEdit.techList.get(workerIndex).getWorkerStatusAtDay(day)) {
-            case ("Работает") -> cell.setCellStyle(workStatusCell);
-            case ("Больничный") -> cell.setCellStyle(hospitalStatusCell);
-            case ("Отпуск") -> cell.setCellStyle(holidayStatusCell);
-            case ("Не определено") -> cell.setCellStyle(nothingStatusCell);
+        switch (GridEdit.techList.get(workerIndex).getWorkerStatusAtDayToRepo(day)) {
+            case WORK -> cell.setCellStyle(workStatusCell);
+            case HOSPITAL -> cell.setCellStyle(hospitalStatusCell);
+            case HOLIDAY -> cell.setCellStyle(holidayStatusCell);
+            case NOTHING -> cell.setCellStyle(nothingStatusCell);
+            case ADMINOTP -> cell.setCellStyle(adminOtpyskStatusCell);
+            case OTRABOTKA -> cell.setCellStyle(otrabotkaStatusCell);
         }
     }
     public String getMonth() {
@@ -235,6 +331,8 @@ public class AllBrigRepoPOI {
             sheet.setColumnWidth(i, 1000);
         }
         sheet.setColumnWidth(0, 1000);
+        legendMap(sheet);
+
     }
     public void reportList() {
         Sheet allBrigSheet = allBook.createSheet("Все бригады");
@@ -696,5 +794,100 @@ public class AllBrigRepoPOI {
         setAroundBorderCenterAlignment(allBook.getSheet(sheet).getRow(techIndex+GridEdit.techList.size()).getCell(0));
         allBook.getSheet(sheet).getRow(techIndex+GridEdit.techList.size()).getCell(0).setCellValue("Итого в бригаде:");
         //завершен отчёт
+
+
+    }
+
+    public void legendMap(Sheet sheet){
+        CellStyle workStatusCell = allBook.createCellStyle();
+        workStatusCell.setBorderBottom(BorderStyle.THIN);
+        workStatusCell.setBorderLeft(BorderStyle.THIN);
+        workStatusCell.setBorderRight(BorderStyle.THIN);
+        workStatusCell.setBorderTop(BorderStyle.THIN);
+
+        CellStyle holidayStatusCell = allBook.createCellStyle();
+        holidayStatusCell.setBorderBottom(BorderStyle.THIN);
+        holidayStatusCell.setBorderLeft(BorderStyle.THIN);
+        holidayStatusCell.setBorderRight(BorderStyle.THIN);
+        holidayStatusCell.setBorderTop(BorderStyle.THIN);
+
+        CellStyle hospitalStatusCell = allBook.createCellStyle();
+        hospitalStatusCell.setBorderBottom(BorderStyle.THIN);
+        hospitalStatusCell.setBorderLeft(BorderStyle.THIN);
+        hospitalStatusCell.setBorderRight(BorderStyle.THIN);
+        hospitalStatusCell.setBorderTop(BorderStyle.THIN);
+
+        CellStyle nothingStatusCell = allBook.createCellStyle();
+        nothingStatusCell.setBorderBottom(BorderStyle.THIN);
+        nothingStatusCell.setBorderLeft(BorderStyle.THIN);
+        nothingStatusCell.setBorderRight(BorderStyle.THIN);
+        nothingStatusCell.setBorderTop(BorderStyle.THIN);
+
+        CellStyle adminOtpyskStatusCell = allBook.createCellStyle();
+        adminOtpyskStatusCell.setBorderBottom(BorderStyle.THIN);
+        adminOtpyskStatusCell.setBorderLeft(BorderStyle.THIN);
+        adminOtpyskStatusCell.setBorderRight(BorderStyle.THIN);
+        adminOtpyskStatusCell.setBorderTop(BorderStyle.THIN);
+
+        CellStyle otrabotkaStatusCell = allBook.createCellStyle();
+        otrabotkaStatusCell.setBorderBottom(BorderStyle.THIN);
+        otrabotkaStatusCell.setBorderLeft(BorderStyle.THIN);
+        otrabotkaStatusCell.setBorderRight(BorderStyle.THIN);
+        otrabotkaStatusCell.setBorderTop(BorderStyle.THIN);
+
+        otrabotkaStatusCell.setFillForegroundColor(IndexedColors.PALE_BLUE.getIndex());
+        otrabotkaStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        otrabotkaStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        otrabotkaStatusCell.setAlignment(HorizontalAlignment.CENTER);
+
+        adminOtpyskStatusCell.setFillForegroundColor(IndexedColors.PLUM.getIndex());
+        adminOtpyskStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        adminOtpyskStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        adminOtpyskStatusCell.setAlignment(HorizontalAlignment.CENTER);
+
+        workStatusCell.setFillForegroundColor(IndexedColors.WHITE.getIndex());
+        workStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        workStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        workStatusCell.setAlignment(HorizontalAlignment.CENTER);
+
+        holidayStatusCell.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+        holidayStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        holidayStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        holidayStatusCell.setAlignment(HorizontalAlignment.CENTER);
+
+        hospitalStatusCell.setFillForegroundColor(IndexedColors.RED.getIndex());
+        hospitalStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        hospitalStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        hospitalStatusCell.setAlignment(HorizontalAlignment.CENTER);
+
+        nothingStatusCell.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        nothingStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        nothingStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        nothingStatusCell.setAlignment(HorizontalAlignment.CENTER);
+
+
+
+        sheet.getRow(1).createCell(35).setCellValue("Работает");
+        sheet.getRow(1).createCell(36).setCellStyle(workStatusCell);
+
+        sheet.getRow(2).createCell(35).setCellValue("Больничный");
+        sheet.getRow(2).createCell(36).setCellStyle(hospitalStatusCell);
+
+        sheet.getRow(3).createCell(35).setCellValue("Отпуск");
+        sheet.getRow(3).createCell(36).setCellStyle(holidayStatusCell);
+
+        sheet.setColumnWidth(37, 100);
+        sheet.setColumnWidth(35, 4000);
+        sheet.setColumnWidth(38, 4000);
+
+
+        sheet.getRow(1).createCell(38).setCellValue("С отработкой");
+        sheet.getRow(1).createCell(39).setCellStyle(otrabotkaStatusCell);
+
+        sheet.getRow(2).createCell(38).setCellValue("Выходной");
+        sheet.getRow(2).createCell(39).setCellStyle(nothingStatusCell);
+
+        sheet.getRow(3).createCell(38).setCellValue("Без отработки");
+        sheet.getRow(3).createCell(39).setCellStyle(adminOtpyskStatusCell);
     }
 }

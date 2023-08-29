@@ -2,6 +2,7 @@ package ru.markov.application.poi;
 
 
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import ru.markov.application.views.GridEdit;
@@ -74,23 +75,55 @@ public class TechRepoPOI {
         nothingStatusCell.setBorderRight(BorderStyle.THIN);
         nothingStatusCell.setBorderTop(BorderStyle.THIN);
 
+        CellStyle adminOtpyskStatusCell = techBook.createCellStyle();
+        adminOtpyskStatusCell.setBorderBottom(BorderStyle.THIN);
+        adminOtpyskStatusCell.setBorderLeft(BorderStyle.THIN);
+        adminOtpyskStatusCell.setBorderRight(BorderStyle.THIN);
+        adminOtpyskStatusCell.setBorderTop(BorderStyle.THIN);
+
+        CellStyle otrabotkaStatusCell = techBook.createCellStyle();
+        otrabotkaStatusCell.setBorderBottom(BorderStyle.THIN);
+        otrabotkaStatusCell.setBorderLeft(BorderStyle.THIN);
+        otrabotkaStatusCell.setBorderRight(BorderStyle.THIN);
+        otrabotkaStatusCell.setBorderTop(BorderStyle.THIN);
+
+        otrabotkaStatusCell.setFillForegroundColor(IndexedColors.PALE_BLUE.getIndex());
+        otrabotkaStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        otrabotkaStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        otrabotkaStatusCell.setAlignment(HorizontalAlignment.CENTER);
+
+        adminOtpyskStatusCell.setFillForegroundColor(IndexedColors.PLUM.getIndex());
+        adminOtpyskStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        adminOtpyskStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        adminOtpyskStatusCell.setAlignment(HorizontalAlignment.CENTER);
+
         workStatusCell.setFillForegroundColor(IndexedColors.WHITE.getIndex());
         workStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        workStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        workStatusCell.setAlignment(HorizontalAlignment.CENTER);
 
         holidayStatusCell.setFillForegroundColor(IndexedColors.GREEN.getIndex());
         holidayStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        holidayStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        holidayStatusCell.setAlignment(HorizontalAlignment.CENTER);
 
         hospitalStatusCell.setFillForegroundColor(IndexedColors.RED.getIndex());
         hospitalStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        hospitalStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        hospitalStatusCell.setAlignment(HorizontalAlignment.CENTER);
 
         nothingStatusCell.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
         nothingStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        nothingStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        nothingStatusCell.setAlignment(HorizontalAlignment.CENTER);
 
-        switch (GridEdit.techList.get(workerIndex).getWorkerStatusAtDay(day)) {
-            case ("Работает") -> cell.setCellStyle(workStatusCell);
-            case ("Больничный") -> cell.setCellStyle(hospitalStatusCell);
-            case ("Отпуск") -> cell.setCellStyle(holidayStatusCell);
-            case ("Не определено") -> cell.setCellStyle(nothingStatusCell);
+        switch (GridEdit.techList.get(workerIndex).getWorkerStatusAtDayToRepo(day)) {
+            case WORK -> cell.setCellStyle(workStatusCell);
+            case HOSPITAL -> cell.setCellStyle(hospitalStatusCell);
+            case HOLIDAY -> cell.setCellStyle(holidayStatusCell);
+            case NOTHING -> cell.setCellStyle(nothingStatusCell);
+            case ADMINOTP -> cell.setCellStyle(adminOtpyskStatusCell);
+        case OTRABOTKA -> cell.setCellStyle(otrabotkaStatusCell);
         }
     }
     public void initSheetTech(Sheet sheet) {
@@ -212,6 +245,10 @@ public class TechRepoPOI {
         //завершен отчёт
 
     }
+
 }
+
+
+
 
 

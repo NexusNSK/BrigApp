@@ -4,5 +4,7 @@ public enum WorkerStatus {
     WORK,
     HOLIDAY,
     HOSPITAL,
-    NOTHING
+    NOTHING,
+    ADMINOTP,
+    OTRABOTKA
 }
