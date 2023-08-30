@@ -51,6 +51,7 @@ public class WorkTime extends Div {
         workTimeDatePicker.setValue(LocalDate.now());
         Grid<Worker> workTimeGrid = new Grid<>(Worker.class, false);
 
+
         initPage(workTimeGrid); //метод служит для предотвращения бага отображения, когда по LocalDate.now() в таблице были не актуальыне данные
 
         workTimeGrid.setWidthFull();
@@ -260,19 +261,12 @@ public class WorkTime extends Div {
         workerStatusColumn.setEditorComponent(statusEditColumn);
 
 
-        workTimeGrid.addItemDoubleClickListener(e -> {
+        workTimeGrid.addItemClickListener(e -> {
             editor.editItem(e.getItem());
             Component editorComponent = e.getColumn().getEditorComponent();
             if (editorComponent instanceof Focusable) {
                 ((Focusable<?>) editorComponent).focus();
             }
-            workTimeGrid.setPartNameGenerator(worker -> {
-                if (worker.getWorkerStatusMassive().equals("Отпуск"))
-                    return "high-rating";
-                if (worker.getWorkerStatusMassive().equals("Больничный"))
-                    return "low-rating";
-                return null;
-            });
             workTimeGrid.getDataProvider().refreshAll();
         });
 

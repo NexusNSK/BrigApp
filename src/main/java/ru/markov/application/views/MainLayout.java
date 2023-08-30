@@ -22,6 +22,9 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 @Route("")
 @PermitAll
 @PageTitle("BrigApp א Домашняя страница")
@@ -29,6 +32,7 @@ public class MainLayout extends AppLayout {
     private final SecurityService securityService;
     public MainLayout(SecurityService securityService) {
         this.securityService = securityService;
+        System.out.println(LocalDate.now() + " " + LocalTime.now() + " пользователь " + securityService.getAuthenticatedUser().getUsername() + " вошел в систему");
         createHeader();
         addClassName("main-layout-app-layout-1");
         HorizontalLayout horizontalLayout = new HorizontalLayout();
