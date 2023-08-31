@@ -4,6 +4,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Focusable;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
@@ -22,15 +23,14 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.spring.annotation.UIScope;
+import com.vaadin.flow.router.RouteAlias;
 import jakarta.annotation.security.PermitAll;
+import org.apache.catalina.webresources.AbstractResource;
 import ru.markov.application.data.ValidationName;
 import ru.markov.application.data.Worker;
 import ru.markov.application.security.SecurityService;
-import ru.markov.application.service.ConveyLine;
-import ru.markov.application.service.District;
-import ru.markov.application.service.Serial;
-import ru.markov.application.service.TimeAdapter;
+import ru.markov.application.service.*;
+
 import java.time.LocalDate;
 import java.util.function.Consumer;
 
@@ -38,7 +38,8 @@ import java.util.function.Consumer;
 @PermitAll
 @Route(value = "worktime", layout = MainLayout.class)
 @PageTitle("BrigApp א Учёт времени")
-@UIScope
+@RouteAlias(value = "", layout = MainLayout.class)
+@Uses(Icon.class)
 public class WorkTime extends Div {
 
     public DatePicker workTimeDatePicker = new DatePicker();
@@ -50,6 +51,7 @@ public class WorkTime extends Div {
 
         workTimeDatePicker.setValue(LocalDate.now());
         Grid<Worker> workTimeGrid = new Grid<>(Worker.class, false);
+        workTimeGrid.addClassName("work-time-grid");
 
 
         initPage(workTimeGrid); //метод служит для предотвращения бага отображения, когда по LocalDate.now() в таблице были не актуальыне данные
@@ -234,7 +236,7 @@ public class WorkTime extends Div {
         IntegerField setTimeEdit = new IntegerField();
         ValidationName timeValid = new ValidationName();
         setTimeEdit.setValue(8);
-        setTimeEdit.setWidth("90px");
+        setTimeEdit.setWidth("60px");
         setTimeEdit.setStepButtonsVisible(true);
         setTimeEdit.setMin(0);
         setTimeEdit.setMax(12);
@@ -277,6 +279,30 @@ public class WorkTime extends Div {
         });
 
         workTimeGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+        workTimeGrid.setPartNameGenerator(person -> {
+            switch (person.getWorkerStatus()) {
+                case WORK -> {
+                    return "work";
+                }
+                case HOSPITAL -> {
+                    return "bol";
+                }
+                case HOLIDAY -> {
+                    return "otpusk";
+                }
+                case NOTHING -> {
+                    return "nothing";
+                }
+                case ADMINOTP -> {
+                    return "administrat";
+                }
+                case OTRABOTKA -> {
+                    return "otrabotka";
+                }
+            }
+                    return null;
+                });
+
         add(workTimeDatePicker, save, likeYesterday, workTimeGrid);
     }
 

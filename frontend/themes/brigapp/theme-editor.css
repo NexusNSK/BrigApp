@@ -2,7 +2,7 @@
  * This file has been created by the Vaadin Theme Editor. Please note that
  * manual changes to individual CSS properties may be overwritten by the theme editor.
  */
-vaadin-app-layout.main-layout-app-layout-1::part(navbar) { background-color:rgba(35,51,72); }
+vaadin-app-layout.main-layout-app-layout-1::part(navbar) { background-color:rgba(8,0,255,0.11); }
 
 vaadin-button.main-layout-button-1 {
   --lumo-button-size:var(--lumo-size-xs);
@@ -17,16 +17,39 @@ vaadin-button.main-layout-button-1::part(label) {
   font-weight:bold;
 }
 
+vaadin-grid.work-time-grid::part(administrat) { background-color: rgba(138, 43, 226, 0.24)}
+vaadin-grid.work-time-grid::part(otrabotka) { background-color: rgba(85, 163, 210, 0.24)}
+vaadin-grid.work-time-grid::part(nothing) { background-color: rgba(77, 44, 112, 0.11)
+}
+
+vaadin-grid.work-time-grid::part(body-cell) {
+  border-radius:20px 0 30px 0;
+  border:1px solid gray;
+}
+
+vaadin-grid.work-time-grid::part(bol) { background-color: rgba(255, 0, 0, 0.34); }
+
+vaadin-grid.work-time-grid::part(font-weight-bold) { font-weight:bold; }
+
+vaadin-grid.work-time-grid::part(otpusk) { background-color: rgba(0, 255, 7, 0.34); }
+
+vaadin-grid.work-time-grid::part(work) { background-color: rgba(255, 255, 255, 0); }
+
+vaadin-grid::part(font-weight-bold) { font-weight:bold; }
+
+vaadin-grid::part(high-rating) { background-color:var(--lumo-success-color-10pct); }
+
+vaadin-grid::part(low-rating) { background-color:var(--lumo-error-color-10pct); }
+
+vaadin-integer-field::part(helper-text) { font-size:var(--lumo-font-size-xxs); }
+
+vaadin-integer-field::part(input-field) {
+  border-radius:var(--lumo-border-radius-l);
+  border-width:0px;
+  font-size:var(--lumo-font-size-xxs);
+  padding-inline:0px;
+}
+
+vaadin-integer-field::part(label) { font-size:var(--lumo-font-size-xxs); }
+
 vaadin-vertical-layout { gap:var(--lumo-space-xs); }
-
-vaadin-grid::part(high-rating) {
-  background-color: var(--lumo-success-color-10pct);
-}
-
-vaadin-grid::part(low-rating) {
-  background-color: var(--lumo-error-color-10pct);
-}
-
-vaadin-grid::part(font-weight-bold) {
-  font-weight: bold;
-}

@@ -25,9 +25,6 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Route("")
-@PermitAll
-@PageTitle("BrigApp א Домашняя страница")
 public class MainLayout extends AppLayout {
     private final SecurityService securityService;
     public MainLayout(SecurityService securityService) {
@@ -41,6 +38,8 @@ public class MainLayout extends AppLayout {
 
     private void createHeader() {
         H1 logo = new H1("BrigApp");
+        //<theme-editor-local-classname>
+        logo.addClassName("main-layout-h1-1");
         Tabs tabs = getTabs();
         addToDrawer(tabs);
         logo.addClassNames(
@@ -62,6 +61,8 @@ public class MainLayout extends AppLayout {
         });
 
         var header = new HorizontalLayout(new DrawerToggle(), logo, theme, logout);
+        //<theme-editor-local-classname>
+        header.addClassName("main-layout-horizontal-layout-1");
 
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         header.expand(logo);

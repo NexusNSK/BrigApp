@@ -220,6 +220,11 @@ public class Worker implements Serializable {
             case ADMINOTP -> "Админ. отпуск";
         };
     }
+    public WorkerStatus getWorkerStatus() {
+        return workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
+                .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth());
+        }
+
 
     public String getWorkerStatusAtDay(int day) {
         return switch (workerStatusMassive.get(Reports.month).get(day)) {
