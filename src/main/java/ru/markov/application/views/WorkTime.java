@@ -25,12 +25,10 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import jakarta.annotation.security.PermitAll;
-import org.apache.catalina.webresources.AbstractResource;
 import ru.markov.application.data.ValidationName;
 import ru.markov.application.data.Worker;
 import ru.markov.application.security.SecurityService;
 import ru.markov.application.service.*;
-
 import java.time.LocalDate;
 import java.util.function.Consumer;
 
@@ -43,7 +41,7 @@ import java.util.function.Consumer;
 public class WorkTime extends Div {
 
     public DatePicker workTimeDatePicker = new DatePicker();
-
+private String dayOfWeek = LocalDate.now().getDayOfWeek().toString();
     public WorkTime(SecurityService securityService) {
 
         GridEdit.initSplitDistrictWorkersList();
@@ -137,6 +135,73 @@ public class WorkTime extends Div {
                 }
             workTimeGrid.getDataProvider().refreshAll();
         });
+        Button likeFriday = new Button("\"Как в пятницу\"");
+        likeFriday.addClickListener(buttonClickEvent -> {
+            switch (username){
+                case "volna1" -> {
+                    for (Worker w : GridEdit.workerList){
+                        if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_1)){
+                            w.setWorkTimeLikeFriday();
+                            w.setWorkerStatusMassiveLikeFriday();}}
+                }
+                case "volna2" -> {
+                    for (Worker w : GridEdit.workerList){
+                        if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_2)){
+                            w.setWorkTimeLikeFriday();
+                            w.setWorkerStatusMassiveLikeFriday();}}
+                }
+                case "volna3" -> {
+                    for (Worker w : GridEdit.workerList){
+                        if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_3)){
+                            w.setWorkTimeLikeFriday();
+                            w.setWorkerStatusMassiveLikeFriday();}}
+                }
+                case "volna4" -> {
+                    for (Worker w : GridEdit.workerList){
+                        if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_4)){
+                            w.setWorkTimeLikeFriday();
+                            w.setWorkerStatusMassiveLikeFriday();}}
+                }
+                case "sborka1" -> {
+                    for (Worker w : GridEdit.workerList){
+                        if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_1)){
+                            w.setWorkTimeLikeFriday();
+                            w.setWorkerStatusMassiveLikeFriday();}}
+                }
+                case "sborka2" -> {
+                    for (Worker w : GridEdit.workerList){
+                        if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_2)){
+                            w.setWorkTimeLikeFriday();
+                            w.setWorkerStatusMassiveLikeFriday();}}
+                }
+                case "sborka3" -> {
+                    for (Worker w : GridEdit.workerList){
+                        if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_3)){
+                            w.setWorkTimeLikeFriday();
+                            w.setWorkerStatusMassiveLikeFriday();}}
+                }
+                case "sborka4" -> {
+                    for (Worker w : GridEdit.workerList){
+                        if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_4)){
+                            w.setWorkTimeLikeFriday();
+                            w.setWorkerStatusMassiveLikeFriday();}}
+                }
+                case "tech" -> {
+                    for (Worker w : GridEdit.workerList){
+                        if (w.getDistrict().equals(District.TECH)){
+                            w.setWorkTimeLikeFriday();
+                            w.setWorkerStatusMassiveLikeFriday();}}
+                }
+            }
+            workTimeGrid.getDataProvider().refreshAll();
+        });
+        if (dayOfWeek.equals("MONDAY")){
+            likeYesterday.setEnabled(false);
+            likeFriday.setEnabled(true);
+        } else {
+            likeYesterday.setEnabled(true);
+            likeFriday.setEnabled(false);
+        }
 
         Grid.Column<Worker> fullNameColumn = workTimeGrid
                 .addColumn(Worker::getFullName).setTextAlign(ColumnTextAlign.START)
@@ -144,7 +209,7 @@ public class WorkTime extends Div {
                 .setAutoWidth(false)
                 .setResizable(true)
                 .setSortable(true)
-                .setWidth("350px")
+                .setWidth("170px")
                 .setFlexGrow(0);
         switch (username) {
             case "admin" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.workerList.size());
@@ -189,13 +254,13 @@ public class WorkTime extends Div {
                 .addColumn(Worker::getWorkTime)
                 .setHeader("Время")
                 .setAutoWidth(false)
-                .setResizable(true)
-                .setWidth("100px")
+                .setResizable(false)
+                .setWidth("115px")
                 .setFlexGrow(0);
 
         if (!(username.equals("admin"))) {
             districtColumn.setVisible(false);
-            workTimeColumn.setWidth("100px");
+            workTimeColumn.setWidth("115px");
         }
 
 
@@ -204,15 +269,15 @@ public class WorkTime extends Div {
                 .setHeader("Статус")
                 .setAutoWidth(false)
                 .setResizable(true)
-                .setWidth("800px")
+                .setWidth("150px")
                 .setFlexGrow(1);
 
-        Grid.Column<Worker> ballast = workTimeGrid.addComponentColumn(worker -> {
-            Button button = new Button("", new Icon(VaadinIcon.AUTOMATION));
-            button.setEnabled(false);
-            return button;
-        });
-        ballast.setWidth("1px");
+//        Grid.Column<Worker> ballast = workTimeGrid.addComponentColumn(worker -> {
+//            Button button = new Button("", new Icon(VaadinIcon.AUTOMATION));
+//            button.setEnabled(false);
+//            return button;
+//        });
+//        ballast.setWidth("1px");
 
         //добавляем фильтры
         if (username.equals("admin")) {
@@ -236,9 +301,9 @@ public class WorkTime extends Div {
         IntegerField setTimeEdit = new IntegerField();
         ValidationName timeValid = new ValidationName();
         setTimeEdit.setValue(8);
-        setTimeEdit.setWidth("60px");
+        setTimeEdit.setWidth("100px");
         setTimeEdit.setStepButtonsVisible(true);
-        setTimeEdit.setMin(0);
+        setTimeEdit.setMin(1);
         setTimeEdit.setMax(12);
         addCloseHandler(setTimeEdit, editor);
         binder.forField(setTimeEdit)
@@ -278,7 +343,7 @@ public class WorkTime extends Div {
             workTimeGrid.getDataProvider().refreshAll();
         });
 
-        workTimeGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+        workTimeGrid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
         workTimeGrid.setPartNameGenerator(person -> {
             switch (person.getWorkerStatus()) {
                 case WORK -> {
@@ -303,7 +368,7 @@ public class WorkTime extends Div {
                     return null;
                 });
 
-        add(workTimeDatePicker, save, likeYesterday, workTimeGrid);
+        add(workTimeDatePicker, save, likeYesterday, likeFriday, workTimeGrid);
     }
 
     public void setItemforGrid(String sc, Grid<Worker> grid) {
