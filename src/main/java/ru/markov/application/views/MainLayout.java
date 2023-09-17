@@ -48,6 +48,8 @@ public class MainLayout extends AppLayout {
 
         String u = securityService.getAuthenticatedUser().getUsername();
         Button logout = new Button("Выйти " + u, new Icon(VaadinIcon.EXIT), e -> securityService.logout());
+        //<theme-editor-local-classname>
+        logout.addClassName("main-layout-button-1");
         logout.addThemeVariants(ButtonVariant.LUMO_ERROR);
         logout.addClassName("main-layout-button-1");
 

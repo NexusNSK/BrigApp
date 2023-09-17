@@ -7,6 +7,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.RolesAllowed;
+import ru.markov.application.service.JsonConverter;
+
+import java.io.IOException;
 
 
 @Route(value = "god_mode", layout = MainLayout.class)
@@ -15,7 +18,15 @@ import jakarta.annotation.security.RolesAllowed;
 public class GodMode extends VerticalLayout {
 
     public GodMode(){
-        Button button = new Button("ewrwer", new Icon(VaadinIcon.PUZZLE_PIECE));
+        Button button = new Button("Выгрузить JSON работников", new Icon(VaadinIcon.PUZZLE_PIECE));
+        button.addClickListener(event -> {
+            try {
+                JsonConverter.toJSON(GridEdit.workerList);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
         add(button);
 
     }

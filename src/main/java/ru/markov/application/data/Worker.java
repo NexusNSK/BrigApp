@@ -1,5 +1,7 @@
 package ru.markov.application.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.context.annotation.ComponentScan;
 import ru.markov.application.service.*;
 import ru.markov.application.views.Reports;
@@ -13,17 +15,26 @@ import java.util.*;
 public class Worker implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
+
+    @JsonProperty("firstName")
     private String firstName;
+    @JsonProperty("lastName")
     private String lastName;
+    @JsonProperty("patronymic")
     private String patronymic;
+    @JsonProperty("district")
     private District district;
+    @JsonProperty("post")
     private Post post;
+    @JsonProperty("line")
     private ConveyLine line;
 
+    @JsonProperty("workerStatusMassive")
     private final HashMap<Integer, HashMap<Integer, WorkerStatus>> workerStatusMassive = new HashMap<>(12);
+    @JsonProperty("workTimeMassive")
     private final HashMap<Integer, HashMap<Integer, Integer>> workTimeMassive = new HashMap<>(12);
     //            Map <номер месяца : Map <номер дня : часы>>
-
+@JsonProperty
     public void initWorkerStatusMap() {
         if (workerStatusMassive.isEmpty()) {
             for (int i = 0; i <= 12; i++) {
@@ -35,7 +46,7 @@ public class Worker implements Serializable {
             System.out.println("Создание карты учета статуса работника завершено!");
         }
     }
-
+@JsonIgnore
     public void initWorkTimeMap() {
         if (workTimeMassive.isEmpty()) {
             for (int i = 0; i <= 12; i++) {
@@ -47,38 +58,41 @@ public class Worker implements Serializable {
             System.out.println("Создание карты учета времемни завершено!");
         }
     }
-
+@JsonIgnore
     public void setWorkTime(int hours) {
         workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), hours);
     }
-
+@JsonIgnore
     public void setWorkTimeLikeYesterday() {
         workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), getWorkTimeLikeYesterday());
     }
+@JsonIgnore
     public void setWorkTimeLikeFriday() {
         workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), getWorkTimeLikeFriday());
     }
-
+@JsonIgnore
     public int getWorkTime() {
         return workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth());
     }
+@JsonIgnore
     public int getWorkTimeLikeYesterday() {
         return workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth()-1);
     }
+@JsonIgnore
     public int getWorkTimeLikeFriday() {
         return workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth()-3);
     }
-
+@JsonIgnore
     public int getWorkTimeToPOI(int day) {
         return workTimeMassive.get(Reports.month).get(day);
     }
-
+@JsonIgnore
     public String getPost() {
         String ps = "";
         switch (post) {
@@ -91,7 +105,7 @@ public class Worker implements Serializable {
         }
         return ps;
     }
-
+@JsonIgnore
     public void setPost(String post) {
         switch (post) {
             case ("Бригадир монтажников") -> this.post = Post.BRIG_MOUNT;
@@ -102,7 +116,7 @@ public class Worker implements Serializable {
             case ("Техник") -> this.post = Post.TECHNIC;
         }
     }
-
+@JsonIgnore
     public String getDistrictToString() {
         return switch (district) {
             case MOUNTING -> "Бригада монтажники";
@@ -110,11 +124,11 @@ public class Worker implements Serializable {
             case TECH -> "Бригада техники";
         };
     }
-
+@JsonIgnore
     public District getDistrict() {
         return this.district;
     }
-
+@JsonIgnore
     public void setDistrict(String district) {
         switch (district) {
             case ("Бригада монтажники") -> this.district = District.MOUNTING;
@@ -133,35 +147,37 @@ public class Worker implements Serializable {
         initWorkTimeMap();
         initWorkerStatusMap();
     }
+    public Worker(){}
 
+    @JsonIgnore
     public String getFullName() {
         return lastName + " " + firstName + " " + patronymic;
     }
-
+@JsonIgnore
     public String getFirstName() {
         return this.firstName;
     }
-
+@JsonIgnore
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-
+@JsonIgnore
     public String getLastName() {
         return this.lastName;
     }
-
+@JsonIgnore
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
+@JsonIgnore
     public String getPatronymic() {
         return this.patronymic;
     }
-
+@JsonIgnore
     public void setPatronymic(String patronymic) {
         this.patronymic = patronymic;
     }
-
+@JsonIgnore
     public void setWorkerStatusMassive(String status) {
         switch (status) {
             case ("10") -> {
@@ -208,22 +224,26 @@ public class Worker implements Serializable {
 
         }
     }
-
+@JsonIgnore
     public void setWorkerStatusMassiveLikeYesterday() {
         workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), getWorkerStatusLikeYesterday());
     }
+@JsonIgnore
     public void setWorkerStatusMassiveLikeFriday() {
         workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), getWorkerStatusLikeFriday());
     }
+@JsonIgnore
     private WorkerStatus getWorkerStatusLikeYesterday() {
         return workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue()).get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth()-1);
     }
+@JsonIgnore
     private WorkerStatus getWorkerStatusLikeFriday() {
         return workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue()).get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth()-3);
     }
 
+    @JsonIgnore
     public String getWorkerStatusMassive() {
         return switch (workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth())) {
@@ -234,12 +254,12 @@ public class Worker implements Serializable {
             case ADMINOTP -> "Админ. отпуск";
         };
     }
+@JsonIgnore
     public WorkerStatus getWorkerStatus() {
         return workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth());
         }
-
-
+        @JsonIgnore
     public String getWorkerStatusAtDay(int day) {
         return switch (workerStatusMassive.get(Reports.month).get(day)) {
             case WORK, OTRABOTKA -> "Работает";
@@ -249,11 +269,12 @@ public class Worker implements Serializable {
             case ADMINOTP -> "Админ. отпуск";
         };
     }
-
+@JsonIgnore
     public WorkerStatus getWorkerStatusAtDayToRepo(int day) {
         return workerStatusMassive.get(Reports.month).get(day);
     }
 
+    @JsonIgnore
     public String getLineToString() {
         return switch (line) {
             case LINE_1 -> "1";
@@ -263,11 +284,11 @@ public class Worker implements Serializable {
             default -> "---";
         };
     }
-
+@JsonIgnore
     public ConveyLine getLine() {
         return this.line;
     }
-
+@JsonIgnore
     public void setLine(String line) {
         switch (line) {
             default -> this.line = ConveyLine.COMMON;

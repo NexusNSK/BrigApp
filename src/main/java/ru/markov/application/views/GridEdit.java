@@ -404,6 +404,8 @@ public class GridEdit extends Div {
             grid.getElement().getThemeList().add("spacing-m");
 
             //добавляем возможность устанавливать диапазон отпусков для автозаполнения в табеле
+            // ---------------------------------------------------------
+            //пока этой реализации нет, а код ниже относится к другому функционалу
 
             add(topHead, grid, firstNameValid, lastNameValid, fatherNameValid);
         }else{
