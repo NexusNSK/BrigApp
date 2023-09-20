@@ -1,0 +1,17 @@
+{
+  "frontendFolder": "C:/Users/User/Downloads/BrigApp/frontend",
+  "themeFolder": "themes",
+  "themeResourceFolder": "C:/Users/User/Downloads/BrigApp/frontend/generated/jar-resources",
+  "staticOutput": "C:/Users/User/Downloads/BrigApp/target/classes/META-INF/VAADIN/webapp/VAADIN/static",
+  "generatedFolder": "generated",
+  "statsOutput": "C:\\Users\\User\\Downloads\\BrigApp\\target\\classes\\META-INF\\VAADIN\\config",
+  "frontendBundleOutput": "C:\\Users\\User\\Downloads\\BrigApp\\target\\classes\\META-INF\\VAADIN\\webapp",
+  "devBundleOutput": "C:/Users/User/Downloads/BrigApp/src/main/dev-bundle/webapp",
+  "devBundleStatsOutput": "C:/Users/User/Downloads/BrigApp/src/main/dev-bundle/config",
+  "jarResourcesFolder": "C:/Users/User/Downloads/BrigApp/frontend/generated/jar-resources",
+  "themeName": "brigapp",
+  "clientServiceWorkerSource": "C:\\Users\\User\\Downloads\\BrigApp\\target\\sw.ts",
+  "pwaEnabled": false,
+  "offlineEnabled": false,
+  "offlinePath": "'offline.html'"
+}
