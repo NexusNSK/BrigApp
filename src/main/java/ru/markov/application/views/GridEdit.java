@@ -84,6 +84,7 @@ public class GridEdit extends Div {
                 case TECH -> techList.add(w);
             }
         }
+
     }
 
     private static void startInitSplitMap(HashMap<ConveyLine, List<Worker>> map) {
