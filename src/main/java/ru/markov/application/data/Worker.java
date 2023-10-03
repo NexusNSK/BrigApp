@@ -62,6 +62,10 @@ public class Worker implements Serializable {
     public void setWorkTime(int hours) {
         workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), hours);
+        if (hours < 8 && hours > 0) {
+            workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
+                    .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.OTRABOTKA);
+        }
     }
 @JsonIgnore
     public void setWorkTimeLikeYesterday() {
@@ -221,7 +225,6 @@ public class Worker implements Serializable {
                         .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.NOTHING);
                 setWorkTime(0);
             }
-
         }
     }
 @JsonIgnore

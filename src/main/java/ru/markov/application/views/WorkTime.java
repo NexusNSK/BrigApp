@@ -13,7 +13,6 @@ import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.grid.editor.Editor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.IntegerField;
@@ -205,12 +204,14 @@ private String dayOfWeek = LocalDate.now().getDayOfWeek().toString();
 
         Grid.Column<Worker> fullNameColumn = workTimeGrid
                 .addColumn(Worker::getFullName).setTextAlign(ColumnTextAlign.START)
+                .setSortProperty("lastName")
                 .setHeader("ФИО сотрудника")
                 .setAutoWidth(false)
                 .setResizable(true)
                 .setSortable(true)
                 .setWidth("170px")
                 .setFlexGrow(0);
+
         switch (username) {
             case "admin" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.workerList.size());
             case "volna1" ->
@@ -272,13 +273,6 @@ private String dayOfWeek = LocalDate.now().getDayOfWeek().toString();
                 .setWidth("150px")
                 .setFlexGrow(1);
 
-//        Grid.Column<Worker> ballast = workTimeGrid.addComponentColumn(worker -> {
-//            Button button = new Button("", new Icon(VaadinIcon.AUTOMATION));
-//            button.setEnabled(false);
-//            return button;
-//        });
-//        ballast.setWidth("1px");
-
         //добавляем фильтры
         if (username.equals("admin")) {
             try {
@@ -304,7 +298,7 @@ private String dayOfWeek = LocalDate.now().getDayOfWeek().toString();
         setTimeEdit.setWidth("100px");
         setTimeEdit.setStepButtonsVisible(true);
         setTimeEdit.setMin(1);
-        setTimeEdit.setMax(12);
+        setTimeEdit.setMax(20);
         addCloseHandler(setTimeEdit, editor);
         binder.forField(setTimeEdit)
                 .asRequired()
