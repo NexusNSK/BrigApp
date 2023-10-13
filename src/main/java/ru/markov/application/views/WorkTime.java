@@ -230,7 +230,7 @@ private String dayOfWeek = LocalDate.now().getDayOfWeek().toString();
                     fullNameColumn.setFooter("Сотрудников: " + GridEdit.builderMap.get(ConveyLine.LINE_3).size());
             case "sborka4" ->
                     fullNameColumn.setFooter("Сотрудников: " + GridEdit.builderMap.get(ConveyLine.LINE_4).size());
-            case "tech" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.techList.size());
+            case "tech" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.techListUPC.size());
         }
 
         Grid.Column<Worker> lineColumn = workTimeGrid.
@@ -376,7 +376,7 @@ private String dayOfWeek = LocalDate.now().getDayOfWeek().toString();
             case "sborka2" -> grid.setItems(GridEdit.builderMap.get(ConveyLine.LINE_2));
             case "sborka3" -> grid.setItems(GridEdit.builderMap.get(ConveyLine.LINE_3));
             case "sborka4" -> grid.setItems(GridEdit.builderMap.get(ConveyLine.LINE_4));
-            case "tech" -> grid.setItems(GridEdit.techList);
+            case "tech" -> grid.setItems(GridEdit.techListUPC);
         }
 
     }

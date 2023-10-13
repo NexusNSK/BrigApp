@@ -28,15 +28,13 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import jakarta.annotation.security.PermitAll;
-import jakarta.annotation.security.RolesAllowed;
 import ru.markov.application.data.*;
 import ru.markov.application.security.SecurityService;
 import ru.markov.application.service.ConveyLine;
 import ru.markov.application.service.Serial;
 import com.vaadin.flow.component.dialog.Dialog;
-
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
@@ -68,23 +66,34 @@ public class GridEdit extends Div {
     public static List<Worker> workerList = new ArrayList<>();
     public static HashMap<ConveyLine, List<Worker>> mountMap = new HashMap<>();
     public static HashMap<ConveyLine, List<Worker>> builderMap = new HashMap<>();
-    public static List<Worker> techList = new ArrayList<>();
+    public static List<Worker> techListUPC = new ArrayList<>();
+    public static List<Worker> techLab1 = new ArrayList<>();
+    public static List<Worker> techLab2 = new ArrayList<>();
+    public static List<Worker> techLab5 = new ArrayList<>();
 
 
     public static void initSplitDistrictWorkersList() {
+        Collections.sort(workerList);
+        for (int i = 0; i < workerList.size(); i++) {
+            if (workerList.get(i).getPost().equals("Бригадир монтажников")||
+                    workerList.get(i).getPost().equals("Бригадир сборщиков")||
+                    workerList.get(i).getPost().equals("Бригадир техников")){
+                workerList.add(0, workerList.get(i));
+                workerList.remove(i+1);
+            }
+        }
         mountMap.clear();
         builderMap.clear();
-        techList.clear();
+        techListUPC.clear();
         startInitSplitMap(mountMap);
         startInitSplitMap(builderMap);
         for (Worker w : workerList) {
             switch (w.getDistrict()) {
                 case MOUNTING -> mountMap.get(w.getLine()).add(w);
                 case BUILDING -> builderMap.get(w.getLine()).add(w);
-                case TECH -> techList.add(w);
+                case TECH -> techListUPC.add(w);
             }
         }
-
     }
 
     private static void startInitSplitMap(HashMap<ConveyLine, List<Worker>> map) {
@@ -417,8 +426,7 @@ public class GridEdit extends Div {
         }
     }
 
-    private static void addCloseHandler(Component textField,
-                                        Editor<Worker> editor) {
+    private static void addCloseHandler(Component textField, Editor<Worker> editor) {
         textField.getElement().addEventListener("keydown", e -> editor.cancel())
                 .setFilter("event.code === 'Escape'");
     }

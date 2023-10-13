@@ -8,16 +8,15 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.RolesAllowed;
 import ru.markov.application.service.JsonConverter;
-
 import java.io.IOException;
 
 
 @Route(value = "god_mode", layout = MainLayout.class)
 @PageTitle("BrigApp א GOD MODE")
-@RolesAllowed("OWNER")
+@RolesAllowed("OWNER, ADMIN")
 public class GodMode extends VerticalLayout {
 
-    public GodMode(){
+    public GodMode() {
         Button button = new Button("Выгрузить JSON работников", new Icon(VaadinIcon.PUZZLE_PIECE));
         button.addClickListener(event -> {
             try {
@@ -27,7 +26,13 @@ public class GodMode extends VerticalLayout {
             }
         });
 
-        add(button);
+        Button sortList = new Button("Сортировать списки", new Icon(VaadinIcon.ABACUS));
+
+
+
+        add(button, sortList);
 
     }
+
 }
+

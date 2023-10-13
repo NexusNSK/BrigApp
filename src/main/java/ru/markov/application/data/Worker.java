@@ -12,7 +12,7 @@ import java.util.*;
 
 @ComponentScan
 
-public class Worker implements Serializable {
+public class Worker implements Serializable, Comparable<Worker> {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -300,6 +300,11 @@ public class Worker implements Serializable {
             case "3" -> this.line = ConveyLine.LINE_3;
             case "4" -> this.line = ConveyLine.LINE_4;
         }
+    }
+
+    @Override
+    public int compareTo(Worker o) {
+        return this.getLastName().compareTo(o.getLastName());
     }
 }
 
