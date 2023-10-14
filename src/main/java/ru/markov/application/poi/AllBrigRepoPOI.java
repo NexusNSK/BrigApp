@@ -862,7 +862,7 @@ public class AllBrigRepoPOI {
 
 
         allBook.getSheet(sheet).addMergedRegion(new CellRangeAddress(techLab2HeaderIndex, techLab2HeaderIndex, 0, 1));
-        allBook.getSheet(sheet).getRow(techLab2HeaderIndex).getCell(0).setCellValue("Лаборатория 1");
+        allBook.getSheet(sheet).getRow(techLab2HeaderIndex).getCell(0).setCellValue("Лаборатория 2");
         allBook.getSheet(sheet).getRow(techLab2HeaderIndex).getCell(0).setCellStyle(cs);
         setAroundBorderCenterAlignment(allBook.getSheet(sheet).getRow(techLab2HeaderIndex).getCell(0));
         setAroundBorderCenterAlignment(allBook.getSheet(sheet).getRow(techLab2HeaderIndex).getCell(1));
@@ -915,7 +915,7 @@ public class AllBrigRepoPOI {
 
 
         allBook.getSheet(sheet).addMergedRegion(new CellRangeAddress(techLab5HeaderIndex, techLab5HeaderIndex, 0, 1));
-        allBook.getSheet(sheet).getRow(techLab5HeaderIndex).getCell(0).setCellValue("Лаборатория 1");
+        allBook.getSheet(sheet).getRow(techLab5HeaderIndex).getCell(0).setCellValue("Лаборатория 5");
         allBook.getSheet(sheet).getRow(techLab5HeaderIndex).getCell(0).setCellStyle(cs);
         setAroundBorderCenterAlignment(allBook.getSheet(sheet).getRow(techLab5HeaderIndex).getCell(0));
         setAroundBorderCenterAlignment(allBook.getSheet(sheet).getRow(techLab5HeaderIndex).getCell(1));
