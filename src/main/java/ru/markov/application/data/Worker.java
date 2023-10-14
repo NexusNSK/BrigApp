@@ -126,6 +126,9 @@ public class Worker implements Serializable, Comparable<Worker> {
             case MOUNTING -> "Бригада монтажники";
             case BUILDING -> "Бригада сборщики";
             case TECH -> "Бригада техники";
+            case LAB1 -> "Лаборатория 1";
+            case LAB2 -> "Лаборатория 2";
+            case LAB5 -> "Лаборатория 5";
         };
     }
 @JsonIgnore
@@ -138,6 +141,9 @@ public class Worker implements Serializable, Comparable<Worker> {
             case ("Бригада монтажники") -> this.district = District.MOUNTING;
             case ("Бригада сборщики") -> this.district = District.BUILDING;
             case ("Бригада техники") -> this.district = District.TECH;
+            case ("Лаборатория 1") -> this.district = District.LAB1;
+            case ("Лаборатория 2") -> this.district = District.LAB2;
+            case ("Лаборатория 5") -> this.district = District.LAB5;
         }
     }
 

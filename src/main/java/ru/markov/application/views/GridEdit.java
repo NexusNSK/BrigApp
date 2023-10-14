@@ -66,6 +66,7 @@ public class GridEdit extends Div {
     public static List<Worker> workerList = new ArrayList<>();
     public static HashMap<ConveyLine, List<Worker>> mountMap = new HashMap<>();
     public static HashMap<ConveyLine, List<Worker>> builderMap = new HashMap<>();
+    public static List<Worker> allTech = new ArrayList<>();
     public static List<Worker> techListUPC = new ArrayList<>();
     public static List<Worker> techLab1 = new ArrayList<>();
     public static List<Worker> techLab2 = new ArrayList<>();
@@ -82,9 +83,13 @@ public class GridEdit extends Div {
                 workerList.remove(i+1);
             }
         }
+        allTech.clear();
         mountMap.clear();
         builderMap.clear();
         techListUPC.clear();
+        techLab1.clear();
+        techLab2.clear();
+        techLab5.clear();
         startInitSplitMap(mountMap);
         startInitSplitMap(builderMap);
         for (Worker w : workerList) {
@@ -92,8 +97,15 @@ public class GridEdit extends Div {
                 case MOUNTING -> mountMap.get(w.getLine()).add(w);
                 case BUILDING -> builderMap.get(w.getLine()).add(w);
                 case TECH -> techListUPC.add(w);
+                case LAB1 -> techLab1.add(w);
+                case LAB2 -> techLab2.add(w);
+                case LAB5 -> techLab5.add(w);
             }
         }
+        allTech.addAll(techListUPC);
+        allTech.addAll(techLab1);
+        allTech.addAll(techLab2);
+        allTech.addAll(techLab5);
     }
 
     private static void startInitSplitMap(HashMap<ConveyLine, List<Worker>> map) {
@@ -122,7 +134,10 @@ public class GridEdit extends Div {
             districtBox.setItems(
                     "Бригада монтажники",
                     "Бригада сборщики",
-                    "Бригада техники"
+                    "Бригада техники",
+                    "Лаборатория 1",
+                    "Лаборатория 2",
+                    "Лаборатория 5"
             );
             ComboBox<String> postBox = new ComboBox<>("Должность"); //поле выбора должности (бригадир, монтажник, сборщик, техник)
             postBox.setAllowCustomValue(true);
@@ -333,7 +348,10 @@ public class GridEdit extends Div {
             districtEditCol.setItems(
                     "Бригада монтажники",
                     "Бригада сборщики",
-                    "Бригада техники"
+                    "Бригада техники",
+                    "Лаборатория 1",
+                    "Лаборатория 2",
+                    "Лаборатория 5"
             );
             districtEditCol.setWidthFull();
             addCloseHandler(districtEditCol, editor);

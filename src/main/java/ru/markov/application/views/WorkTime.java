@@ -127,7 +127,7 @@ private String dayOfWeek = LocalDate.now().getDayOfWeek().toString();
                     }
                     case "tech" -> {
                         for (Worker w : GridEdit.workerList){
-                            if (w.getDistrict().equals(District.TECH)){
+                            if (w.getDistrict().equals(District.TECH)||w.getDistrict().equals(District.LAB1)||w.getDistrict().equals(District.LAB2)||w.getDistrict().equals(District.LAB5)){
                                 w.setWorkTimeLikeYesterday();
                                 w.setWorkerStatusMassiveLikeYesterday();}}
                     }
@@ -187,7 +187,7 @@ private String dayOfWeek = LocalDate.now().getDayOfWeek().toString();
                 }
                 case "tech" -> {
                     for (Worker w : GridEdit.workerList){
-                        if (w.getDistrict().equals(District.TECH)){
+                        if (w.getDistrict().equals(District.TECH)||w.getDistrict().equals(District.LAB1)||w.getDistrict().equals(District.LAB2)||w.getDistrict().equals(District.LAB5)){
                             w.setWorkTimeLikeFriday();
                             w.setWorkerStatusMassiveLikeFriday();}}
                 }
@@ -376,7 +376,7 @@ private String dayOfWeek = LocalDate.now().getDayOfWeek().toString();
             case "sborka2" -> grid.setItems(GridEdit.builderMap.get(ConveyLine.LINE_2));
             case "sborka3" -> grid.setItems(GridEdit.builderMap.get(ConveyLine.LINE_3));
             case "sborka4" -> grid.setItems(GridEdit.builderMap.get(ConveyLine.LINE_4));
-            case "tech" -> grid.setItems(GridEdit.techListUPC);
+            case "tech" -> grid.setItems(GridEdit.allTech);
         }
 
     }
