@@ -233,6 +233,7 @@ private String dayOfWeek = LocalDate.now().getDayOfWeek().toString();
             case "tech" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.techListUPC.size());
         }
 
+
         Grid.Column<Worker> lineColumn = workTimeGrid.
                 addColumn(Worker::getLineToString)
                 .setHeader("Линия")

@@ -13,7 +13,6 @@ ru\markov\application\views\Reports.class
 ru\markov\application\data\ValidationName.class
 ru\markov\application\views\LoginView.class
 ru\markov\application\security\SecurityService.class
-ru\markov\application\views\WorkTimeDeprecated.class
 ru\markov\application\data\Worker$1.class
 ru\markov\application\poi\AllBrigRepoPOI$1.class
 ru\markov\application\poi\Template.class
