@@ -62,11 +62,18 @@ public class Worker implements Serializable, Comparable<Worker> {
     public void setWorkTime(int hours) {
         workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), hours);
-        if (hours < 8 && hours > 0) {
-            workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
-                    .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.OTRABOTKA);
-        }
+
+//        if (hours < 8 && hours > 0) {
+//            workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
+//                    .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.OTRABOTKA);
+//        }
     }
+
+@JsonIgnore
+    public void setWorkTimeForWorkInHoliday(int hours){
+    workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
+            .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), hours);
+}
 @JsonIgnore
     public void setWorkTimeLikeYesterday() {
         workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
@@ -205,7 +212,6 @@ public class Worker implements Serializable, Comparable<Worker> {
                         .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.WORK);
                 setWorkTime(8);
             }
-
             case ("БОЛ") -> {
                 workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                         .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.HOSPITAL);
@@ -214,12 +220,13 @@ public class Worker implements Serializable, Comparable<Worker> {
             case ("ОТП") -> {
                 workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                         .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.HOLIDAY);
-                setWorkTime(0);
+               // setWorkTime(0);
             }
+
             case ("ОТГ") -> {
                 workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                         .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.OTRABOTKA);
-                setWorkTime(0);
+                //setWorkTime(0);
             }
             case ("АДМ") -> {
                 workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())

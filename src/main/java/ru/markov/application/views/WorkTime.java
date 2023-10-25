@@ -47,6 +47,7 @@ private String dayOfWeek = LocalDate.now().getDayOfWeek().toString();
         GridEdit.initSplitDistrictWorkersList();
         String username = securityService.getAuthenticatedUser().getUsername();
         DatePicker.DatePickerI18n ruPicker = new DatePicker.DatePickerI18n();
+        ruPicker.setDateFormat("dd.MM.yyyy");
         ruPicker.setFirstDayOfWeek(1);
         ruPicker.setMonthNames(List.of("Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"));
         ruPicker.setWeekdays(List.of("Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"));
@@ -414,7 +415,6 @@ private String dayOfWeek = LocalDate.now().getDayOfWeek().toString();
 
     private static class PersonFilter {
         private final GridListDataView<Worker> dataView;
-
         private String fullName;
         private String line;
         private String district;
@@ -423,9 +423,8 @@ private String dayOfWeek = LocalDate.now().getDayOfWeek().toString();
 
         public PersonFilter(GridListDataView<Worker> dataView) {
             this.dataView = dataView;
-            this.dataView.addFilter(this::test);
+            this.dataView.addFilter(this::matchesField);
         }
-
 
         public void setFullName(String fullName) {
             this.fullName = fullName;
@@ -452,7 +451,7 @@ private String dayOfWeek = LocalDate.now().getDayOfWeek().toString();
             this.dataView.refreshAll();
         }
 
-        public boolean test(Worker worker) {
+        public boolean matchesField(Worker worker) {
             boolean matchesLine = matches(worker.getLineToString(), line);
             boolean matchesDistrict = matches(worker.getDistrictToString(), district);
             boolean matchesFullName = matches(worker.getFullName(), fullName);
