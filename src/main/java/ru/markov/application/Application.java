@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ru.markov.application.service.Serial;
 import ru.markov.application.service.TimeAdapter;
 import ru.markov.application.views.GridEdit;
+import ru.markov.application.views.WhoNext;
 
 
 @SpringBootApplication
@@ -17,6 +18,7 @@ public class Application implements AppShellConfigurator {
         TimeAdapter.initWorkTime();
         Serial.load();
         GridEdit.initSplitDistrictWorkersList();
+        WhoNext.initListForWhoNext();
     }
 }
 

@@ -33,22 +33,22 @@ public class SecurityConfig extends VaadinWebSecurity {
         UserDetails mountBrig1 = User.builder()
                 .username("volna1")
                 .password("{noop}volna1")
-                .roles("USER")
+                .roles("BRIGMOUNT")
                 .build();
         UserDetails mountBrig2 = User.builder()
                 .username("volna2")
                 .password("{noop}volna2")
-                .roles("USER")
+                .roles("BRIGMOUNT")
                 .build();
         UserDetails mountBrig3 = User.builder()
                 .username("volna3")
                 .password("{noop}volna3")
-                .roles("USER")
+                .roles("BRIGMOUNT")
                 .build();
         UserDetails mountBrig4 = User.builder()
                 .username("volna4")
                 .password("{noop}volna4")
-                .roles("USER")
+                .roles("BRIGMOUNT")
                 .build();
         UserDetails buildBrig1 = User.builder()
                 .username("sborka1")
@@ -73,12 +73,12 @@ public class SecurityConfig extends VaadinWebSecurity {
         UserDetails techBrig = User.builder()
                 .username("tech")
                 .password("{noop}tech")
-                .roles("USER")
+                .roles("USER", "TECH")
                 .build();
         UserDetails brigOwner = User.builder()
                 .username("owner")
                 .password("{noop}bwb526452")
-                .roles("USER", "ADMIN", "OWNER")
+                .roles("USER", "ADMIN", "OWNER", "BRIGMOUNT")
                 .build();
         return new InMemoryUserDetailsManager(brigOwner, admin, mountBrig1, mountBrig2 ,mountBrig3 ,mountBrig4 , buildBrig1, buildBrig2, buildBrig3, buildBrig4, techBrig);
     }

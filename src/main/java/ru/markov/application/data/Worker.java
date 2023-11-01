@@ -313,6 +313,7 @@ public class Worker implements Serializable, Comparable<Worker> {
             case "3" -> this.line = ConveyLine.LINE_3;
             case "4" -> this.line = ConveyLine.LINE_4;
         }
+    System.out.println(getFullName() + " была присвоена линия "+ line);
     }
 
     @Override

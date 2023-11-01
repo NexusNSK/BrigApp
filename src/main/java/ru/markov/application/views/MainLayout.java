@@ -79,7 +79,8 @@ public class MainLayout extends AppLayout {
         tabs.add(
                 createTab(VaadinIcon.USER_HEART,"Редактор бригады", new RouterLink(GridEdit.class)),
                 createTab(VaadinIcon.TIMER, "Учёт времени", new RouterLink(WorkTime.class)),
-                createTab(VaadinIcon.FILE_TABLE, "Отчёты", new RouterLink(Reports.class)));
+                createTab(VaadinIcon.FILE_TABLE, "Отчёты", new RouterLink(Reports.class)),
+                createTab(VaadinIcon.RANDOM, "График смены техников", new RouterLink(WhoNext.class)));
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
         return tabs;
     }

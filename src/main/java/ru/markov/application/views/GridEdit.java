@@ -31,6 +31,7 @@ import jakarta.annotation.security.PermitAll;
 import ru.markov.application.data.*;
 import ru.markov.application.security.SecurityService;
 import ru.markov.application.service.ConveyLine;
+import ru.markov.application.service.District;
 import ru.markov.application.service.Serial;
 import com.vaadin.flow.component.dialog.Dialog;
 import java.util.ArrayList;
@@ -74,6 +75,12 @@ public class GridEdit extends Div {
 
 
     public static void initSplitDistrictWorkersList() {
+        for (Worker w:workerList
+             ) {
+            if(w.getDistrict().equals(District.TECH)){
+                techListUPC.add(w);
+            }
+        }
         Collections.sort(workerList);
         for (int i = 0; i < workerList.size(); i++) {
             if (workerList.get(i).getPost().equals("Бригадир монтажников")||
@@ -86,7 +93,7 @@ public class GridEdit extends Div {
         allTech.clear();
         mountMap.clear();
         builderMap.clear();
-        techListUPC.clear();
+        //techListUPC.clear();
         techLab1.clear();
         techLab2.clear();
         techLab5.clear();
@@ -96,7 +103,7 @@ public class GridEdit extends Div {
             switch (w.getDistrict()) {
                 case MOUNTING -> mountMap.get(w.getLine()).add(w);
                 case BUILDING -> builderMap.get(w.getLine()).add(w);
-                case TECH -> techListUPC.add(w);
+               // case TECH -> techListUPC.add(w);
                 case LAB1 -> techLab1.add(w);
                 case LAB2 -> techLab2.add(w);
                 case LAB5 -> techLab5.add(w);
