@@ -10,8 +10,6 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 
-@ComponentScan
-
 public class Worker implements Serializable, Comparable<Worker> {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -43,7 +41,7 @@ public class Worker implements Serializable, Comparable<Worker> {
                     workerStatusMassive.get(i).put(j, WorkerStatus.NOTHING);
                 }
             }
-            System.out.println("Создание карты учета статуса работника завершено!");
+            System.out.println(getFullName() + ": Создание карты учета статуса работника завершено!");
         }
     }
 @JsonIgnore
@@ -55,7 +53,7 @@ public class Worker implements Serializable, Comparable<Worker> {
                     workTimeMassive.get(i).put(j, 0);
                 }
             }
-            System.out.println("Создание карты учета времемни завершено!");
+            System.out.println(getFullName() + ": Создание карты учета времемни завершено!");
         }
     }
 @JsonIgnore
@@ -319,6 +317,11 @@ public class Worker implements Serializable, Comparable<Worker> {
     @Override
     public int compareTo(Worker o) {
         return this.getLastName().compareTo(o.getLastName());
+    }
+
+    public void eraseAllMassive(){
+    workTimeMassive.clear();
+    workerStatusMassive.clear();
     }
 }
 

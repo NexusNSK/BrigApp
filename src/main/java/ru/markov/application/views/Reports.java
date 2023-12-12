@@ -22,7 +22,6 @@ import java.time.LocalDate;
 
 @Route(value = "reports", layout = MainLayout.class)
 @PermitAll
-@UIScope
 @PageTitle("BrigApp א Отчёты")
 
 public class Reports extends Div {

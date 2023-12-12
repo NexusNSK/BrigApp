@@ -63,7 +63,7 @@ import java.util.function.Consumer;
 
 public class GridEdit extends Div {
 
-    //в этой коллекции хранятся сохраняемые сотрудники, используется для загрузки данных при старте приложения
+    //в этой коллекции хранятся сотрудники, используется для загрузки данных при старте приложения
     public static List<Worker> workerList = new ArrayList<>();
     public static HashMap<ConveyLine, List<Worker>> mountMap = new HashMap<>();
     public static HashMap<ConveyLine, List<Worker>> builderMap = new HashMap<>();
@@ -93,7 +93,6 @@ public class GridEdit extends Div {
         allTech.clear();
         mountMap.clear();
         builderMap.clear();
-        //techListUPC.clear();
         techLab1.clear();
         techLab2.clear();
         techLab5.clear();
@@ -103,7 +102,6 @@ public class GridEdit extends Div {
             switch (w.getDistrict()) {
                 case MOUNTING -> mountMap.get(w.getLine()).add(w);
                 case BUILDING -> builderMap.get(w.getLine()).add(w);
-               // case TECH -> techListUPC.add(w);
                 case LAB1 -> techLab1.add(w);
                 case LAB2 -> techLab2.add(w);
                 case LAB5 -> techLab5.add(w);
@@ -444,7 +442,7 @@ public class GridEdit extends Div {
 
             add(topHead, grid, firstNameValid, lastNameValid, fatherNameValid);
         }else{
-            Notification notification =  Notification.show("У вас нет доступа с этой странице");
+            Notification notification =  Notification.show("У вас нет доступа к этой странице");
             notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
             notification.setPosition(Notification.Position.MIDDLE);
 

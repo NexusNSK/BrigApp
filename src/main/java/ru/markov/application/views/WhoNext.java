@@ -14,25 +14,36 @@ import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.RolesAllowed;
 import ru.markov.application.data.Worker;
 import ru.markov.application.service.ConveyLine;
-import ru.markov.application.service.Post;
 import ru.markov.application.service.Serial;
-
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
+
 
 @Route(value ="who_next", layout = MainLayout.class)
 @RolesAllowed("TECH")
 public class WhoNext extends VerticalLayout {
     private Worker draggedWorker;
-    private static ArrayList<Worker> people = (ArrayList<Worker>) GridEdit.techListUPC;
+    public static ArrayList<Worker> people = new ArrayList<>();
     static ArrayList<Worker> people1 = new ArrayList<>();
     static ArrayList<Worker> people2 = new ArrayList<>();
     static ArrayList<Worker> people3 = new ArrayList<>();
     static ArrayList<Worker> people4 = new ArrayList<>();
     public WhoNext() {
-        Button save = new Button("Сохранить", new Icon(VaadinIcon.SAFE));
+
+        Button save = new Button("Глобальное сохранение", new Icon(VaadinIcon.SAFE));
         save.addClickListener(event -> Serial.save());
+
+        Button saveList = new Button("Сохранить список миграции", new Icon(VaadinIcon.FILE));
+        //saveList.addClickListener(event -> Serial.saveMigration());
+        Button loadList = new Button("Загрузить список миграции", new Icon(VaadinIcon.AIRPLANE));
+        /*loadList.addClickListener(event -> {
+            try {
+                Serial.loadMigration();
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        });*/
+
+        Div buttons = new Div(save, saveList, loadList);
         Grid<Worker> grid1Line = new Grid<>(Worker.class, false);
         grid1Line.addColumn(Worker::getFullName).setHeader("Линия 1");
         setGridStyles(grid1Line);
@@ -58,7 +69,6 @@ public class WhoNext extends VerticalLayout {
             dataView3.removeItem(draggedWorker);
             dataView4.removeItem(draggedWorker);
             dataView2.removeItem(draggedWorker);
-           // dataView1.addItem(draggedWorker);
             grid1Line.getDataProvider().refreshAll();
             grid2Line.getDataProvider().refreshAll();
             grid3Line.getDataProvider().refreshAll();
@@ -72,7 +82,6 @@ public class WhoNext extends VerticalLayout {
         grid2Line.addDragStartListener(this::handleDragStart);
         grid2Line.addDropListener(e -> {
             dataView3.removeItem(draggedWorker);
-           // dataView2.addItem(draggedWorker);
             dataView1.removeItem(draggedWorker);
             dataView4.removeItem(draggedWorker);
             grid1Line.getDataProvider().refreshAll();
@@ -90,7 +99,6 @@ public class WhoNext extends VerticalLayout {
             dataView4.removeItem(draggedWorker);
             dataView2.removeItem(draggedWorker);
             dataView1.removeItem(draggedWorker);
-            //dataView3.addItem(draggedWorker);
             grid1Line.getDataProvider().refreshAll();
             grid2Line.getDataProvider().refreshAll();
             grid3Line.getDataProvider().refreshAll();
@@ -106,7 +114,6 @@ public class WhoNext extends VerticalLayout {
             dataView1.removeItem(draggedWorker);
             dataView2.removeItem(draggedWorker);
             dataView3.removeItem(draggedWorker);
-            //dataView4.addItem(draggedWorker);
             grid1Line.getDataProvider().refreshAll();
             grid2Line.getDataProvider().refreshAll();
             grid3Line.getDataProvider().refreshAll();
@@ -118,7 +125,7 @@ public class WhoNext extends VerticalLayout {
         Div container = new Div(grid1Line, grid2Line, grid3Line, grid4Line);
         setContainerStyles(container);
 
-        add(save, container);
+        add(buttons, container);
     }
 
     private void handleDragStart(GridDragStartEvent<Worker> e) {

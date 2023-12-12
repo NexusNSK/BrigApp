@@ -8,10 +8,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.dom.ThemeList;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.Lumo;
-import jakarta.annotation.security.PermitAll;
 import ru.markov.application.security.SecurityService;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -80,7 +77,7 @@ public class MainLayout extends AppLayout {
                 createTab(VaadinIcon.USER_HEART,"Редактор бригады", new RouterLink(GridEdit.class)),
                 createTab(VaadinIcon.TIMER, "Учёт времени", new RouterLink(WorkTime.class)),
                 createTab(VaadinIcon.FILE_TABLE, "Отчёты", new RouterLink(Reports.class)),
-                createTab(VaadinIcon.RANDOM, "График смены техников", new RouterLink(WhoNext.class)));
+                createTab(VaadinIcon.SERVER, "Сервисный раздел", new RouterLink(Service.class)));
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
         return tabs;
     }
