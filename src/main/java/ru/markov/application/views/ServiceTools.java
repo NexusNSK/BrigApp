@@ -16,11 +16,11 @@ import java.io.IOException;
 
 
 @Route(value = "service", layout = MainLayout.class)
-@PageTitle("BrigApp א Сервисное меню")
+@PageTitle("BrigApp א Сервичный раздел")
 @PermitAll
-public class Service extends VerticalLayout {
+public class ServiceTools extends VerticalLayout {
 
-    public Service(SecurityService securityService) {
+    public ServiceTools(SecurityService securityService) {
         if (securityService.getAuthenticatedUser().getUsername().equals("admin")) {
             Button downloadJson = new Button("Создать JSON работников", new Icon(VaadinIcon.PUZZLE_PIECE));
             downloadJson.addClickListener(event -> {
@@ -47,18 +47,18 @@ public class Service extends VerticalLayout {
         }
     }
 
-        public static void eraseAllWorkTimes() {
-            System.out.println("Начата процедура очистки табелей");
-            for (Worker w : GridEdit.workerList) {
-                w.eraseAllMassive();
-                w.initWorkTimeMap();
-                w.initWorkerStatusMap();
-            }
-            Notification erase = Notification.show("Табели сотрудников были стёрты");
-            erase.setPosition(Notification.Position.MIDDLE);
-            erase.addThemeVariants(NotificationVariant.LUMO_WARNING);
-
+    public static void eraseAllWorkTimes() {
+        System.out.println("Начата процедура очистки табелей");
+        for (Worker w : GridEdit.workerList) {
+            w.eraseAllMassive();
+            w.initWorkTimeMap();
+            w.initWorkerStatusMap();
         }
+        Notification erase = Notification.show("Табели сотрудников были стёрты");
+        erase.setPosition(Notification.Position.MIDDLE);
+        erase.addThemeVariants(NotificationVariant.LUMO_WARNING);
+
     }
+}
 
 

@@ -123,7 +123,7 @@ public class TechRepoPOI {
             case HOLIDAY -> cell.setCellStyle(holidayStatusCell);
             case NOTHING -> cell.setCellStyle(nothingStatusCell);
             case ADMINOTP -> cell.setCellStyle(adminOtpyskStatusCell);
-        case OTRABOTKA -> cell.setCellStyle(otrabotkaStatusCell);
+            case OTRABOTKA -> cell.setCellStyle(otrabotkaStatusCell);
         }
     }
     public void initSheetTech(Sheet sheet) {

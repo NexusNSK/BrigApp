@@ -40,8 +40,8 @@ public class MainLayout extends AppLayout {
         Tabs tabs = getTabs();
         addToDrawer(tabs);
         logo.addClassNames(
-            LumoUtility.FontSize.LARGE,
-            LumoUtility.Margin.MEDIUM);
+                LumoUtility.FontSize.LARGE,
+                LumoUtility.Margin.MEDIUM);
 
         String u = securityService.getAuthenticatedUser().getUsername();
         Button logout = new Button("Выйти " + u, new Icon(VaadinIcon.EXIT), e -> securityService.logout());
@@ -56,7 +56,7 @@ public class MainLayout extends AppLayout {
                 t.remove(Lumo.DARK);}
             else{
                 t.add(Lumo.DARK);
-                }
+            }
         });
 
         var header = new HorizontalLayout(new DrawerToggle(), logo, theme, logout);
@@ -77,7 +77,7 @@ public class MainLayout extends AppLayout {
                 createTab(VaadinIcon.USER_HEART,"Редактор бригады", new RouterLink(GridEdit.class)),
                 createTab(VaadinIcon.TIMER, "Учёт времени", new RouterLink(WorkTime.class)),
                 createTab(VaadinIcon.FILE_TABLE, "Отчёты", new RouterLink(Reports.class)),
-                createTab(VaadinIcon.SERVER, "Сервисный раздел", new RouterLink(Service.class)));
+                createTab(VaadinIcon.SERVER, "Сервисный раздел", new RouterLink((ServiceTools.class))));
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
         return tabs;
     }

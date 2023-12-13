@@ -310,7 +310,7 @@ public class BuildRepoPOI {
                     //добавляем общие часы за месяц по работнику
                     buildBook.getSheet(sheet).getRow(line3Index+1+i).getCell(33).setCellValue(
                             buildBook.getSheet(sheet).getRow(line3Index+1+i).getCell(33).getNumericCellValue()
-                    + buildBook.getSheet(sheet).getRow(line3Index+1+i).getCell(days + 1).getNumericCellValue());
+                                    + buildBook.getSheet(sheet).getRow(line3Index+1+i).getCell(days + 1).getNumericCellValue());
                     days++;
                 } else {
                     setStatusCellColorBuild(i, days, buildBook.getSheet(sheet).getRow(line3Index+1+i).getCell(days + 1), ConveyLine.LINE_3);

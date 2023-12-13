@@ -11,9 +11,18 @@ import java.util.List;
 public class JsonConverter {
 
     public static void toJSON(List<Worker> list) throws IOException {
-        File jsonFile = new File("workers.json");
+        File jsonFile = new File("Workers json/workers0.json");
+
+
         ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(jsonFile, list);
-        System.out.println("В корне создан json всех работников (workers.json)");
+        System.out.println("json created!");
     }
+
+    public static Worker toJavaObject() throws IOException {
+        String baseFile = "someJavaObject";
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(new File(baseFile), Worker.class);
+    }
+
 }

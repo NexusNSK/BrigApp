@@ -1,27 +1,27 @@
-C:\Users\User\Documents\GitHub\BrigApp\src\main\java\ru\markov\application\service\JsonConverter.java
-C:\Users\User\Documents\GitHub\BrigApp\src\main\java\ru\markov\application\views\GridEdit.java
-C:\Users\User\Documents\GitHub\BrigApp\src\main\java\ru\markov\application\views\MainLayout.java
-C:\Users\User\Documents\GitHub\BrigApp\src\main\java\ru\markov\application\views\MountLineEmployers.java
-C:\Users\User\Documents\GitHub\BrigApp\src\main\java\ru\markov\application\views\LoginView.java
-C:\Users\User\Documents\GitHub\BrigApp\src\main\java\ru\markov\application\data\ValidationName.java
-C:\Users\User\Documents\GitHub\BrigApp\src\main\java\ru\markov\application\service\ConveyLine.java
-C:\Users\User\Documents\GitHub\BrigApp\src\main\java\ru\markov\application\views\HomePage.java
-C:\Users\User\Documents\GitHub\BrigApp\src\main\java\ru\markov\application\data\FillMap.java
-C:\Users\User\Documents\GitHub\BrigApp\src\main\java\ru\markov\application\Application.java
-C:\Users\User\Documents\GitHub\BrigApp\src\main\java\ru\markov\application\service\WorkerStatus.java
-C:\Users\User\Documents\GitHub\BrigApp\src\main\java\ru\markov\application\service\Serial.java
-C:\Users\User\Documents\GitHub\BrigApp\src\main\java\ru\markov\application\service\District.java
-C:\Users\User\Documents\GitHub\BrigApp\src\main\java\ru\markov\application\security\SecurityConfig.java
-C:\Users\User\Documents\GitHub\BrigApp\src\main\java\ru\markov\application\views\WorkTime.java
-C:\Users\User\Documents\GitHub\BrigApp\src\main\java\ru\markov\application\poi\Template.java
-C:\Users\User\Documents\GitHub\BrigApp\src\main\java\ru\markov\application\security\SecurityService.java
-C:\Users\User\Documents\GitHub\BrigApp\src\main\java\ru\markov\application\service\TimeAdapter.java
-C:\Users\User\Documents\GitHub\BrigApp\src\main\java\ru\markov\application\views\Reports.java
-C:\Users\User\Documents\GitHub\BrigApp\src\main\java\ru\markov\application\poi\AllBrigRepoPOI.java
-C:\Users\User\Documents\GitHub\BrigApp\src\main\java\ru\markov\application\data\Worker.java
-C:\Users\User\Documents\GitHub\BrigApp\src\main\java\ru\markov\application\poi\BuildRepoPOI.java
-C:\Users\User\Documents\GitHub\BrigApp\src\main\java\ru\markov\application\views\Service.java
-C:\Users\User\Documents\GitHub\BrigApp\src\main\java\ru\markov\application\poi\MountRepoPOI.java
-C:\Users\User\Documents\GitHub\BrigApp\src\main\java\ru\markov\application\poi\TechRepoPOI.java
-C:\Users\User\Documents\GitHub\BrigApp\src\main\java\ru\markov\application\service\Post.java
-C:\Users\User\Documents\GitHub\BrigApp\src\main\java\ru\markov\application\views\WhoNext.java
+C:\Users\User\Documents\GitHub\BrigApp v1.0.8\src\main\java\ru\markov\application\views\GridEdit.java
+C:\Users\User\Documents\GitHub\BrigApp v1.0.8\src\main\java\ru\markov\application\Application.java
+C:\Users\User\Documents\GitHub\BrigApp v1.0.8\src\main\java\ru\markov\application\service\JsonConverter.java
+C:\Users\User\Documents\GitHub\BrigApp v1.0.8\src\main\java\ru\markov\application\service\Post.java
+C:\Users\User\Documents\GitHub\BrigApp v1.0.8\src\main\java\ru\markov\application\data\FillMap.java
+C:\Users\User\Documents\GitHub\BrigApp v1.0.8\src\main\java\ru\markov\application\service\WorkerStatus.java
+C:\Users\User\Documents\GitHub\BrigApp v1.0.8\src\main\java\ru\markov\application\data\Worker.java
+C:\Users\User\Documents\GitHub\BrigApp v1.0.8\src\main\java\ru\markov\application\service\ConveyLine.java
+C:\Users\User\Documents\GitHub\BrigApp v1.0.8\src\main\java\ru\markov\application\views\Reports.java
+C:\Users\User\Documents\GitHub\BrigApp v1.0.8\src\main\java\ru\markov\application\poi\TechRepoPOI.java
+C:\Users\User\Documents\GitHub\BrigApp v1.0.8\src\main\java\ru\markov\application\security\SecurityService.java
+C:\Users\User\Documents\GitHub\BrigApp v1.0.8\src\main\java\ru\markov\application\service\Serial.java
+C:\Users\User\Documents\GitHub\BrigApp v1.0.8\src\main\java\ru\markov\application\poi\AllBrigRepoPOI.java
+C:\Users\User\Documents\GitHub\BrigApp v1.0.8\src\main\java\ru\markov\application\service\TimeAdapter.java
+C:\Users\User\Documents\GitHub\BrigApp v1.0.8\src\main\java\ru\markov\application\views\WorkTime.java
+C:\Users\User\Documents\GitHub\BrigApp v1.0.8\src\main\java\ru\markov\application\views\MainLayout.java
+C:\Users\User\Documents\GitHub\BrigApp v1.0.8\src\main\java\ru\markov\application\views\WhoNext.java
+C:\Users\User\Documents\GitHub\BrigApp v1.0.8\src\main\java\ru\markov\application\poi\Template.java
+C:\Users\User\Documents\GitHub\BrigApp v1.0.8\src\main\java\ru\markov\application\views\LoginView.java
+C:\Users\User\Documents\GitHub\BrigApp v1.0.8\src\main\java\ru\markov\application\views\HomePage.java
+C:\Users\User\Documents\GitHub\BrigApp v1.0.8\src\main\java\ru\markov\application\views\ServiceTools.java
+C:\Users\User\Documents\GitHub\BrigApp v1.0.8\src\main\java\ru\markov\application\service\District.java
+C:\Users\User\Documents\GitHub\BrigApp v1.0.8\src\main\java\ru\markov\application\poi\BuildRepoPOI.java
+C:\Users\User\Documents\GitHub\BrigApp v1.0.8\src\main\java\ru\markov\application\poi\MountRepoPOI.java
+C:\Users\User\Documents\GitHub\BrigApp v1.0.8\src\main\java\ru\markov\application\security\SecurityConfig.java
+C:\Users\User\Documents\GitHub\BrigApp v1.0.8\src\main\java\ru\markov\application\data\ValidationName.java
+C:\Users\User\Documents\GitHub\BrigApp v1.0.8\src\main\java\ru\markov\application\views\MountLineEmployers.java

@@ -10,6 +10,8 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 
+@ComponentScan
+
 public class Worker implements Serializable, Comparable<Worker> {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -32,7 +34,7 @@ public class Worker implements Serializable, Comparable<Worker> {
     @JsonProperty("workTimeMassive")
     private final HashMap<Integer, HashMap<Integer, Integer>> workTimeMassive = new HashMap<>(12);
     //            Map <номер месяца : Map <номер дня : часы>>
-@JsonProperty
+    @JsonProperty
     public void initWorkerStatusMap() {
         if (workerStatusMassive.isEmpty()) {
             for (int i = 0; i <= 12; i++) {
@@ -41,10 +43,10 @@ public class Worker implements Serializable, Comparable<Worker> {
                     workerStatusMassive.get(i).put(j, WorkerStatus.NOTHING);
                 }
             }
-            System.out.println(getFullName() + ": Создание карты учета статуса работника завершено!");
+            System.out.println("Создание карты учета статуса работника завершено!");
         }
     }
-@JsonIgnore
+    @JsonIgnore
     public void initWorkTimeMap() {
         if (workTimeMassive.isEmpty()) {
             for (int i = 0; i <= 12; i++) {
@@ -53,10 +55,10 @@ public class Worker implements Serializable, Comparable<Worker> {
                     workTimeMassive.get(i).put(j, 0);
                 }
             }
-            System.out.println(getFullName() + ": Создание карты учета времемни завершено!");
+            System.out.println("Создание карты учета времемни завершено!");
         }
     }
-@JsonIgnore
+    @JsonIgnore
     public void setWorkTime(int hours) {
         workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), hours);
@@ -67,41 +69,41 @@ public class Worker implements Serializable, Comparable<Worker> {
 //        }
     }
 
-@JsonIgnore
+    @JsonIgnore
     public void setWorkTimeForWorkInHoliday(int hours){
-    workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
-            .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), hours);
-}
-@JsonIgnore
+        workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
+                .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), hours);
+    }
+    @JsonIgnore
     public void setWorkTimeLikeYesterday() {
         workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), getWorkTimeLikeYesterday());
     }
-@JsonIgnore
+    @JsonIgnore
     public void setWorkTimeLikeFriday() {
         workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), getWorkTimeLikeFriday());
     }
-@JsonIgnore
+    @JsonIgnore
     public int getWorkTime() {
         return workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth());
     }
-@JsonIgnore
+    @JsonIgnore
     public int getWorkTimeLikeYesterday() {
         return workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth()-1);
     }
-@JsonIgnore
+    @JsonIgnore
     public int getWorkTimeLikeFriday() {
         return workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth()-3);
     }
-@JsonIgnore
+    @JsonIgnore
     public int getWorkTimeToPOI(int day) {
         return workTimeMassive.get(Reports.month).get(day);
     }
-@JsonIgnore
+    @JsonIgnore
     public String getPost() {
         String ps = "";
         switch (post) {
@@ -114,7 +116,7 @@ public class Worker implements Serializable, Comparable<Worker> {
         }
         return ps;
     }
-@JsonIgnore
+    @JsonIgnore
     public void setPost(String post) {
         switch (post) {
             case ("Бригадир монтажников") -> this.post = Post.BRIG_MOUNT;
@@ -125,7 +127,7 @@ public class Worker implements Serializable, Comparable<Worker> {
             case ("Техник") -> this.post = Post.TECHNIC;
         }
     }
-@JsonIgnore
+    @JsonIgnore
     public String getDistrictToString() {
         return switch (district) {
             case MOUNTING -> "Бригада монтажники";
@@ -136,11 +138,11 @@ public class Worker implements Serializable, Comparable<Worker> {
             case LAB5 -> "Лаборатория 5";
         };
     }
-@JsonIgnore
+    @JsonIgnore
     public District getDistrict() {
         return this.district;
     }
-@JsonIgnore
+    @JsonIgnore
     public void setDistrict(String district) {
         switch (district) {
             case ("Бригада монтажники") -> this.district = District.MOUNTING;
@@ -168,31 +170,31 @@ public class Worker implements Serializable, Comparable<Worker> {
     public String getFullName() {
         return lastName + " " + firstName + " " + patronymic;
     }
-@JsonIgnore
+    @JsonIgnore
     public String getFirstName() {
         return this.firstName;
     }
-@JsonIgnore
+    @JsonIgnore
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-@JsonIgnore
+    @JsonIgnore
     public String getLastName() {
         return this.lastName;
     }
-@JsonIgnore
+    @JsonIgnore
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-@JsonIgnore
+    @JsonIgnore
     public String getPatronymic() {
         return this.patronymic;
     }
-@JsonIgnore
+    @JsonIgnore
     public void setPatronymic(String patronymic) {
         this.patronymic = patronymic;
     }
-@JsonIgnore
+    @JsonIgnore
     public void setWorkerStatusMassive(String status) {
         switch (status) {
             case ("10") -> {
@@ -218,7 +220,7 @@ public class Worker implements Serializable, Comparable<Worker> {
             case ("ОТП") -> {
                 workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                         .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.HOLIDAY);
-               // setWorkTime(0);
+                // setWorkTime(0);
             }
 
             case ("ОТГ") -> {
@@ -238,21 +240,21 @@ public class Worker implements Serializable, Comparable<Worker> {
             }
         }
     }
-@JsonIgnore
+    @JsonIgnore
     public void setWorkerStatusMassiveLikeYesterday() {
         workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), getWorkerStatusLikeYesterday());
     }
-@JsonIgnore
+    @JsonIgnore
     public void setWorkerStatusMassiveLikeFriday() {
         workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), getWorkerStatusLikeFriday());
     }
-@JsonIgnore
+    @JsonIgnore
     private WorkerStatus getWorkerStatusLikeYesterday() {
         return workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue()).get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth()-1);
     }
-@JsonIgnore
+    @JsonIgnore
     private WorkerStatus getWorkerStatusLikeFriday() {
         return workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue()).get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth()-3);
     }
@@ -268,12 +270,12 @@ public class Worker implements Serializable, Comparable<Worker> {
             case ADMINOTP -> "Админ. отпуск";
         };
     }
-@JsonIgnore
+    @JsonIgnore
     public WorkerStatus getWorkerStatus() {
         return workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth());
-        }
-        @JsonIgnore
+    }
+    @JsonIgnore
     public String getWorkerStatusAtDay(int day) {
         return switch (workerStatusMassive.get(Reports.month).get(day)) {
             case WORK, OTRABOTKA -> "Работает";
@@ -283,7 +285,7 @@ public class Worker implements Serializable, Comparable<Worker> {
             case ADMINOTP -> "Админ. отпуск";
         };
     }
-@JsonIgnore
+    @JsonIgnore
     public WorkerStatus getWorkerStatusAtDayToRepo(int day) {
         return workerStatusMassive.get(Reports.month).get(day);
     }
@@ -298,11 +300,11 @@ public class Worker implements Serializable, Comparable<Worker> {
             default -> "---";
         };
     }
-@JsonIgnore
+    @JsonIgnore
     public ConveyLine getLine() {
         return this.line;
     }
-@JsonIgnore
+    @JsonIgnore
     public void setLine(String line) {
         switch (line) {
             default -> this.line = ConveyLine.COMMON;
@@ -311,17 +313,17 @@ public class Worker implements Serializable, Comparable<Worker> {
             case "3" -> this.line = ConveyLine.LINE_3;
             case "4" -> this.line = ConveyLine.LINE_4;
         }
-    System.out.println(getFullName() + " была присвоена линия "+ line);
     }
 
     @Override
     public int compareTo(Worker o) {
         return this.getLastName().compareTo(o.getLastName());
     }
-
     public void eraseAllMassive(){
-    workTimeMassive.clear();
-    workerStatusMassive.clear();
+        workerStatusMassive.clear();
+        workTimeMassive.clear();
     }
 }
+
+
 

@@ -11,7 +11,6 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.grid.editor.Editor;
-import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -24,7 +23,6 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
-import com.vaadin.flow.router.RouterLink;
 import jakarta.annotation.security.PermitAll;
 import ru.markov.application.data.ValidationName;
 import ru.markov.application.data.Worker;
@@ -43,7 +41,7 @@ import java.util.function.Consumer;
 public class WorkTime extends Div {
 
     public DatePicker workTimeDatePicker = new DatePicker();
-private String dayOfWeek = LocalDate.now().getDayOfWeek().toString();
+    private String dayOfWeek = LocalDate.now().getDayOfWeek().toString();
     public WorkTime(SecurityService securityService) {
 
         GridEdit.initSplitDistrictWorkersList();
@@ -87,62 +85,62 @@ private String dayOfWeek = LocalDate.now().getDayOfWeek().toString();
         });
         Button likeYesterday = new Button("\"Как вчера\"");
         likeYesterday.addClickListener(buttonClickEvent -> {
-                switch (username){
-                    case "volna1" -> {
-                        for (Worker w : GridEdit.workerList){
-                            if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_1)){
-                                w.setWorkTimeLikeYesterday();
-                                w.setWorkerStatusMassiveLikeYesterday();}}
-                    }
-                    case "volna2" -> {
-                        for (Worker w : GridEdit.workerList){
-                            if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_2)){
-                                w.setWorkTimeLikeYesterday();
-                                w.setWorkerStatusMassiveLikeYesterday();}}
-                    }
-                    case "volna3" -> {
-                        for (Worker w : GridEdit.workerList){
-                            if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_3)){
-                                w.setWorkTimeLikeYesterday();
-                                w.setWorkerStatusMassiveLikeYesterday();}}
-                    }
-                    case "volna4" -> {
-                        for (Worker w : GridEdit.workerList){
-                            if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_4)){
-                                w.setWorkTimeLikeYesterday();
-                                w.setWorkerStatusMassiveLikeYesterday();}}
-                    }
-                    case "sborka1" -> {
-                        for (Worker w : GridEdit.workerList){
-                            if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_1)){
-                                w.setWorkTimeLikeYesterday();
-                                w.setWorkerStatusMassiveLikeYesterday();}}
-                    }
-                    case "sborka2" -> {
-                        for (Worker w : GridEdit.workerList){
-                            if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_2)){
-                                w.setWorkTimeLikeYesterday();
-                                w.setWorkerStatusMassiveLikeYesterday();}}
-                    }
-                    case "sborka3" -> {
-                        for (Worker w : GridEdit.workerList){
-                            if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_3)){
-                                w.setWorkTimeLikeYesterday();
-                                w.setWorkerStatusMassiveLikeYesterday();}}
-                    }
-                    case "sborka4" -> {
-                        for (Worker w : GridEdit.workerList){
-                            if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_4)){
-                                w.setWorkTimeLikeYesterday();
-                                w.setWorkerStatusMassiveLikeYesterday();}}
-                    }
-                    case "tech" -> {
-                        for (Worker w : GridEdit.workerList){
-                            if (w.getDistrict().equals(District.TECH)||w.getDistrict().equals(District.LAB1)||w.getDistrict().equals(District.LAB2)||w.getDistrict().equals(District.LAB5)){
-                                w.setWorkTimeLikeYesterday();
-                                w.setWorkerStatusMassiveLikeYesterday();}}
-                    }
+            switch (username){
+                case "volna1" -> {
+                    for (Worker w : GridEdit.workerList){
+                        if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_1)){
+                            w.setWorkTimeLikeYesterday();
+                            w.setWorkerStatusMassiveLikeYesterday();}}
                 }
+                case "volna2" -> {
+                    for (Worker w : GridEdit.workerList){
+                        if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_2)){
+                            w.setWorkTimeLikeYesterday();
+                            w.setWorkerStatusMassiveLikeYesterday();}}
+                }
+                case "volna3" -> {
+                    for (Worker w : GridEdit.workerList){
+                        if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_3)){
+                            w.setWorkTimeLikeYesterday();
+                            w.setWorkerStatusMassiveLikeYesterday();}}
+                }
+                case "volna4" -> {
+                    for (Worker w : GridEdit.workerList){
+                        if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_4)){
+                            w.setWorkTimeLikeYesterday();
+                            w.setWorkerStatusMassiveLikeYesterday();}}
+                }
+                case "sborka1" -> {
+                    for (Worker w : GridEdit.workerList){
+                        if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_1)){
+                            w.setWorkTimeLikeYesterday();
+                            w.setWorkerStatusMassiveLikeYesterday();}}
+                }
+                case "sborka2" -> {
+                    for (Worker w : GridEdit.workerList){
+                        if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_2)){
+                            w.setWorkTimeLikeYesterday();
+                            w.setWorkerStatusMassiveLikeYesterday();}}
+                }
+                case "sborka3" -> {
+                    for (Worker w : GridEdit.workerList){
+                        if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_3)){
+                            w.setWorkTimeLikeYesterday();
+                            w.setWorkerStatusMassiveLikeYesterday();}}
+                }
+                case "sborka4" -> {
+                    for (Worker w : GridEdit.workerList){
+                        if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_4)){
+                            w.setWorkTimeLikeYesterday();
+                            w.setWorkerStatusMassiveLikeYesterday();}}
+                }
+                case "tech" -> {
+                    for (Worker w : GridEdit.workerList){
+                        if (w.getDistrict().equals(District.TECH)||w.getDistrict().equals(District.LAB1)||w.getDistrict().equals(District.LAB2)||w.getDistrict().equals(District.LAB5)){
+                            w.setWorkTimeLikeYesterday();
+                            w.setWorkerStatusMassiveLikeYesterday();}}
+                }
+            }
             workTimeGrid.getDataProvider().refreshAll();
         });
         Button likeFriday = new Button("\"Как в пятницу\"");
@@ -371,10 +369,8 @@ private String dayOfWeek = LocalDate.now().getDayOfWeek().toString();
                     return "otrabotka";
                 }
             }
-                    return null;
-                });
-
-
+            return null;
+        });
 
         add(workTimeDatePicker, save, likeYesterday, likeFriday, workTimeGrid);
     }

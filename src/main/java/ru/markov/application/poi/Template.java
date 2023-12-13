@@ -218,8 +218,8 @@ public class Template {
             }
             case "Пустой шаблон" -> {
                 Sheet temp = book.createSheet("Шаблон");
-            initSheet(temp);
-            createHeaderGrid(temp);
+                initSheet(temp);
+                createHeaderGrid(temp);
             }
         }
 

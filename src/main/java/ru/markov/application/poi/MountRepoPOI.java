@@ -313,7 +313,7 @@ public class MountRepoPOI {
                     //добавляем общие часы за месяц по работнику
                     mountBook.getSheet(sheet).getRow(line3Index+1+i).getCell(33).setCellValue(
                             mountBook.getSheet(sheet).getRow(line3Index+1+i).getCell(33).getNumericCellValue()
-                    +mountBook.getSheet(sheet).getRow(line3Index+1+i).getCell(days + 1).getNumericCellValue());
+                                    +mountBook.getSheet(sheet).getRow(line3Index+1+i).getCell(days + 1).getNumericCellValue());
                     days++;
                 } else {
                     setStatusCellColorMount(i, days, mountBook.getSheet(sheet).getRow(line3Index+1+i).getCell(days + 1), ConveyLine.LINE_3);
