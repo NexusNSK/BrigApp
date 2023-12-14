@@ -31,7 +31,7 @@ public class Worker implements Serializable, Comparable<Worker> {
     private final HashMap<Integer, HashMap<Integer, WorkerStatus>> workerStatusMassive = new HashMap<>(12);
     @JsonProperty("workTimeMassive")
     private final HashMap<Integer, HashMap<Integer, Integer>> workTimeMassive = new HashMap<>(12);
-    //            Map <номер месяца : Map <номер дня : часы>>
+    //            хэшмап <номер месяца : хэшмап  <номер дня : часы>>
     @JsonProperty
     public void initWorkerStatusMap() {
         if (workerStatusMassive.isEmpty()) {
