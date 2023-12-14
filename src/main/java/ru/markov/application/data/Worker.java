@@ -10,8 +10,6 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 
-@ComponentScan
-
 public class Worker implements Serializable, Comparable<Worker> {
     @Serial
     private static final long serialVersionUID = 1L;

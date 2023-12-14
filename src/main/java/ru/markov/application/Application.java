@@ -4,6 +4,7 @@ import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.theme.Theme;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import ru.markov.application.data.Backup;
 import ru.markov.application.service.Serial;
 import ru.markov.application.service.TimeAdapter;
 import ru.markov.application.views.GridEdit;
@@ -17,6 +18,8 @@ public class Application implements AppShellConfigurator {
         TimeAdapter.initWorkTime();
         Serial.load();
         GridEdit.initSplitDistrictWorkersList();
+        Backup backup = new Backup();
+        backup.start();
     }
 }
 
