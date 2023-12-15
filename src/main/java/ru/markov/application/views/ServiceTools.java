@@ -20,10 +20,10 @@ import ru.markov.application.data.Worker;
 import ru.markov.application.security.SecurityService;
 import ru.markov.application.service.JsonConverter;
 import ru.markov.application.service.Serial;
+import ru.markov.application.service.UploadRussianI18N;
 import java.io.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+
 
 
 @Route(value = "service", layout = MainLayout.class)
@@ -39,13 +39,21 @@ public class ServiceTools extends VerticalLayout {
             Upload singleFileUpload = new Upload(fileBuffer);
             int maxFileSizeInBytes = 50 * 1024 * 1024; // 50MB
             singleFileUpload.setMaxFileSize(maxFileSizeInBytes);
+            UploadRussianI18N localization = new UploadRussianI18N();
+            singleFileUpload.setI18n(localization);
+            singleFileUpload.setAcceptedFileTypes(".bin");
+
 
             TextArea instructArea = new TextArea();
-            instructArea.setMinWidth("500px");
-            instructArea.setMaxWidth("1500px");
+            instructArea.setMinWidth("600px");
+            instructArea.setMaxWidth("2000px");
             instructArea.setReadOnly(true);
             instructArea.setPrefixComponent(VaadinIcon.QUESTION_CIRCLE.create());
-            instructArea.setValue("Выберите файл с бэкапом для восстановления");
+            instructArea.setValue("""
+                    Выберите файл с бэкапом для восстановления данных.\s
+                    Бэкапы хранятся на сервере по пути /root/Backup worker list/\s
+                    Бэкап должен иметь расширение .bin, имя файла может быть любым
+                    """);
 
             singleFileUpload.addSucceededListener(event -> {
                 FileData savedFileData = fileBuffer.getFileData();

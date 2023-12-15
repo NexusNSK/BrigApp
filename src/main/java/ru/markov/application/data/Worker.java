@@ -2,7 +2,6 @@ package ru.markov.application.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.context.annotation.ComponentScan;
 import ru.markov.application.service.*;
 import ru.markov.application.views.Reports;
 
@@ -41,7 +40,7 @@ public class Worker implements Serializable, Comparable<Worker> {
                     workerStatusMassive.get(i).put(j, WorkerStatus.NOTHING);
                 }
             }
-            System.out.println("Создание карты учета статуса работника завершено!");
+            System.out.println(getFullName() +  ": Создание карты учета статуса работника завершено!");
         }
     }
     @JsonIgnore
@@ -53,7 +52,7 @@ public class Worker implements Serializable, Comparable<Worker> {
                     workTimeMassive.get(i).put(j, 0);
                 }
             }
-            System.out.println("Создание карты учета времемни завершено!");
+            System.out.println(getFullName() +  ": Создание карты учета времемни завершено!");
         }
     }
     @JsonIgnore
@@ -218,7 +217,7 @@ public class Worker implements Serializable, Comparable<Worker> {
             case ("ОТП") -> {
                 workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                         .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.HOLIDAY);
-                // setWorkTime(0);
+                //setWorkTime(0);
             }
 
             case ("ОТГ") -> {
