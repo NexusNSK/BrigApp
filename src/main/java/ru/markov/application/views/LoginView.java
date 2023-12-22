@@ -1,7 +1,10 @@
 package ru.markov.application.views;
 
 
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -19,6 +22,8 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
 	private final LoginForm login = new LoginForm();
+	Button visitorMode = new Button("Режим гостя", new Icon(VaadinIcon.EYE));
+
 
 
 	public LoginView(){
@@ -32,11 +37,11 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 		setJustifyContentMode(JustifyContentMode.START);
 		login.setAction("login");
 		login.getElement().setAttribute("no-autofocus", "");
+		visitorMode.addClickListener(event -> visitorMode.getUI().ifPresent(ui -> ui.navigate("visitor")));
 
 
 
-
-		add(new H1("BrigApp"), login);
+		add(new H1("BrigApp"), login, visitorMode);
 	}
 
 	@Override

@@ -30,7 +30,7 @@ public class Reports extends Div {
     public static int month;
 
     public Reports() {
-        GridEdit.initSplitDistrictWorkersList();
+        BrigEdit.initSplitDistrictWorkersList();
         ComboBox<String> selectReport = new ComboBox<>("Выбор бригады для отчета");
         ComboBox<String> selectMonth = new ComboBox<>("Месяц");
 

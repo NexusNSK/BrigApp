@@ -80,6 +80,11 @@ public class SecurityConfig extends VaadinWebSecurity {
                 .password("{noop}bwb526452")
                 .roles("USER", "ADMIN", "OWNER")
                 .build();
-        return new InMemoryUserDetailsManager(brigOwner, admin, mountBrig1, mountBrig2 ,mountBrig3 ,mountBrig4 , buildBrig1, buildBrig2, buildBrig3, buildBrig4, techBrig);
+        UserDetails guest = User.builder()
+                .username("guest")
+                .password("{noop}guest")
+                .roles("GUEST")
+                .build();
+        return new InMemoryUserDetailsManager(brigOwner, admin, mountBrig1, mountBrig2 ,mountBrig3 ,mountBrig4 , buildBrig1, buildBrig2, buildBrig3, buildBrig4, techBrig, guest);
     }
 }

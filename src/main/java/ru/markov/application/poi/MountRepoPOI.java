@@ -5,7 +5,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import ru.markov.application.service.ConveyLine;
-import ru.markov.application.views.GridEdit;
+import ru.markov.application.views.BrigEdit;
 import ru.markov.application.views.Reports;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -118,7 +118,7 @@ public class MountRepoPOI {
         nothingStatusCell.setAlignment(HorizontalAlignment.CENTER);
 
 
-        switch (GridEdit.mountMap.get(line).get(workerIndex).getWorkerStatusAtDayToRepo(day)) {
+        switch (BrigEdit.mountMap.get(line).get(workerIndex).getWorkerStatusAtDayToRepo(day)) {
             case WORK -> cell.setCellStyle(workStatusCell);
             case HOSPITAL -> cell.setCellStyle(hospitalStatusCell);
             case HOLIDAY -> cell.setCellStyle(holidayStatusCell);
@@ -128,11 +128,11 @@ public class MountRepoPOI {
         }
     }
     public void initSheet(Sheet sheet) {
-        int totalSize = GridEdit.mountMap.get(ConveyLine.COMMON).size()
-                + GridEdit.mountMap.get(ConveyLine.LINE_1).size()
-                + GridEdit.mountMap.get(ConveyLine.LINE_2).size()
-                + GridEdit.mountMap.get(ConveyLine.LINE_3).size()
-                + GridEdit.mountMap.get(ConveyLine.LINE_4).size() + 8;
+        int totalSize = BrigEdit.mountMap.get(ConveyLine.COMMON).size()
+                + BrigEdit.mountMap.get(ConveyLine.LINE_1).size()
+                + BrigEdit.mountMap.get(ConveyLine.LINE_2).size()
+                + BrigEdit.mountMap.get(ConveyLine.LINE_3).size()
+                + BrigEdit.mountMap.get(ConveyLine.LINE_4).size() + 8;
         for (int i = 0; i < totalSize + 1 + 3; i++) {
             sheet.createRow(i);
             for (int j = 0; j <= 33; j++) {
@@ -216,28 +216,28 @@ public class MountRepoPOI {
     public void repoLineMount() {
         String sheet = "Монтажники";
         int line1Index = 4;
-        int line2Index = line1Index+GridEdit.mountMap.get(ConveyLine.LINE_1).size()+2;
-        int line3Index = line2Index+GridEdit.mountMap.get(ConveyLine.LINE_2).size()+2;
-        int line4Index = line3Index+GridEdit.mountMap.get(ConveyLine.LINE_3).size()+2;
+        int line2Index = line1Index+ BrigEdit.mountMap.get(ConveyLine.LINE_1).size()+2;
+        int line3Index = line2Index+ BrigEdit.mountMap.get(ConveyLine.LINE_2).size()+2;
+        int line4Index = line3Index+ BrigEdit.mountMap.get(ConveyLine.LINE_3).size()+2;
         mountBook.getSheet(sheet).addMergedRegion(new CellRangeAddress(4, 4, 0, 1));
         setAroundBorderCenterAlignment(mountBook.getSheet(sheet).getRow(4).getCell(0));
         mountBook.getSheet(sheet).getRow(4).getCell(0).setCellValue("Волна 1");
-        for (int i = 0; i < GridEdit.mountMap.get(ConveyLine.LINE_1).size(); i++) {
+        for (int i = 0; i < BrigEdit.mountMap.get(ConveyLine.LINE_1).size(); i++) {
             mountBook.getSheet(sheet).getRow(i + 5).getCell(0).setCellValue(i + 1); // порядковый номер сотрудника
             setAroundBorder(mountBook.getSheet(sheet).getRow(i + 5).getCell(0));
-            mountBook.getSheet(sheet).getRow(i + 5).getCell(1).setCellValue(GridEdit.mountMap.get(ConveyLine.LINE_1).get(i).getFullName());
+            mountBook.getSheet(sheet).getRow(i + 5).getCell(1).setCellValue(BrigEdit.mountMap.get(ConveyLine.LINE_1).get(i).getFullName());
             int days = 1;
             while (days <= 31) {
-                if (!(GridEdit.mountMap.get(ConveyLine.LINE_1).get(i).getWorkTimeToPOI(days) == 0)) {
+                if (!(BrigEdit.mountMap.get(ConveyLine.LINE_1).get(i).getWorkTimeToPOI(days) == 0)) {
                     setStatusCellColorMount(i, days, mountBook.getSheet(sheet).getRow(i + 5).getCell(days + 1), ConveyLine.LINE_1);
                     mountBook.getSheet(sheet).getRow(i + 5).getCell(days + 1)
-                            .setCellValue(GridEdit.mountMap.get(ConveyLine.LINE_1).get(i).getWorkTimeToPOI(days));
+                            .setCellValue(BrigEdit.mountMap.get(ConveyLine.LINE_1).get(i).getWorkTimeToPOI(days));
 
                     //добавляем итого за день:
-                    mountBook.getSheet(sheet).getRow(4+GridEdit.mountMap.get(ConveyLine.LINE_1).size()+1).getCell(days + 1)
+                    mountBook.getSheet(sheet).getRow(4+ BrigEdit.mountMap.get(ConveyLine.LINE_1).size()+1).getCell(days + 1)
                             .setCellValue(
-                                    mountBook.getSheet(sheet).getRow(4+GridEdit.mountMap.get(ConveyLine.LINE_1).size()+1).getCell(days + 1).getNumericCellValue()+1);
-                    setAroundBorderCenterAlignmentTotal(mountBook.getSheet(sheet).getRow(4+GridEdit.mountMap.get(ConveyLine.LINE_1).size()+1).getCell(days + 1));
+                                    mountBook.getSheet(sheet).getRow(4+ BrigEdit.mountMap.get(ConveyLine.LINE_1).size()+1).getCell(days + 1).getNumericCellValue()+1);
+                    setAroundBorderCenterAlignmentTotal(mountBook.getSheet(sheet).getRow(4+ BrigEdit.mountMap.get(ConveyLine.LINE_1).size()+1).getCell(days + 1));
                     //добавляем общие часы за месяц по работнику
                     mountBook.getSheet(sheet).getRow(i + 5).getCell(33).setCellValue(
                             mountBook.getSheet(sheet).getRow(i + 5).getCell(33).getNumericCellValue()
@@ -245,35 +245,35 @@ public class MountRepoPOI {
                     days++;
                 } else {
                     setStatusCellColorMount(i, days, mountBook.getSheet(sheet).getRow(i + 5).getCell(days + 1), ConveyLine.LINE_1);
-                    setAroundBorderCenterAlignmentTotal(mountBook.getSheet(sheet).getRow(4+GridEdit.mountMap.get(ConveyLine.LINE_1).size()+1).getCell(days + 1));
+                    setAroundBorderCenterAlignmentTotal(mountBook.getSheet(sheet).getRow(4+ BrigEdit.mountMap.get(ConveyLine.LINE_1).size()+1).getCell(days + 1));
                     days++;
                 }
             }
         }
-        mountBook.getSheet(sheet).addMergedRegion(new CellRangeAddress(4+GridEdit.mountMap.get(ConveyLine.LINE_1).size()+1, 4+GridEdit.mountMap.get(ConveyLine.LINE_1).size()+1, 0, 1));
-        setAroundBorderCenterAlignment(mountBook.getSheet(sheet).getRow(4+GridEdit.mountMap.get(ConveyLine.LINE_1).size()+1).getCell(0));
-        mountBook.getSheet(sheet).getRow(4+GridEdit.mountMap.get(ConveyLine.LINE_1).size()+1).getCell(0).setCellValue("Итого в бригаде:");
+        mountBook.getSheet(sheet).addMergedRegion(new CellRangeAddress(4+ BrigEdit.mountMap.get(ConveyLine.LINE_1).size()+1, 4+ BrigEdit.mountMap.get(ConveyLine.LINE_1).size()+1, 0, 1));
+        setAroundBorderCenterAlignment(mountBook.getSheet(sheet).getRow(4+ BrigEdit.mountMap.get(ConveyLine.LINE_1).size()+1).getCell(0));
+        mountBook.getSheet(sheet).getRow(4+ BrigEdit.mountMap.get(ConveyLine.LINE_1).size()+1).getCell(0).setCellValue("Итого в бригаде:");
         //завершен отчёт по 1 линии
 
         mountBook.getSheet(sheet).addMergedRegion(new CellRangeAddress(line2Index, line2Index, 0, 1));
         setAroundBorderCenterAlignment(mountBook.getSheet(sheet).getRow(line2Index).getCell(0));
         mountBook.getSheet(sheet).getRow(line2Index).getCell(0).setCellValue("Волна 2");
-        for (int i = 0; i < GridEdit.mountMap.get(ConveyLine.LINE_2).size(); i++) {
+        for (int i = 0; i < BrigEdit.mountMap.get(ConveyLine.LINE_2).size(); i++) {
             mountBook.getSheet(sheet).getRow(line2Index+1+i).getCell(0).setCellValue(i + 1); // порядковый номер сотрудника
             setAroundBorder(mountBook.getSheet(sheet).getRow(line2Index+1+i).getCell(0));
-            mountBook.getSheet(sheet).getRow(line2Index+1+i).getCell(1).setCellValue(GridEdit.mountMap.get(ConveyLine.LINE_2).get(i).getFullName());
+            mountBook.getSheet(sheet).getRow(line2Index+1+i).getCell(1).setCellValue(BrigEdit.mountMap.get(ConveyLine.LINE_2).get(i).getFullName());
             int days = 1;
             while (days <= 31) {
-                if (!(GridEdit.mountMap.get(ConveyLine.LINE_2).get(i).getWorkTimeToPOI(days) == 0)) {
+                if (!(BrigEdit.mountMap.get(ConveyLine.LINE_2).get(i).getWorkTimeToPOI(days) == 0)) {
                     setStatusCellColorMount(i, days, mountBook.getSheet(sheet).getRow(line2Index+1+i).getCell(days + 1), ConveyLine.LINE_2);
                     mountBook.getSheet(sheet).getRow(line2Index+1+i).getCell(days + 1)
-                            .setCellValue(GridEdit.mountMap.get(ConveyLine.LINE_2).get(i).getWorkTimeToPOI(days));
+                            .setCellValue(BrigEdit.mountMap.get(ConveyLine.LINE_2).get(i).getWorkTimeToPOI(days));
 
                     //добавляем итого за день:
-                    mountBook.getSheet(sheet).getRow(line2Index+GridEdit.mountMap.get(ConveyLine.LINE_2).size()+1).getCell(days + 1)
+                    mountBook.getSheet(sheet).getRow(line2Index+ BrigEdit.mountMap.get(ConveyLine.LINE_2).size()+1).getCell(days + 1)
                             .setCellValue(
-                                    mountBook.getSheet(sheet).getRow(line2Index+GridEdit.mountMap.get(ConveyLine.LINE_2).size()+1).getCell(days + 1).getNumericCellValue()+1);
-                    setAroundBorderCenterAlignmentTotal(mountBook.getSheet(sheet).getRow(line2Index+GridEdit.mountMap.get(ConveyLine.LINE_2).size()+1).getCell(days + 1));
+                                    mountBook.getSheet(sheet).getRow(line2Index+ BrigEdit.mountMap.get(ConveyLine.LINE_2).size()+1).getCell(days + 1).getNumericCellValue()+1);
+                    setAroundBorderCenterAlignmentTotal(mountBook.getSheet(sheet).getRow(line2Index+ BrigEdit.mountMap.get(ConveyLine.LINE_2).size()+1).getCell(days + 1));
                     //добавляем общие часы за месяц по работнику
                     mountBook.getSheet(sheet).getRow(line2Index+1+i).getCell(33).setCellValue(
                             mountBook.getSheet(sheet).getRow(line2Index+1+i).getCell(33).getNumericCellValue()
@@ -281,35 +281,35 @@ public class MountRepoPOI {
                     days++;
                 } else {
                     setStatusCellColorMount(i, days, mountBook.getSheet(sheet).getRow(line2Index+1+i).getCell(days + 1), ConveyLine.LINE_2);
-                    setAroundBorderCenterAlignmentTotal(mountBook.getSheet(sheet).getRow(line2Index+GridEdit.mountMap.get(ConveyLine.LINE_2).size()+1).getCell(days + 1));
+                    setAroundBorderCenterAlignmentTotal(mountBook.getSheet(sheet).getRow(line2Index+ BrigEdit.mountMap.get(ConveyLine.LINE_2).size()+1).getCell(days + 1));
                     days++;
                 }
             }
         }
-        mountBook.getSheet(sheet).addMergedRegion(new CellRangeAddress(line2Index+GridEdit.mountMap.get(ConveyLine.LINE_2).size()+1, line2Index+GridEdit.mountMap.get(ConveyLine.LINE_2).size()+1, 0, 1));
-        setAroundBorderCenterAlignment(mountBook.getSheet(sheet).getRow(line2Index+GridEdit.mountMap.get(ConveyLine.LINE_2).size()+1).getCell(0));
-        mountBook.getSheet(sheet).getRow(line2Index+GridEdit.mountMap.get(ConveyLine.LINE_2).size()+1).getCell(0).setCellValue("Итого в бригаде:");
+        mountBook.getSheet(sheet).addMergedRegion(new CellRangeAddress(line2Index+ BrigEdit.mountMap.get(ConveyLine.LINE_2).size()+1, line2Index+ BrigEdit.mountMap.get(ConveyLine.LINE_2).size()+1, 0, 1));
+        setAroundBorderCenterAlignment(mountBook.getSheet(sheet).getRow(line2Index+ BrigEdit.mountMap.get(ConveyLine.LINE_2).size()+1).getCell(0));
+        mountBook.getSheet(sheet).getRow(line2Index+ BrigEdit.mountMap.get(ConveyLine.LINE_2).size()+1).getCell(0).setCellValue("Итого в бригаде:");
         //завершен отчёт по 2 линии
 
         mountBook.getSheet(sheet).addMergedRegion(new CellRangeAddress(line3Index, line3Index, 0, 1));
         setAroundBorderCenterAlignment(mountBook.getSheet(sheet).getRow(line3Index).getCell(0));
         mountBook.getSheet(sheet).getRow(line3Index).getCell(0).setCellValue("Волна 3");
-        for (int i = 0; i < GridEdit.mountMap.get(ConveyLine.LINE_3).size(); i++) {
+        for (int i = 0; i < BrigEdit.mountMap.get(ConveyLine.LINE_3).size(); i++) {
             mountBook.getSheet(sheet).getRow(line3Index+1+i).getCell(0).setCellValue(i + 1); // порядковый номер сотрудника
             setAroundBorder(mountBook.getSheet(sheet).getRow(line3Index+1+i).getCell(0));
-            mountBook.getSheet(sheet).getRow(line3Index+1+i).getCell(1).setCellValue(GridEdit.mountMap.get(ConveyLine.LINE_3).get(i).getFullName());
+            mountBook.getSheet(sheet).getRow(line3Index+1+i).getCell(1).setCellValue(BrigEdit.mountMap.get(ConveyLine.LINE_3).get(i).getFullName());
             int days = 1;
             while (days <= 31) {
-                if (!(GridEdit.mountMap.get(ConveyLine.LINE_3).get(i).getWorkTimeToPOI(days) == 0)) {
+                if (!(BrigEdit.mountMap.get(ConveyLine.LINE_3).get(i).getWorkTimeToPOI(days) == 0)) {
                     setStatusCellColorMount(i, days, mountBook.getSheet(sheet).getRow(line3Index+1+i).getCell(days + 1), ConveyLine.LINE_3);
                     mountBook.getSheet(sheet).getRow(line3Index+1+i).getCell(days + 1)
-                            .setCellValue(GridEdit.mountMap.get(ConveyLine.LINE_3).get(i).getWorkTimeToPOI(days));
+                            .setCellValue(BrigEdit.mountMap.get(ConveyLine.LINE_3).get(i).getWorkTimeToPOI(days));
 
                     //добавляем итого за день:
-                    mountBook.getSheet(sheet).getRow(line3Index+GridEdit.mountMap.get(ConveyLine.LINE_3).size()+1).getCell(days + 1)
+                    mountBook.getSheet(sheet).getRow(line3Index+ BrigEdit.mountMap.get(ConveyLine.LINE_3).size()+1).getCell(days + 1)
                             .setCellValue(
-                                    mountBook.getSheet(sheet).getRow(line3Index+GridEdit.mountMap.get(ConveyLine.LINE_3).size()+1).getCell(days + 1).getNumericCellValue()+1);
-                    setAroundBorderCenterAlignmentTotal(mountBook.getSheet(sheet).getRow(line3Index+GridEdit.mountMap.get(ConveyLine.LINE_3).size()+1).getCell(days + 1));
+                                    mountBook.getSheet(sheet).getRow(line3Index+ BrigEdit.mountMap.get(ConveyLine.LINE_3).size()+1).getCell(days + 1).getNumericCellValue()+1);
+                    setAroundBorderCenterAlignmentTotal(mountBook.getSheet(sheet).getRow(line3Index+ BrigEdit.mountMap.get(ConveyLine.LINE_3).size()+1).getCell(days + 1));
                     //добавляем общие часы за месяц по работнику
                     mountBook.getSheet(sheet).getRow(line3Index+1+i).getCell(33).setCellValue(
                             mountBook.getSheet(sheet).getRow(line3Index+1+i).getCell(33).getNumericCellValue()
@@ -317,36 +317,36 @@ public class MountRepoPOI {
                     days++;
                 } else {
                     setStatusCellColorMount(i, days, mountBook.getSheet(sheet).getRow(line3Index+1+i).getCell(days + 1), ConveyLine.LINE_3);
-                    setAroundBorderCenterAlignmentTotal(mountBook.getSheet(sheet).getRow(line3Index+GridEdit.mountMap.get(ConveyLine.LINE_3).size()+1).getCell(days + 1));
+                    setAroundBorderCenterAlignmentTotal(mountBook.getSheet(sheet).getRow(line3Index+ BrigEdit.mountMap.get(ConveyLine.LINE_3).size()+1).getCell(days + 1));
                     days++;
                 }
             }
         }
-        mountBook.getSheet(sheet).addMergedRegion(new CellRangeAddress(line3Index+GridEdit.mountMap.get(ConveyLine.LINE_3).size()+1, line3Index+GridEdit.mountMap.get(ConveyLine.LINE_3).size()+1, 0, 1));
-        setAroundBorderCenterAlignment(mountBook.getSheet(sheet).getRow(line3Index+GridEdit.mountMap.get(ConveyLine.LINE_3).size()+1).getCell(0));
-        mountBook.getSheet(sheet).getRow(line3Index+GridEdit.mountMap.get(ConveyLine.LINE_3).size()+1).getCell(0).setCellValue("Итого в бригаде:");
+        mountBook.getSheet(sheet).addMergedRegion(new CellRangeAddress(line3Index+ BrigEdit.mountMap.get(ConveyLine.LINE_3).size()+1, line3Index+ BrigEdit.mountMap.get(ConveyLine.LINE_3).size()+1, 0, 1));
+        setAroundBorderCenterAlignment(mountBook.getSheet(sheet).getRow(line3Index+ BrigEdit.mountMap.get(ConveyLine.LINE_3).size()+1).getCell(0));
+        mountBook.getSheet(sheet).getRow(line3Index+ BrigEdit.mountMap.get(ConveyLine.LINE_3).size()+1).getCell(0).setCellValue("Итого в бригаде:");
 
         //завершен отчёт по 3 линии
 
         mountBook.getSheet(sheet).addMergedRegion(new CellRangeAddress(line4Index, line4Index, 0, 1));
         setAroundBorderCenterAlignment(mountBook.getSheet(sheet).getRow(line4Index).getCell(0));
         mountBook.getSheet(sheet).getRow(line4Index).getCell(0).setCellValue("Волна 4");
-        for (int i = 0; i < GridEdit.mountMap.get(ConveyLine.LINE_4).size(); i++) {
+        for (int i = 0; i < BrigEdit.mountMap.get(ConveyLine.LINE_4).size(); i++) {
             mountBook.getSheet(sheet).getRow(line4Index+1+i).getCell(0).setCellValue(i + 1); // порядковый номер сотрудника
             setAroundBorder(mountBook.getSheet(sheet).getRow(line4Index+1+i).getCell(0));
-            mountBook.getSheet(sheet).getRow(line4Index+1+i).getCell(1).setCellValue(GridEdit.mountMap.get(ConveyLine.LINE_4).get(i).getFullName());
+            mountBook.getSheet(sheet).getRow(line4Index+1+i).getCell(1).setCellValue(BrigEdit.mountMap.get(ConveyLine.LINE_4).get(i).getFullName());
             int days = 1;
             while (days <= 31) {
-                if (!(GridEdit.mountMap.get(ConveyLine.LINE_4).get(i).getWorkTimeToPOI(days) == 0)) {
+                if (!(BrigEdit.mountMap.get(ConveyLine.LINE_4).get(i).getWorkTimeToPOI(days) == 0)) {
                     setStatusCellColorMount(i, days, mountBook.getSheet(sheet).getRow(line4Index+1+i).getCell(days + 1), ConveyLine.LINE_4);
                     mountBook.getSheet(sheet).getRow(line4Index+1+i).getCell(days + 1)
-                            .setCellValue(GridEdit.mountMap.get(ConveyLine.LINE_4).get(i).getWorkTimeToPOI(days));
+                            .setCellValue(BrigEdit.mountMap.get(ConveyLine.LINE_4).get(i).getWorkTimeToPOI(days));
 
                     //добавляем итого за день:
-                    mountBook.getSheet(sheet).getRow(line4Index+GridEdit.mountMap.get(ConveyLine.LINE_4).size()+1).getCell(days + 1)
+                    mountBook.getSheet(sheet).getRow(line4Index+ BrigEdit.mountMap.get(ConveyLine.LINE_4).size()+1).getCell(days + 1)
                             .setCellValue(
-                                    mountBook.getSheet(sheet).getRow(line4Index+GridEdit.mountMap.get(ConveyLine.LINE_4).size()+1).getCell(days + 1).getNumericCellValue()+1);
-                    setAroundBorderCenterAlignmentTotal(mountBook.getSheet(sheet).getRow(line4Index+GridEdit.mountMap.get(ConveyLine.LINE_4).size()+1).getCell(days + 1));
+                                    mountBook.getSheet(sheet).getRow(line4Index+ BrigEdit.mountMap.get(ConveyLine.LINE_4).size()+1).getCell(days + 1).getNumericCellValue()+1);
+                    setAroundBorderCenterAlignmentTotal(mountBook.getSheet(sheet).getRow(line4Index+ BrigEdit.mountMap.get(ConveyLine.LINE_4).size()+1).getCell(days + 1));
                     //добавляем общие часы за месяц по работнику
                     mountBook.getSheet(sheet).getRow(line4Index+1+i).getCell(33).setCellValue(
                             mountBook.getSheet(sheet).getRow(line4Index+1+i).getCell(33).getNumericCellValue()
@@ -354,14 +354,14 @@ public class MountRepoPOI {
                     days++;
                 } else {
                     setStatusCellColorMount(i, days, mountBook.getSheet(sheet).getRow(line4Index+1+i).getCell(days + 1), ConveyLine.LINE_4);
-                    setAroundBorderCenterAlignmentTotal(mountBook.getSheet(sheet).getRow(line4Index+GridEdit.mountMap.get(ConveyLine.LINE_4).size()+1).getCell(days + 1));
+                    setAroundBorderCenterAlignmentTotal(mountBook.getSheet(sheet).getRow(line4Index+ BrigEdit.mountMap.get(ConveyLine.LINE_4).size()+1).getCell(days + 1));
                     days++;
                 }
             }
         }
-        mountBook.getSheet(sheet).addMergedRegion(new CellRangeAddress(line4Index+GridEdit.mountMap.get(ConveyLine.LINE_4).size()+1, line4Index+GridEdit.mountMap.get(ConveyLine.LINE_4).size()+1, 0, 1));
-        setAroundBorderCenterAlignment(mountBook.getSheet(sheet).getRow(line4Index+GridEdit.mountMap.get(ConveyLine.LINE_4).size()+1).getCell(0));
-        mountBook.getSheet(sheet).getRow(line4Index+GridEdit.mountMap.get(ConveyLine.LINE_4).size()+1).getCell(0).setCellValue("Итого в бригаде:");
+        mountBook.getSheet(sheet).addMergedRegion(new CellRangeAddress(line4Index+ BrigEdit.mountMap.get(ConveyLine.LINE_4).size()+1, line4Index+ BrigEdit.mountMap.get(ConveyLine.LINE_4).size()+1, 0, 1));
+        setAroundBorderCenterAlignment(mountBook.getSheet(sheet).getRow(line4Index+ BrigEdit.mountMap.get(ConveyLine.LINE_4).size()+1).getCell(0));
+        mountBook.getSheet(sheet).getRow(line4Index+ BrigEdit.mountMap.get(ConveyLine.LINE_4).size()+1).getCell(0).setCellValue("Итого в бригаде:");
 
         //завершен отчёт по 4 линии
     }

@@ -1,11 +1,10 @@
 package ru.markov.application.service;
 
 import ru.markov.application.data.Worker;
-import ru.markov.application.views.GridEdit;
+import ru.markov.application.views.BrigEdit;
 
 import java.io.*;
 import java.util.List;
-import java.util.logging.Level;
 
 public class Serial {
     private static final String filename = "worker list.bin";
@@ -18,12 +17,12 @@ public class Serial {
             final String fullFilename = workDir + File.separator + filename;
             FileOutputStream fos = new FileOutputStream(fullFilename);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(GridEdit.workerList);
+            oos.writeObject(BrigEdit.workerList);
             oos.close();
             System.out.println("Файл .bin был записан в резервную директорию " + workDir);
             fos = new FileOutputStream("worker list.bin");
             oos = new ObjectOutputStream(fos);
-            oos.writeObject(GridEdit.workerList);
+            oos.writeObject(BrigEdit.workerList);
             oos.close();
             System.out.println("Файл .bin был записан в основрую директорию ");
         } catch (IOException e) {
@@ -36,7 +35,7 @@ public class Serial {
             System.out.println("...Ищу данные о составе бригады...\n / | \\");
             FileInputStream fis = new FileInputStream(filename);
             ObjectInputStream ois = new ObjectInputStream(fis);
-            GridEdit.workerList = (List<Worker>) ois.readObject();
+            BrigEdit.workerList = (List<Worker>) ois.readObject();
             System.out.println("...Состав бригады был успешно загружен из основного файла...");
             ois.close();
         } catch (IOException e) {
@@ -47,7 +46,7 @@ public class Serial {
                 System.out.println("...Ищу данные о составе бригады...\n / | \\");
                 FileInputStream fisReserv = new FileInputStream(fullFilename);
                 ObjectInputStream oisReserv = new ObjectInputStream(fisReserv);
-                GridEdit.workerList = (List<Worker>) oisReserv.readObject();
+                BrigEdit.workerList = (List<Worker>) oisReserv.readObject();
                 System.out.println("...Состав бригады был успешно загружен из резервного файла...");
                 oisReserv.close();
             } catch (IOException ex) {

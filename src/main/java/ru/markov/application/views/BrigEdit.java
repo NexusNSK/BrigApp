@@ -60,7 +60,7 @@ import java.util.function.Consumer;
 @PermitAll
 @UIScope
 
-public class GridEdit extends Div {
+public class BrigEdit extends Div {
 
     //в этой коллекции хранятся сохраняемые сотрудники, используется для загрузки данных при старте приложения
     public static List<Worker> workerList = new ArrayList<>();
@@ -116,7 +116,7 @@ public class GridEdit extends Div {
         map.put(ConveyLine.LINE_4, new ArrayList<>());
     }
 
-    public GridEdit(SecurityService securityService) {
+    public BrigEdit(SecurityService securityService) {
         if (securityService.getAuthenticatedUser().getUsername().equals("admin")) {
             if (workerList.isEmpty()) FillMap.fillArray();
             Grid<Worker> grid = new Grid<>(Worker.class, false); //основная таблица с сотрудниками

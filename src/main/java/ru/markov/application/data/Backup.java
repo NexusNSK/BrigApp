@@ -1,6 +1,6 @@
 package ru.markov.application.data;
 
-import ru.markov.application.views.GridEdit;
+import ru.markov.application.views.BrigEdit;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -28,7 +28,7 @@ public class Backup extends Thread {
                     final String fullFilename = workDir + File.separator +"Backup worker list"+File.separator+ filename;
                     FileOutputStream fos = new FileOutputStream(fullFilename);
                     ObjectOutputStream oos = new ObjectOutputStream(fos);
-                    oos.writeObject(GridEdit.workerList);
+                    oos.writeObject(BrigEdit.workerList);
                     System.out.println("Backup создан");
                     oos.close();
                     hasBackup=true;
@@ -38,7 +38,6 @@ public class Backup extends Thread {
             } else {
                 hasBackup = false;
                try {
-                   System.out.println("Следующая попытка бэкапа через 1 час");
                     Thread.sleep(60*60*1000);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);

@@ -65,12 +65,12 @@ public class ServiceTools extends VerticalLayout {
                     System.out.println("Во время перемещения файла возникла непредвиденная ошибка. Попробуйте ещё раз, либо замените файл вручную.");
                 }
                 try {
-                    GridEdit.workerList.clear();
+                    BrigEdit.workerList.clear();
                     Serial.load();
                 } catch (ClassNotFoundException e) {
                     System.out.println("Во время загрузки данных из файла произошла ошибка");
                 }
-                GridEdit.initSplitDistrictWorkersList();
+                BrigEdit.initSplitDistrictWorkersList();
             });
             singleFileUpload.addFileRejectedListener(event -> {
                 String errorMessage = event.getErrorMessage();
@@ -84,7 +84,7 @@ public class ServiceTools extends VerticalLayout {
             Button downloadJson = new Button("Создать JSON работников", new Icon(VaadinIcon.PUZZLE_PIECE));
             downloadJson.addClickListener(event -> {
                 try {
-                    JsonConverter.toJSON(GridEdit.workerList);
+                    JsonConverter.toJSON(BrigEdit.workerList);
                     Notification n = Notification.show("Json создан и лежит в корне приложения (на сервере)");
                     n.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
                     n.setPosition(Notification.Position.MIDDLE);
@@ -127,7 +127,7 @@ public class ServiceTools extends VerticalLayout {
     //метод, в котором вся логика для затирки всех табелей
     public static void eraseAllWorkTimes() {
         System.out.println("Начата процедура очистки табелей");
-        for (Worker w : GridEdit.workerList) {
+        for (Worker w : BrigEdit.workerList) {
             w.eraseAllMassive();
             w.initWorkTimeMap();
             w.initWorkerStatusMap();

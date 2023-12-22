@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ru.markov.application.data.Backup;
 import ru.markov.application.service.Serial;
 import ru.markov.application.service.TimeAdapter;
-import ru.markov.application.views.GridEdit;
+import ru.markov.application.views.BrigEdit;
 
 
 @SpringBootApplication
@@ -17,7 +17,7 @@ public class Application implements AppShellConfigurator {
         SpringApplication.run(Application.class, args);
         TimeAdapter.initWorkTime();
         Serial.load();
-        GridEdit.initSplitDistrictWorkersList();
+        BrigEdit.initSplitDistrictWorkersList();
         Backup backup = new Backup();
         backup.start();
     }

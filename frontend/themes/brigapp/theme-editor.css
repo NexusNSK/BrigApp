@@ -2,6 +2,22 @@
  * This file has been created by the Vaadin Theme Editor. Please note that
  * manual changes to individual CSS properties may be overwritten by the theme editor.
  */
+.login-view {
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  height: 500px;
+}
+.login-view vaadin-login-form {
+  align-items: flex-end;
+  background-image: image("images/alef.png");
+  display: flex;
+  max-width: 300px;
+}
+.login-view vaadin-login-form-wrapper {
+  background-image: image("alef_logo_oil_1.png");
+}
+
 vaadin-button.main-layout-button-1 {
   --lumo-button-size:var(--lumo-size-m);
   border-radius:var(--lumo-border-radius-m);
