@@ -28,20 +28,22 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
 	public LoginView(){
 		addClassName("login-view");
-		getStyle().set("background-color", "var(--lumo-contrast-0pct)")
+		getStyle().set("background-color", "var(--lumo-contrast-100pct)")
 				.set("display", "flex").set("justify-content", "center")
 				.set("padding", "var(--lumo-space-l)");
 		login.setForgotPasswordButtonVisible(false);
-		setSizeFull();
+		//setSizeFull();
 		setAlignItems(Alignment.CENTER);
-		setJustifyContentMode(JustifyContentMode.START);
+		setJustifyContentMode(JustifyContentMode.AROUND);
 		login.setAction("login");
 		login.getElement().setAttribute("no-autofocus", "");
-		visitorMode.addClickListener(event -> visitorMode.getUI().ifPresent(ui -> ui.navigate("visitor")));
+		visitorMode.addClickListener(event -> visitorMode.getUI().ifPresent(ui -> ui.navigate("plan")));
 
 
 
 		add(new H1("BrigApp"), login, visitorMode);
+		//<theme-editor-local-classname>
+		addClassName("login-view-vertical-layout-1");
 	}
 
 	@Override

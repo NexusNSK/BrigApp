@@ -2,22 +2,6 @@
  * This file has been created by the Vaadin Theme Editor. Please note that
  * manual changes to individual CSS properties may be overwritten by the theme editor.
  */
-.login-view {
-  background-position: center;
-  background-size: cover;
-  display: flex;
-  height: 500px;
-}
-.login-view vaadin-login-form {
-  align-items: flex-end;
-  background-image: image("images/alef.png");
-  display: flex;
-  max-width: 300px;
-}
-.login-view vaadin-login-form-wrapper {
-  background-image: image("alef_logo_oil_1.png");
-}
-
 vaadin-button.main-layout-button-1 {
   --lumo-button-size:var(--lumo-size-m);
   border-radius:var(--lumo-border-radius-m);
@@ -97,4 +81,13 @@ vaadin-integer-field::part(input-field) {
 
 vaadin-integer-field::part(label) { font-size:var(--lumo-font-size-xxs); }
 
-vaadin-vertical-layout { gap:var(--lumo-space-xs); }
+vaadin-login-form-wrapper::part(form) {
+  background-image:image-set("https://yt3.googleusercontent.com/nA3dezF5AxmokWfiOf6MypQoJF_x1RC4jNnlAHCcmvPgdAKVJkAdUXi8nTHC8S0NV2n9N57tGA=s900-c-k-c0x00ffffff-no-rj");
+  background-size:cover;
+
+}
+
+vaadin-vertical-layout {
+  gap:var(--lumo-space-xs);
+}
+

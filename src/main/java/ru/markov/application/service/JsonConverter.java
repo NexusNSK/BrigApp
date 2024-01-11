@@ -11,7 +11,11 @@ import java.util.List;
 public class JsonConverter {
 
     public static void toJSON(List<Worker> list) throws IOException {
-        File jsonFile = new File("Workers json/workers0.json");
+        File theDir = new File("/Worker JSON");
+        if (!theDir.exists()){
+            theDir.mkdirs();
+        }
+        File jsonFile = new File("/Worker JSON/workers.json");
 
 
         ObjectMapper mapper = new ObjectMapper();

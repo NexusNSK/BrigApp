@@ -61,7 +61,8 @@ public class GuestLayout extends AppLayout {
     }
     private Tabs getTabs() {
         Tabs tabs = new Tabs();
-        tabs.add(createTab(VaadinIcon.EYE, "Инфа для гостя", new RouterLink((TechGuest.class))));
+        tabs.add(createTab(VaadinIcon.EYE, "Текущий план", new RouterLink(TechGuest.class)));
+        tabs.add(createTab(VaadinIcon.ABSOLUTE_POSITION, "Рассадка техников", new RouterLink(WhoNext.class)));
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
         return tabs;
     }
