@@ -32,6 +32,44 @@ import java.time.LocalDateTime;
 public class ServiceTools extends VerticalLayout {
     public ServiceTools(SecurityService securityService) {
         if (securityService.getAuthenticatedUser().getUsername().equals("admin")) {
+            //Загрузка графика волны на сервер из браузера
+
+            FileBuffer fileBufferForPlan = new FileBuffer();
+            Upload singleFileUploadPlan = new Upload(fileBufferForPlan);
+            int maxFileSizeInBytesPlan = 50 * 1024 * 1024; // 50MB
+            singleFileUploadPlan.setMaxFileSize(maxFileSizeInBytesPlan);
+            UploadRussianI18N localizationPlan = new UploadRussianI18N("Plan");
+            singleFileUploadPlan.setI18n(localizationPlan);
+            singleFileUploadPlan.setAcceptedFileTypes(".png");
+
+
+            TextArea instructAreaPlan = new TextArea();
+            instructAreaPlan.setMinWidth("600px");
+            instructAreaPlan.setMaxWidth("2000px");
+            instructAreaPlan.setReadOnly(true);
+            instructAreaPlan.setPrefixComponent(VaadinIcon.QUESTION_CIRCLE.create());
+            instructAreaPlan.setValue("""
+                    Выберите файл с текущим планом.\s
+                    Он будет отображаться в гостевом режиме\s
+                    Файл должен иметь расширение .png, имя файла может быть любым
+                    """);
+
+            singleFileUploadPlan.addSucceededListener(event -> {
+                FileData savedFileData = fileBufferForPlan.getFileData();
+                String absolutePath = savedFileData.getFile().getAbsolutePath();
+                System.out.printf("Файл сохранён по пути: %s%n", absolutePath);
+                try {
+                    FileUtils.moveFile(new File(absolutePath), new File("src/main/resources/images/volna.png"));
+                } catch (IOException e) {
+                    System.out.println("Во время перемещения файла возникла непредвиденная ошибка. Попробуйте ещё раз, либо замените файл вручную.");
+                }
+            });
+            singleFileUploadPlan.addFileRejectedListener(event -> {
+                String errorMessage = event.getErrorMessage();
+
+                Notification notification = Notification.show(errorMessage, 5000,
+                        Notification.Position.MIDDLE);
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);});
 
             //Загрузка файла worker list на сервер из браузера
 
@@ -114,7 +152,7 @@ public class ServiceTools extends VerticalLayout {
 
 
             //добавляем кнопки в интерфейс приложения
-            add(downloadJson, eraseAllTime, download, instructArea ,singleFileUpload);
+            add(downloadJson, eraseAllTime, download, instructArea ,singleFileUpload,instructAreaPlan, singleFileUploadPlan);
 
         } else {
             Notification notification = Notification.show("У вас нет доступа к этой странице");
