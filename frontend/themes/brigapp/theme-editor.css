@@ -82,8 +82,15 @@ vaadin-integer-field::part(input-field) {
 vaadin-integer-field::part(label) { font-size:var(--lumo-font-size-xxs); }
 
 vaadin-login-form-wrapper::part(form) {
-  background-image:image-set("https://yt3.googleusercontent.com/nA3dezF5AxmokWfiOf6MypQoJF_x1RC4jNnlAHCcmvPgdAKVJkAdUXi8nTHC8S0NV2n9N57tGA=s900-c-k-c0x00ffffff-no-rj");
-  background-size:cover;
+  block-size: 400px;
+  border-radius: 10% 10% 40% 40%;
+  background-blend-mode: color;
+  background-image: linear-gradient(rgb(255, 255, 255), rgb(60, 121, 197)),
+  url("https://eltex-co.ru/upload/iblock/3bb/eltex_logo_white.png");
+  /*background-image:image-set("https://imagetolink.com/ib/42PssRZknl.png");*/
+  /*background-image:image-set("https://yt3.googleusercontent.com/nA3dezF5AxmokWfiOf6MypQoJF_x1RC4jNnlAHCcmvPgdAKVJkAdUXi8nTHC8S0NV2n9N57tGA=s900-c-k-c0x00ffffff-no-rj");*/
+  background-size: 33%;
+  background-repeat: round;
 
 }
 

@@ -33,7 +33,7 @@ public class Backup extends Thread {
                     oos.close();
                     hasBackup=true;
                 } catch (IOException e){
-                    e.printStackTrace();
+                    System.out.println("ошибка при создании бэкапа");
                 }
             } else {
                 hasBackup = false;

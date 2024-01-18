@@ -59,7 +59,9 @@ public class ServiceTools extends VerticalLayout {
                 String absolutePath = savedFileData.getFile().getAbsolutePath();
                 System.out.printf("Файл сохранён по пути: %s%n", absolutePath);
                 try {
+                    FileUtils.deleteQuietly(new File("src/main/resources/images/volna.png"));
                     FileUtils.moveFile(new File(absolutePath), new File("src/main/resources/images/volna.png"));
+
                 } catch (IOException e) {
                     System.out.println("Во время перемещения файла возникла непредвиденная ошибка. Попробуйте ещё раз, либо замените файл вручную.");
                 }
