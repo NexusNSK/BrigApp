@@ -31,7 +31,8 @@ import java.time.LocalDateTime;
 @PermitAll
 public class ServiceTools extends VerticalLayout {
     public ServiceTools(SecurityService securityService) {
-        if (securityService.getAuthenticatedUser().getUsername().equals("admin")) {
+        if (securityService.getAuthenticatedUser().getUsername().equals("admin")
+          ||securityService.getAuthenticatedUser().getUsername().equals("tech")) {
             //Загрузка графика волны на сервер из браузера
 
             FileBuffer fileBufferForPlan = new FileBuffer();

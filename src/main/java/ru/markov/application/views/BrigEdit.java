@@ -117,7 +117,8 @@ public class BrigEdit extends Div {
     }
 
     public BrigEdit(SecurityService securityService) {
-        if (securityService.getAuthenticatedUser().getUsername().equals("admin")) {
+        if (securityService.getAuthenticatedUser().getUsername().equals("admin")
+          ||securityService.getAuthenticatedUser().getUsername().equals("tech")) {
             if (workerList.isEmpty()) FillMap.fillArray();
             Grid<Worker> grid = new Grid<>(Worker.class, false); //основная таблица с сотрудниками
             grid.setItems(workerList);
