@@ -82,16 +82,40 @@ vaadin-integer-field::part(input-field) {
 vaadin-integer-field::part(label) { font-size:var(--lumo-font-size-xxs); }
 
 vaadin-login-form-wrapper::part(form) {
-  block-size: 400px;
-  border-radius: 10% 10% 40% 40%;
-  background-blend-mode: color;
+  block-size: auto;
+  border-radius: 0% 0% 0% 0%;
+  background-blend-mode: screen;
   background-image: linear-gradient(rgb(255, 255, 255), rgb(60, 121, 197)),
-  url("https://eltex-co.ru/upload/iblock/3bb/eltex_logo_white.png");
+  /*url("https://eltex-co.ru/upload/iblock/3bb/eltex_logo_white.png");*/
+  url("https://i.pinimg.com/originals/68/16/88/6816885d988b23a19281a69d25e673bd.jpg");
   /*background-image:image-set("https://imagetolink.com/ib/42PssRZknl.png");*/
   /*background-image:image-set("https://yt3.googleusercontent.com/nA3dezF5AxmokWfiOf6MypQoJF_x1RC4jNnlAHCcmvPgdAKVJkAdUXi8nTHC8S0NV2n9N57tGA=s900-c-k-c0x00ffffff-no-rj");*/
-  background-size: 33%;
-  background-repeat: round;
+  background-size: 150%;
+  background-position-x: center;
+  background-repeat: no-repeat;
 
+}
+
+vaadin-login-overlay-wrapper::part(title){
+  color: rgba(0, 0, 0, 0.53);
+}
+vaadin-login-form [slot="forgot-password"]{
+  color: rgba(0, 0, 0, 0.53);
+  font-weight: bold;
+  font-size: medium;
+}
+
+
+vaadin-login-overlay-wrapper::part(brand){
+  border-radius: 0% 0% 0% 0%;
+  background-blend-mode: screen;
+  background-image: linear-gradient(rgb(12, 36, 65), rgb(255, 255, 255)),
+  url("https://eltex-co.ru/upload/iblock/3bb/eltex_logo_white.png");
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+vaadin-login-overlay-wrapper::part(backdrop){
+  background-color: rgba(0, 0, 0, 0.07);
 }
 
 vaadin-vertical-layout {
