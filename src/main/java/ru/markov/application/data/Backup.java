@@ -3,6 +3,7 @@ package ru.markov.application.data;
 import ru.markov.application.views.BrigEdit;
 
 import java.io.*;
+import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -32,6 +33,11 @@ public class Backup extends Thread {
                     System.out.println("Backup создан");
                     oos.close();
                     hasBackup=true;
+                    try (FileChannel src = new FileInputStream(fullFilename).getChannel();
+                         FileChannel dest = new FileOutputStream("D:\\" + filename).getChannel()) {
+                        dest.transferFrom(src, 0, src.size());
+                        System.out.println("Копирование файла на внешний ресурс выполнено");
+                    }
                 } catch (IOException e){
                     System.out.println("ошибка при создании бэкапа");
                 }

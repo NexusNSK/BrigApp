@@ -2,6 +2,10 @@
  * This file has been created by the Vaadin Theme Editor. Please note that
  * manual changes to individual CSS properties may be overwritten by the theme editor.
  */
+h1.main-layout-h1-1 {
+
+}
+
 vaadin-button.main-layout-button-1 {
   --lumo-button-size:var(--lumo-size-m);
   border-radius:var(--lumo-border-radius-m);
@@ -81,44 +85,32 @@ vaadin-integer-field::part(input-field) {
 
 vaadin-integer-field::part(label) { font-size:var(--lumo-font-size-xxs); }
 
+vaadin-login-form [slot="forgot-password"] {
+  color:rgba(0,0,0,0.53);
+  font-size:medium;
+  font-weight:bold;
+}
+
 vaadin-login-form-wrapper::part(form) {
-  block-size: auto;
-  border-radius: 0% 0% 0% 0%;
-  background-blend-mode: screen;
-  background-image: linear-gradient(rgb(255, 255, 255), rgb(60, 121, 197)),
-  /*url("https://eltex-co.ru/upload/iblock/3bb/eltex_logo_white.png");*/
-  url("https://i.pinimg.com/originals/68/16/88/6816885d988b23a19281a69d25e673bd.jpg");
-  /*background-image:image-set("https://imagetolink.com/ib/42PssRZknl.png");*/
-  /*background-image:image-set("https://yt3.googleusercontent.com/nA3dezF5AxmokWfiOf6MypQoJF_x1RC4jNnlAHCcmvPgdAKVJkAdUXi8nTHC8S0NV2n9N57tGA=s900-c-k-c0x00ffffff-no-rj");*/
-  background-size: 150%;
-  background-position-x: center;
-  background-repeat: no-repeat;
-
+  background-blend-mode:screen;
+  background-image:linear-gradient(rgb(255,255,255),rgb(60,121,197)),url(https://i.pinimg.com/originals/68/16/88/6816885d988b23a19281a69d25e673bd.jpg);
+  background-position-x:center;
+  background-repeat:no-repeat;
+  background-size:150%;
+  block-size:auto;
+  border-radius:0% 0% 0% 0%;
 }
 
-vaadin-login-overlay-wrapper::part(title){
-  color: rgba(0, 0, 0, 0.53);
-}
-vaadin-login-form [slot="forgot-password"]{
-  color: rgba(0, 0, 0, 0.53);
-  font-weight: bold;
-  font-size: medium;
+vaadin-login-overlay-wrapper::part(backdrop) { background-color:rgba(0,0,0,0.07); }
+
+vaadin-login-overlay-wrapper::part(brand) {
+  background-blend-mode:screen;
+  background-image:linear-gradient(rgb(12,36,65),rgb(255,255,255)),url(https://eltex-co.ru/upload/iblock/3bb/eltex_logo_white.png);
+  background-repeat:no-repeat;
+  background-size:100%;
+  border-radius:0% 0% 0% 0%;
 }
 
+vaadin-login-overlay-wrapper::part(title) { color:rgba(0,0,0,0.53); }
 
-vaadin-login-overlay-wrapper::part(brand){
-  border-radius: 0% 0% 0% 0%;
-  background-blend-mode: screen;
-  background-image: linear-gradient(rgb(12, 36, 65), rgb(255, 255, 255)),
-  url("https://eltex-co.ru/upload/iblock/3bb/eltex_logo_white.png");
-  background-size: 100%;
-  background-repeat: no-repeat;
-}
-vaadin-login-overlay-wrapper::part(backdrop){
-  background-color: rgba(0, 0, 0, 0.07);
-}
-
-vaadin-vertical-layout {
-  gap:var(--lumo-space-xs);
-}
-
+vaadin-vertical-layout { gap:var(--lumo-space-xs); }
