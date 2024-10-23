@@ -27,7 +27,7 @@ import java.time.LocalDateTime;
 
 
 @Route(value = "service", layout = MainLayout.class)
-@PageTitle("BrigApp א Сервичный раздел")
+@PageTitle("BrigApp א Первичный раздел")
 @PermitAll
 public class ServiceTools extends VerticalLayout {
     public ServiceTools(SecurityService securityService) {

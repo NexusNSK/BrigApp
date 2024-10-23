@@ -57,6 +57,12 @@ vaadin-grid.work-time-grid::part(work) {
   border-top:1px solid rgba(0,0,0,0.27);
 }
 
+vaadin-grid.work-time-grid::part(pererabotka) {
+  background-color: rgba(255, 197, 0, 0.29);
+  border-bottom:1px solid rgba(0,0,0,0.27);
+  border-top:1px solid rgba(0,0,0,0.27);
+}
+
 vaadin-grid::part(font-weight-bold) { font-weight:bold; }
 
 vaadin-integer-field::part(clear-button) { color:rgba(255,255,255,0); }

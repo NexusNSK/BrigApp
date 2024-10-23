@@ -60,7 +60,7 @@ public class WorkTime extends Div {
         workTimeGrid.addClassName("work-time-grid");
 
 
-        initPage(workTimeGrid); //метод служит для предотвращения бага отображения, когда по LocalDate.now() в таблице были не актуальыне данные
+        initPage(workTimeGrid); //метод служит для предотвращения бага отображения, когда по LocalDate.now() в таблице были не актуальные данные
 
         workTimeGrid.setWidthFull();
         workTimeGrid.setMinHeight("500px");
@@ -367,6 +367,9 @@ public class WorkTime extends Div {
                 }
                 case OTRABOTKA -> {
                     return "otrabotka";
+                }
+                case PERERABOTKA -> {
+                    return "pererabotka";
                 }
             }
             return null;

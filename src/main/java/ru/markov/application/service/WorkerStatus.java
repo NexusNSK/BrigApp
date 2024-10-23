@@ -6,5 +6,6 @@ public enum WorkerStatus {
     HOSPITAL,
     NOTHING,
     ADMINOTP,
-    OTRABOTKA
+    OTRABOTKA,
+    PERERABOTKA
 }

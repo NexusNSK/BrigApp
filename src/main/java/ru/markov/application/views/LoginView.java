@@ -24,7 +24,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
 	private final LoginForm login = new LoginForm();
-	Button visitorMode = new Button("Режим гостя", new Icon(VaadinIcon.EYE));
+	Button visitorMode = new Button("Актуальный план", new Icon(VaadinIcon.EYE));
 
 
 
@@ -40,7 +40,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 		i18nForm.setUsername("Логин:");
 		i18nForm.setPassword("Пароль:");
 		i18nForm.setSubmit("Войти");
-		i18nForm.setForgotPassword("Гостевой режим");
+		i18nForm.setForgotPassword("Актуальный план");
 		login18n.setForm(i18nForm);
 
 		addClassName("login-view");

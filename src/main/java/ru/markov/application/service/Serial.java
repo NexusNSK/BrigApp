@@ -24,7 +24,7 @@ public class Serial {
             oos = new ObjectOutputStream(fos);
             oos.writeObject(BrigEdit.workerList);
             oos.close();
-            System.out.println("Файл .bin был записан в основрую директорию ");
+            System.out.println("Файл .bin был записан в основную директорию ");
         } catch (IOException e) {
             e.printStackTrace();
         }

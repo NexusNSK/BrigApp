@@ -34,7 +34,7 @@ public class Reports extends Div {
         ComboBox<String> selectReport = new ComboBox<>("Выбор бригады для отчета");
         ComboBox<String> selectMonth = new ComboBox<>("Месяц");
 
-        selectMonth.setItems("Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Откябрь", "Ноябрь", "Декабрь");
+        selectMonth.setItems("Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь");
         selectReport.setAllowCustomValue(true);
 
         selectReport.setMinWidth("220px");
@@ -55,7 +55,7 @@ public class Reports extends Div {
                     case "Июль" -> month = 7;
                     case "Август" -> month = 8;
                     case "Сентябрь" -> month = 9;
-                    case "Откябрь" -> month = 10;
+                    case "Октябрь" -> month = 10;
                     case "Ноябрь" -> month = 11;
                     case "Декабрь" -> month = 12;
                 }
