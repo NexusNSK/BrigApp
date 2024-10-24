@@ -65,7 +65,7 @@ public class WorkTime extends Div {
         workTimeGrid.setWidthFull();
         workTimeGrid.setMinHeight("500px");
         workTimeGrid.setHeight("800px");
-        setItemforGrid(username, workTimeGrid);
+        setItemForGrid(username, workTimeGrid);
 
 
         Editor<Worker> editor = workTimeGrid.getEditor();
@@ -378,7 +378,7 @@ public class WorkTime extends Div {
         add(workTimeDatePicker, save, likeYesterday, likeFriday, workTimeGrid);
     }
 
-    public void setItemforGrid(String sc, Grid<Worker> grid) {
+    public void setItemForGrid(String sc, Grid<Worker> grid) {
         switch (sc) {
             case "admin", "owner" -> grid.setItems(BrigEdit.workerList);
             case "volna1" -> grid.setItems(BrigEdit.mountMap.get(ConveyLine.LINE_1));

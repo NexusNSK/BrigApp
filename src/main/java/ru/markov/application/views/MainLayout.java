@@ -35,7 +35,6 @@ public class MainLayout extends AppLayout {
 
     private void createHeader() {
         H1 logo = new H1("BrigApp");
-        //<theme-editor-local-classname>
         logo.addClassName("main-layout-h1-1");
         Tabs tabs = getTabs();
         addToDrawer(tabs);
@@ -45,7 +44,6 @@ public class MainLayout extends AppLayout {
 
         String u = securityService.getAuthenticatedUser().getUsername();
         Button logout = new Button("Выйти " + u, new Icon(VaadinIcon.EXIT), e -> securityService.logout());
-        //<theme-editor-local-classname>
         logout.addClassName("main-layout-button-1");
         logout.addThemeVariants(ButtonVariant.LUMO_ERROR);
         logout.addClassName("main-layout-button-1");
@@ -60,17 +58,15 @@ public class MainLayout extends AppLayout {
         });
 
         var header = new HorizontalLayout(new DrawerToggle(), logo, theme, logout);
-        //<theme-editor-local-classname>
         header.addClassName("main-layout-horizontal-layout-1");
-
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         header.expand(logo);
         header.setWidthFull();
         header.addClassNames(
                 "app-header");
-
         addToNavbar(header);
     }
+
     private Tabs getTabs() {
         Tabs tabs = new Tabs();
         tabs.add(
@@ -81,17 +77,15 @@ public class MainLayout extends AppLayout {
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
         return tabs;
     }
+
     private Tab createTab(VaadinIcon viewIcon, String viewName, RouterLink routerLink) {
         Icon icon = viewIcon.create();
         icon.getStyle().set("box-sizing", "border-box")
                 .set("margin-inline-end", "var(--lumo-space-xs)")
                 .set("margin-inline-start", "var(--lumo-space-xs)")
                 .set("padding", "var(--lumo-space-xs)");
-
         routerLink.add(icon, new Span(viewName));
         routerLink.setTabIndex(0);
         return new Tab(routerLink);
     }
-
-
 }

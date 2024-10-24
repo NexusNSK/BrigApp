@@ -111,7 +111,7 @@ vaadin-login-overlay-wrapper::part(backdrop) { background-color:rgba(0,0,0,0.07)
 
 vaadin-login-overlay-wrapper::part(brand) {
   background-blend-mode:screen;
-  background-image:linear-gradient(rgb(12,36,65),rgb(255,255,255)),url(https://eltex-co.ru/upload/iblock/3bb/eltex_logo_white.png);
+  background-image:linear-gradient(rgb(12,36,65),rgb(255,255,255)),url(https://eltex.loc/templates/ja_purity/images/logo.png);
   background-repeat:no-repeat;
   background-size:100%;
   border-radius:0% 0% 0% 0%;

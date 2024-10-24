@@ -43,7 +43,7 @@ import java.util.function.Consumer;
  * GridEdit.java класс реализует интерфейс веб страницы для управления составом бригад.
  * Состав хранится в публичной статичной коллекции GridEdit.workerList, что позволяет обратиться
  * к ней из любой точки программы для взаимодействия с данными.
- * GridEdit.workerList является источником данных для публичных статических коллеций
+ * GridEdit.workerList является источником данных для публичных статических коллекций
  * GridEdit.mountList, GridEdit.builderList и GridEdit.builderList,
  * которые хранят в себе отсортированные по enum District.java (Участок) объекты Worker.
  * Коллекция сериализуется когда наступает одно из событий:
@@ -51,8 +51,8 @@ import java.util.function.Consumer;
  * (String lastName, String firstName, String patronymic, String district, String post, String category),
  * и нажата кнопка "Сохранить изменения" (Button saveWorkers |188 строка|).
  * 2. Данные Worker были валидно изменены и сохранены нажатием кнопки "Сохранить" (Button saveButton |379 строка|).
- * В момент запуска приложения проихсодит десериализация из worker list.bin в корне приложения.
- * Объект Worker можно удалять из GridEdit.workerList путём нажатия кнопки "Удалить" (Button dialogDeleteButton |286 строка|.
+ * В момент запуска приложения происходит десериализация из worker list.bin в корне приложения.
+ * Объект Worker можно удалять из GridEdit.workerList путём нажатия кнопки "Удалить" (Button dialogDeleteButton |286 строка|).
  */
 
 @Route(value = "grid_edit", layout = MainLayout.class)
@@ -160,9 +160,9 @@ public class BrigEdit extends Div {
             Button addWorker = new Button("Добавить сотрудника", new Icon(VaadinIcon.AUTOMATION));
             addWorker.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_PRIMARY);
             addWorker.addClickListener(buttonClickEvent -> {
-                if (!(firstNameT.getValue().equals(""))
-                        && !(lastNameT.getValue().equals(""))
-                        && !(fatherNameT.getValue().equals(""))
+                if (!(firstNameT.getValue().isEmpty())
+                        && !(lastNameT.getValue().isEmpty())
+                        && !(fatherNameT.getValue().isEmpty())
                         && !(districtBox.getValue() == null)
                         && !(postBox.getValue() == null)) {
                     workerList.add(new Worker(
@@ -226,7 +226,7 @@ public class BrigEdit extends Div {
             HorizontalLayout topHead = new HorizontalLayout();
 
 
-            //объявление полей для таблицы со списком соттудников
+            //объявление полей для таблицы со списком сотрудников
             ValidationName firstNameValid = new ValidationName();
             ValidationName lastNameValid = new ValidationName();
             ValidationName fatherNameValid = new ValidationName();

@@ -2,7 +2,6 @@ package ru.markov.application.service;
 
 import ru.markov.application.data.Worker;
 import ru.markov.application.views.BrigEdit;
-
 import java.io.*;
 import java.util.List;
 

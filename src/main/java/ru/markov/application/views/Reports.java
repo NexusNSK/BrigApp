@@ -29,6 +29,7 @@ public class Reports extends Div {
     public static DatePicker datePickerForRepo = new DatePicker(LocalDate.now());
     public static int month;
 
+    @SuppressWarnings("CallToPrintStackTrace")
     public Reports() {
         BrigEdit.initSplitDistrictWorkersList();
         ComboBox<String> selectReport = new ComboBox<>("Выбор бригады для отчета");
@@ -60,18 +61,10 @@ public class Reports extends Div {
                     case "Декабрь" -> month = 12;
                 }
                 switch (selectReport.getValue()) {
-                    case "Бригада монтажники" -> {
-                        new MountRepoPOI();
-                    }
-                    case "Бригада сборщики" -> {
-                        new BuildRepoPOI();
-                    }
-                    case "Бригада техники" -> {
-                        new TechRepoPOI();
-                    }
-                    case "Все бригады" -> {
-                        new AllBrigRepoPOI();
-                    }
+                    case "Бригада монтажники" -> new MountRepoPOI();
+                    case "Бригада сборщики" -> new BuildRepoPOI();
+                    case "Бригада техники" -> new TechRepoPOI();
+                    case "Все бригады" -> new AllBrigRepoPOI();
                 }
                 Notification n = Notification.show("Отчёт был создан. \nТеперь можно скачать файл!");
                 n.addThemeVariants(NotificationVariant.LUMO_SUCCESS);

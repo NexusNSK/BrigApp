@@ -18,7 +18,6 @@ import jakarta.annotation.security.PermitAll;
 import org.apache.commons.io.FileUtils;
 import ru.markov.application.data.Worker;
 import ru.markov.application.security.SecurityService;
-import ru.markov.application.service.JsonConverter;
 import ru.markov.application.service.Serial;
 import ru.markov.application.service.UploadRussianI18N;
 import java.io.*;
@@ -27,7 +26,7 @@ import java.time.LocalDateTime;
 
 
 @Route(value = "service", layout = MainLayout.class)
-@PageTitle("BrigApp א Первичный раздел")
+@PageTitle("BrigApp א Сервисный раздел")
 @PermitAll
 public class ServiceTools extends VerticalLayout {
     public ServiceTools(SecurityService securityService) {
@@ -121,22 +120,6 @@ public class ServiceTools extends VerticalLayout {
                         Notification.Position.MIDDLE);
                 notification.addThemeVariants(NotificationVariant.LUMO_ERROR);});
 
-
-            //Добавлена возможность выгрузки json всех работников с учетом их текущих табелей (на сервер)
-            Button downloadJson = new Button("Создать JSON работников", new Icon(VaadinIcon.PUZZLE_PIECE));
-            downloadJson.addClickListener(event -> {
-                try {
-                    JsonConverter.toJSON(BrigEdit.workerList);
-                    Notification n = Notification.show("Json создан и лежит в корне приложения (на сервере)");
-                    n.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-                    n.setPosition(Notification.Position.MIDDLE);
-                } catch (IOException e) {
-                    Notification error = Notification.show("Что-то пошло не так");
-                    error.addThemeVariants(NotificationVariant.LUMO_ERROR);
-                    error.setPosition(Notification.Position.MIDDLE);
-                }
-            });
-
             //эта кнопка затирает табели и пересоздает их с нуля для всех сотрудников
             Button eraseAllTime = new Button("Стереть табели всем сотрудникам", new Icon(VaadinIcon.ERASER));
             eraseAllTime.addClickListener(event -> eraseAllWorkTimes());
@@ -156,7 +139,7 @@ public class ServiceTools extends VerticalLayout {
 
 
             //добавляем кнопки в интерфейс приложения
-            add(downloadJson, eraseAllTime, download, instructArea ,singleFileUpload,instructAreaPlan, singleFileUploadPlan);
+            add(eraseAllTime, download, instructArea ,singleFileUpload,instructAreaPlan, singleFileUploadPlan);
 
         } else {
             Notification notification = Notification.show("У вас нет доступа к этой странице");

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.markov.application.service.*;
 import ru.markov.application.views.Reports;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
@@ -30,7 +29,7 @@ public class Worker implements Serializable, Comparable<Worker> {
     private final HashMap<Integer, HashMap<Integer, WorkerStatus>> workerStatusMassive = new HashMap<>(12);
     @JsonProperty("workTimeMassive")
     private final HashMap<Integer, HashMap<Integer, Integer>> workTimeMassive = new HashMap<>(12);
-    //            хэшмап <номер месяца : хэшмап  <номер дня : часы>>
+    //            hashmap <номер месяца : hashmap  <номер дня : часы>>
     @JsonProperty
     public void initWorkerStatusMap() {
         if (workerStatusMassive.isEmpty()) {
@@ -40,7 +39,7 @@ public class Worker implements Serializable, Comparable<Worker> {
                     workerStatusMassive.get(i).put(j, WorkerStatus.NOTHING);
                 }
             }
-            System.out.println(getFullName() +  ": Создание карты учета статуса работника завершено!");
+            //System.out.println(getFullName() +  ": Создание карты учета статуса работника завершено!");
         }
     }
     @JsonIgnore
@@ -52,7 +51,7 @@ public class Worker implements Serializable, Comparable<Worker> {
                     workTimeMassive.get(i).put(j, 0);
                 }
             }
-            System.out.println(getFullName() +  ": Создание карты учета времени завершено!");
+            //System.out.println(getFullName() +  ": Создание карты учета времени завершено!");
         }
     }
     @JsonIgnore
@@ -70,12 +69,13 @@ public class Worker implements Serializable, Comparable<Worker> {
                     .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.WORK);
         }
     }
-
+    /*
     @JsonIgnore
     public void setWorkTimeForWorkInHoliday(int hours){
         workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), hours);
     }
+    */
     @JsonIgnore
     public void setWorkTimeLikeYesterday() {
         workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
