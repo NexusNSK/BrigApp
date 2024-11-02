@@ -194,8 +194,6 @@ public class TechRepoPOI {
         initSheetTech(techSheet);
         createHeaderGrid(techSheet);
         repoLineTech();
-
-
     }
     public TechRepoPOI() throws IOException {
         Calendar date = new GregorianCalendar();

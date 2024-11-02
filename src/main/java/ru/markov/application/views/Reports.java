@@ -15,6 +15,7 @@ import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.spring.annotation.UIScope;
 import jakarta.annotation.security.PermitAll;
 import ru.markov.application.poi.*;
+import ru.markov.application.security.SecurityService;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -30,7 +31,7 @@ public class Reports extends Div {
     public static int month;
 
     @SuppressWarnings("CallToPrintStackTrace")
-    public Reports() {
+    public Reports(SecurityService securityService) {
         BrigEdit.initSplitDistrictWorkersList();
         ComboBox<String> selectReport = new ComboBox<>("Выбор бригады для отчета");
         ComboBox<String> selectMonth = new ComboBox<>("Месяц");
@@ -62,7 +63,7 @@ public class Reports extends Div {
                 }
                 switch (selectReport.getValue()) {
                     case "Бригада монтажники" -> new MountRepoPOI();
-                    case "Бригада сборщики" -> new BuildRepoPOI();
+                    case "Бригада сборщики" -> new BuildRepoPOI(securityService);
                     case "Бригада техники" -> new TechRepoPOI();
                     case "Все бригады" -> new AllBrigRepoPOI();
                 }

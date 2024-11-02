@@ -194,12 +194,12 @@ public class AllBrigRepoPOI {
         nothingStatusCell.setAlignment(HorizontalAlignment.CENTER);
 
         switch (BrigEdit.builderMap.get(line).get(workerIndex).getWorkerStatusAtDayToRepo(day)) {
-            case WORK -> cell.setCellStyle(workStatusCell);
+            case WORK, PERERABOTKA -> cell.setCellStyle(workStatusCell);
             case HOSPITAL -> cell.setCellStyle(hospitalStatusCell);
             case HOLIDAY -> cell.setCellStyle(holidayStatusCell);
-            case NOTHING -> cell.setCellStyle(nothingStatusCell);
             case ADMINOTP -> cell.setCellStyle(adminOtpyskStatusCell);
             case OTRABOTKA -> cell.setCellStyle(otrabotkaStatusCell);
+            default -> cell.setCellStyle(nothingStatusCell);
         }
     }
     public void setStatusCellColorTech(int workerIndex, int day, Cell cell) {
@@ -270,12 +270,12 @@ public class AllBrigRepoPOI {
         nothingStatusCell.setAlignment(HorizontalAlignment.CENTER);
 
         switch (BrigEdit.techListUPC.get(workerIndex).getWorkerStatusAtDayToRepo(day)) {
-            case WORK -> cell.setCellStyle(workStatusCell);
+            case WORK, PERERABOTKA -> cell.setCellStyle(workStatusCell);
             case HOSPITAL -> cell.setCellStyle(hospitalStatusCell);
             case HOLIDAY -> cell.setCellStyle(holidayStatusCell);
-            case NOTHING -> cell.setCellStyle(nothingStatusCell);
             case ADMINOTP -> cell.setCellStyle(adminOtpyskStatusCell);
             case OTRABOTKA -> cell.setCellStyle(otrabotkaStatusCell);
+            default -> cell.setCellStyle(nothingStatusCell);
         }
     }
     public String getMonth() {

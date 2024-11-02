@@ -117,7 +117,6 @@ public class MountRepoPOI {
         nothingStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
         nothingStatusCell.setAlignment(HorizontalAlignment.CENTER);
 
-
         switch (BrigEdit.mountMap.get(line).get(workerIndex).getWorkerStatusAtDayToRepo(day)) {
             case WORK, PERERABOTKA -> cell.setCellStyle(workStatusCell);
             case HOSPITAL -> cell.setCellStyle(hospitalStatusCell);
@@ -199,8 +198,6 @@ public class MountRepoPOI {
         initSheet(mountSheet);
         createHeaderGrid(mountSheet);
         repoLineMount();
-
-
     }
     public MountRepoPOI() throws IOException {
         Calendar date = new GregorianCalendar();
