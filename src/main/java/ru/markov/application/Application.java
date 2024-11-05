@@ -9,7 +9,6 @@ import ru.markov.application.service.Serial;
 import ru.markov.application.service.TimeAdapter;
 import ru.markov.application.views.BrigEdit;
 
-
 @SpringBootApplication
 @Push
 @Theme(value = "brigapp")

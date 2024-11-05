@@ -40,6 +40,7 @@ public class Reports extends Div {
         selectReport.setAllowCustomValue(true);
 
         selectReport.setMinWidth("220px");
+
         selectReport.setItems("Бригада техники", "Бригада сборщики", "Бригада монтажники", "Все бригады");
 
         Button currentReport = new Button("Сформировать отчет за выбранный месяц", new Icon(VaadinIcon.FILE_TEXT));
@@ -62,7 +63,7 @@ public class Reports extends Div {
                     case "Декабрь" -> month = 12;
                 }
                 switch (selectReport.getValue()) {
-                    case "Бригада монтажники" -> new MountRepoPOI();
+                    case "Бригада монтажники" -> new MountRepoPOI(securityService);
                     case "Бригада сборщики" -> new BuildRepoPOI(securityService);
                     case "Бригада техники" -> new TechRepoPOI();
                     case "Все бригады" -> new AllBrigRepoPOI();
@@ -71,7 +72,12 @@ public class Reports extends Div {
                 n.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
                 n.setPosition(Notification.Position.MIDDLE);
             } catch(NullPointerException npe){
-                Notification error = Notification.show("Необходимо выбрать бригаду и отчётный месяц!");
+                Notification error = Notification.show("""
+                        Необходимо выбрать бригаду и отчётный месяц!\
+                        
+                        Проверьте, что выбираете отчёт по своей бригаде.\
+                        
+                        Если Вы всё сделали правильно, но появляется ошибка - обратитесь к Евгению Маркову.""");
                 error.addThemeVariants(NotificationVariant.LUMO_ERROR);
                 error.setPosition(Notification.Position.MIDDLE);
                 npe.printStackTrace();
