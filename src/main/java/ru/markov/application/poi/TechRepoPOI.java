@@ -5,7 +5,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import ru.markov.application.views.GridEdit;
+import ru.markov.application.views.BrigEdit;
 import ru.markov.application.views.Reports;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -117,17 +117,17 @@ public class TechRepoPOI {
         nothingStatusCell.setVerticalAlignment(VerticalAlignment.CENTER);
         nothingStatusCell.setAlignment(HorizontalAlignment.CENTER);
 
-        switch (GridEdit.techListUPC.get(workerIndex).getWorkerStatusAtDayToRepo(day)) {
-            case WORK -> cell.setCellStyle(workStatusCell);
+        switch (BrigEdit.techListUPC.get(workerIndex).getWorkerStatusAtDayToRepo(day)) {
+            case WORK, PERERABOTKA -> cell.setCellStyle(workStatusCell);
             case HOSPITAL -> cell.setCellStyle(hospitalStatusCell);
             case HOLIDAY -> cell.setCellStyle(holidayStatusCell);
-            case NOTHING -> cell.setCellStyle(nothingStatusCell);
             case ADMINOTP -> cell.setCellStyle(adminOtpyskStatusCell);
             case OTRABOTKA -> cell.setCellStyle(otrabotkaStatusCell);
+            default -> cell.setCellStyle(nothingStatusCell);
         }
     }
     public void initSheetTech(Sheet sheet) {
-        int totalSize = GridEdit.techListUPC.size() + 1;
+        int totalSize = BrigEdit.techListUPC.size() + 1;
         for (int i = 0; i < totalSize + 1 + 3; i++) {
             sheet.createRow(i);
             for (int j = 0; j <= 33; j++) {
@@ -194,8 +194,6 @@ public class TechRepoPOI {
         initSheetTech(techSheet);
         createHeaderGrid(techSheet);
         repoLineTech();
-
-
     }
     public TechRepoPOI() throws IOException {
         Calendar date = new GregorianCalendar();
@@ -211,22 +209,22 @@ public class TechRepoPOI {
     public void repoLineTech() {
         String sheet = "Техники";
         int line1Index = 4;
-        for (int i = 0; i < GridEdit.techListUPC.size(); i++) {
+        for (int i = 0; i < BrigEdit.techListUPC.size(); i++) {
             techBook.getSheet(sheet).getRow(i + line1Index).getCell(0).setCellValue(i + 1); // порядковый номер сотрудника
             setAroundBorder(techBook.getSheet(sheet).getRow(i + line1Index).getCell(0));
-            techBook.getSheet(sheet).getRow(i + line1Index).getCell(1).setCellValue(GridEdit.techListUPC.get(i).getFullName());
+            techBook.getSheet(sheet).getRow(i + line1Index).getCell(1).setCellValue(BrigEdit.techListUPC.get(i).getFullName());
             int days = 1;
             while (days <= 31) {
-                if (!(GridEdit.techListUPC.get(i).getWorkTimeToPOI(days) == 0)) {
+                if (!(BrigEdit.techListUPC.get(i).getWorkTimeToPOI(days) == 0)) {
                     setStatusCellColorTech(i, days, techBook.getSheet(sheet).getRow(i + line1Index).getCell(days + 1));
                     techBook.getSheet(sheet).getRow(i + line1Index).getCell(days + 1)
-                            .setCellValue(GridEdit.techListUPC.get(i).getWorkTimeToPOI(days));
+                            .setCellValue(BrigEdit.techListUPC.get(i).getWorkTimeToPOI(days));
 
                     //добавляем итого за день:
-                    techBook.getSheet(sheet).getRow(line1Index+GridEdit.techListUPC.size()).getCell(days + 1)
+                    techBook.getSheet(sheet).getRow(line1Index+ BrigEdit.techListUPC.size()).getCell(days + 1)
                             .setCellValue(
-                                    techBook.getSheet(sheet).getRow(line1Index+GridEdit.techListUPC.size()).getCell(days + 1).getNumericCellValue()+1);
-                    setAroundBorderCenterAlignmentTotal(techBook.getSheet(sheet).getRow(line1Index+GridEdit.techListUPC.size()).getCell(days + 1));
+                                    techBook.getSheet(sheet).getRow(line1Index+ BrigEdit.techListUPC.size()).getCell(days + 1).getNumericCellValue()+1);
+                    setAroundBorderCenterAlignmentTotal(techBook.getSheet(sheet).getRow(line1Index+ BrigEdit.techListUPC.size()).getCell(days + 1));
                     //добавляем общие часы за месяц по работнику
                     techBook.getSheet(sheet).getRow(i + line1Index).getCell(33).setCellValue(
                             techBook.getSheet(sheet).getRow(i + line1Index).getCell(33).getNumericCellValue()
@@ -234,14 +232,14 @@ public class TechRepoPOI {
                     days++;
                 } else {
                     setStatusCellColorTech(i, days, techBook.getSheet(sheet).getRow(i + line1Index).getCell(days + 1));
-                    setAroundBorderCenterAlignmentTotal(techBook.getSheet(sheet).getRow(line1Index+GridEdit.techListUPC.size()).getCell(days + 1));
+                    setAroundBorderCenterAlignmentTotal(techBook.getSheet(sheet).getRow(line1Index+ BrigEdit.techListUPC.size()).getCell(days + 1));
                     days++;
                 }
             }
         }
-        techBook.getSheet(sheet).addMergedRegion(new CellRangeAddress(line1Index+GridEdit.techListUPC.size(), line1Index+GridEdit.techListUPC.size(), 0, 1));
-        setAroundBorderCenterAlignment(techBook.getSheet(sheet).getRow(line1Index+GridEdit.techListUPC.size()).getCell(0));
-        techBook.getSheet(sheet).getRow(line1Index+GridEdit.techListUPC.size()).getCell(0).setCellValue("Итого в бригаде:");
+        techBook.getSheet(sheet).addMergedRegion(new CellRangeAddress(line1Index+ BrigEdit.techListUPC.size(), line1Index+ BrigEdit.techListUPC.size(), 0, 1));
+        setAroundBorderCenterAlignment(techBook.getSheet(sheet).getRow(line1Index+ BrigEdit.techListUPC.size()).getCell(0));
+        techBook.getSheet(sheet).getRow(line1Index+ BrigEdit.techListUPC.size()).getCell(0).setCellValue("Итого в бригаде:");
         //завершен отчёт
 
     }

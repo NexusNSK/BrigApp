@@ -4,7 +4,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import ru.markov.application.service.District;
-import ru.markov.application.views.GridEdit;
+import ru.markov.application.views.BrigEdit;
 import ru.markov.application.views.Reports;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -82,7 +82,7 @@ public class Template {
         nothingStatusCell.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
         nothingStatusCell.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
-        switch (GridEdit.workerList.get(workerIndex).getWorkerStatusAtDay(day)) {
+        switch (BrigEdit.workerList.get(workerIndex).getWorkerStatusAtDay(day)) {
             case ("Работает") -> cell.setCellStyle(workStatusCell);
             case ("Больничный") -> cell.setCellStyle(hospitalStatusCell);
             case ("Отпуск") -> cell.setCellStyle(holidayStatusCell);
@@ -172,7 +172,7 @@ public class Template {
                 initSheet(mountSheet);
                 createHeaderGrid(mountSheet);
                 for (int i = 0; i < 3; i++) {
-                    for (int j = 0; j < GridEdit.workerList.size(); j++){
+                    for (int j = 0; j < BrigEdit.workerList.size(); j++){
                         switch (j) {
                             case 0 -> {
                                 curentSheet = techSheet;
@@ -188,21 +188,21 @@ public class Template {
                             }
                         }
                         int techCount = 1;
-                        for (int iter = 0; iter < GridEdit.workerList.size(); iter++) {
+                        for (int iter = 0; iter < BrigEdit.workerList.size(); iter++) {
                             int days = 1;
-                            if (GridEdit.workerList.get(iter).getDistrict().equals(district)) {
+                            if (BrigEdit.workerList.get(iter).getDistrict().equals(district)) {
                                 curentSheet.getRow(techCount + 2)
                                         .getCell(0)
                                         .setCellValue(techCount);
                                 curentSheet.getRow(techCount + 2)
                                         .getCell(1)
-                                        .setCellValue(GridEdit.workerList
+                                        .setCellValue(BrigEdit.workerList
                                                 .get(iter).getFullName());
                                 while (days <= 31) {
-                                    if (!(GridEdit.workerList.get(iter).getWorkTimeToPOI(days) == 0)) {
+                                    if (!(BrigEdit.workerList.get(iter).getWorkTimeToPOI(days) == 0)) {
                                         setStatusCellColor(iter, days, curentSheet.getRow(techCount + 2).getCell(days + 1));
                                         curentSheet.getRow(techCount + 2).getCell(days + 1)
-                                                .setCellValue(GridEdit.workerList.get(iter).getWorkTimeToPOI(days));
+                                                .setCellValue(BrigEdit.workerList.get(iter).getWorkTimeToPOI(days));
                                         days++;
                                     } else {
                                         setStatusCellColor(iter, days, curentSheet.getRow(techCount + 2).getCell(days + 1));
@@ -224,21 +224,21 @@ public class Template {
         }
 
         int techCount = 1;
-        for (int i = 0; i < GridEdit.workerList.size(); i++) {
+        for (int i = 0; i < BrigEdit.workerList.size(); i++) {
             int days = 1;
-            if (GridEdit.workerList.get(i).getDistrict().equals(district)) {
+            if (BrigEdit.workerList.get(i).getDistrict().equals(district)) {
                 curentSheet.getRow(techCount + 2)
                         .getCell(0)
                         .setCellValue(techCount);
                 curentSheet.getRow(techCount + 2)
                         .getCell(1)
-                        .setCellValue(GridEdit.workerList
+                        .setCellValue(BrigEdit.workerList
                                 .get(i).getFullName());
                 while (days <= 31) {
-                    if (!(GridEdit.workerList.get(i).getWorkTimeToPOI(days) == 0)) {
+                    if (!(BrigEdit.workerList.get(i).getWorkTimeToPOI(days) == 0)) {
                         setStatusCellColor(i, days, curentSheet.getRow(techCount + 2).getCell(days + 1));
                         curentSheet.getRow(techCount + 2).getCell(days + 1)
-                                .setCellValue(GridEdit.workerList.get(i).getWorkTimeToPOI(days));
+                                .setCellValue(BrigEdit.workerList.get(i).getWorkTimeToPOI(days));
                         days++;
                     } else {
                         setStatusCellColor(i, days, curentSheet.getRow(techCount + 2).getCell(days + 1));

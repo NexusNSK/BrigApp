@@ -15,6 +15,7 @@ import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.spring.annotation.UIScope;
 import jakarta.annotation.security.PermitAll;
 import ru.markov.application.poi.*;
+import ru.markov.application.security.SecurityService;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -29,15 +30,17 @@ public class Reports extends Div {
     public static DatePicker datePickerForRepo = new DatePicker(LocalDate.now());
     public static int month;
 
-    public Reports() {
-        GridEdit.initSplitDistrictWorkersList();
+    @SuppressWarnings("CallToPrintStackTrace")
+    public Reports(SecurityService securityService) {
+        BrigEdit.initSplitDistrictWorkersList();
         ComboBox<String> selectReport = new ComboBox<>("Выбор бригады для отчета");
         ComboBox<String> selectMonth = new ComboBox<>("Месяц");
 
-        selectMonth.setItems("Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Откябрь", "Ноябрь", "Декабрь");
+        selectMonth.setItems("Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь");
         selectReport.setAllowCustomValue(true);
 
         selectReport.setMinWidth("220px");
+
         selectReport.setItems("Бригада техники", "Бригада сборщики", "Бригада монтажники", "Все бригады");
 
         Button currentReport = new Button("Сформировать отчет за выбранный месяц", new Icon(VaadinIcon.FILE_TEXT));
@@ -55,29 +58,26 @@ public class Reports extends Div {
                     case "Июль" -> month = 7;
                     case "Август" -> month = 8;
                     case "Сентябрь" -> month = 9;
-                    case "Откябрь" -> month = 10;
+                    case "Октябрь" -> month = 10;
                     case "Ноябрь" -> month = 11;
                     case "Декабрь" -> month = 12;
                 }
                 switch (selectReport.getValue()) {
-                    case "Бригада монтажники" -> {
-                        new MountRepoPOI();
-                    }
-                    case "Бригада сборщики" -> {
-                        new BuildRepoPOI();
-                    }
-                    case "Бригада техники" -> {
-                        new TechRepoPOI();
-                    }
-                    case "Все бригады" -> {
-                        new AllBrigRepoPOI();
-                    }
+                    case "Бригада монтажники" -> new MountRepoPOI(securityService);
+                    case "Бригада сборщики" -> new BuildRepoPOI(securityService);
+                    case "Бригада техники" -> new TechRepoPOI();
+                    case "Все бригады" -> new AllBrigRepoPOI();
                 }
                 Notification n = Notification.show("Отчёт был создан. \nТеперь можно скачать файл!");
                 n.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
                 n.setPosition(Notification.Position.MIDDLE);
             } catch(NullPointerException npe){
-                Notification error = Notification.show("Необходимо выбрать бригаду и отчётный месяц!");
+                Notification error = Notification.show("""
+                        Необходимо выбрать бригаду и отчётный месяц!\
+                        
+                        Проверьте, что выбираете отчёт по своей бригаде.\
+                        
+                        Если Вы всё сделали правильно, но появляется ошибка - обратитесь к Евгению Маркову.""");
                 error.addThemeVariants(NotificationVariant.LUMO_ERROR);
                 error.setPosition(Notification.Position.MIDDLE);
                 npe.printStackTrace();

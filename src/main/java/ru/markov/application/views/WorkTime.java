@@ -44,7 +44,7 @@ public class WorkTime extends Div {
     private String dayOfWeek = LocalDate.now().getDayOfWeek().toString();
     public WorkTime(SecurityService securityService) {
 
-        GridEdit.initSplitDistrictWorkersList();
+        BrigEdit.initSplitDistrictWorkersList();
         String username = securityService.getAuthenticatedUser().getUsername();
         DatePicker.DatePickerI18n ruPicker = new DatePicker.DatePickerI18n();
         ruPicker.setDateFormat("dd.MM.yyyy");
@@ -60,12 +60,12 @@ public class WorkTime extends Div {
         workTimeGrid.addClassName("work-time-grid");
 
 
-        initPage(workTimeGrid); //метод служит для предотвращения бага отображения, когда по LocalDate.now() в таблице были не актуальыне данные
+        initPage(workTimeGrid); //метод служит для предотвращения бага отображения, когда по LocalDate.now() в таблице были не актуальные данные
 
         workTimeGrid.setWidthFull();
         workTimeGrid.setMinHeight("500px");
         workTimeGrid.setHeight("800px");
-        setItemforGrid(username, workTimeGrid);
+        setItemForGrid(username, workTimeGrid);
 
 
         Editor<Worker> editor = workTimeGrid.getEditor();
@@ -87,55 +87,55 @@ public class WorkTime extends Div {
         likeYesterday.addClickListener(buttonClickEvent -> {
             switch (username){
                 case "volna1" -> {
-                    for (Worker w : GridEdit.workerList){
+                    for (Worker w : BrigEdit.workerList){
                         if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_1)){
                             w.setWorkTimeLikeYesterday();
                             w.setWorkerStatusMassiveLikeYesterday();}}
                 }
                 case "volna2" -> {
-                    for (Worker w : GridEdit.workerList){
+                    for (Worker w : BrigEdit.workerList){
                         if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_2)){
                             w.setWorkTimeLikeYesterday();
                             w.setWorkerStatusMassiveLikeYesterday();}}
                 }
                 case "volna3" -> {
-                    for (Worker w : GridEdit.workerList){
+                    for (Worker w : BrigEdit.workerList){
                         if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_3)){
                             w.setWorkTimeLikeYesterday();
                             w.setWorkerStatusMassiveLikeYesterday();}}
                 }
                 case "volna4" -> {
-                    for (Worker w : GridEdit.workerList){
+                    for (Worker w : BrigEdit.workerList){
                         if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_4)){
                             w.setWorkTimeLikeYesterday();
                             w.setWorkerStatusMassiveLikeYesterday();}}
                 }
                 case "sborka1" -> {
-                    for (Worker w : GridEdit.workerList){
+                    for (Worker w : BrigEdit.workerList){
                         if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_1)){
                             w.setWorkTimeLikeYesterday();
                             w.setWorkerStatusMassiveLikeYesterday();}}
                 }
                 case "sborka2" -> {
-                    for (Worker w : GridEdit.workerList){
+                    for (Worker w : BrigEdit.workerList){
                         if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_2)){
                             w.setWorkTimeLikeYesterday();
                             w.setWorkerStatusMassiveLikeYesterday();}}
                 }
                 case "sborka3" -> {
-                    for (Worker w : GridEdit.workerList){
+                    for (Worker w : BrigEdit.workerList){
                         if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_3)){
                             w.setWorkTimeLikeYesterday();
                             w.setWorkerStatusMassiveLikeYesterday();}}
                 }
                 case "sborka4" -> {
-                    for (Worker w : GridEdit.workerList){
+                    for (Worker w : BrigEdit.workerList){
                         if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_4)){
                             w.setWorkTimeLikeYesterday();
                             w.setWorkerStatusMassiveLikeYesterday();}}
                 }
                 case "tech" -> {
-                    for (Worker w : GridEdit.workerList){
+                    for (Worker w : BrigEdit.workerList){
                         if (w.getDistrict().equals(District.TECH)||w.getDistrict().equals(District.LAB1)||w.getDistrict().equals(District.LAB2)||w.getDistrict().equals(District.LAB5)){
                             w.setWorkTimeLikeYesterday();
                             w.setWorkerStatusMassiveLikeYesterday();}}
@@ -147,55 +147,55 @@ public class WorkTime extends Div {
         likeFriday.addClickListener(buttonClickEvent -> {
             switch (username){
                 case "volna1" -> {
-                    for (Worker w : GridEdit.workerList){
+                    for (Worker w : BrigEdit.workerList){
                         if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_1)){
                             w.setWorkTimeLikeFriday();
                             w.setWorkerStatusMassiveLikeFriday();}}
                 }
                 case "volna2" -> {
-                    for (Worker w : GridEdit.workerList){
+                    for (Worker w : BrigEdit.workerList){
                         if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_2)){
                             w.setWorkTimeLikeFriday();
                             w.setWorkerStatusMassiveLikeFriday();}}
                 }
                 case "volna3" -> {
-                    for (Worker w : GridEdit.workerList){
+                    for (Worker w : BrigEdit.workerList){
                         if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_3)){
                             w.setWorkTimeLikeFriday();
                             w.setWorkerStatusMassiveLikeFriday();}}
                 }
                 case "volna4" -> {
-                    for (Worker w : GridEdit.workerList){
+                    for (Worker w : BrigEdit.workerList){
                         if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_4)){
                             w.setWorkTimeLikeFriday();
                             w.setWorkerStatusMassiveLikeFriday();}}
                 }
                 case "sborka1" -> {
-                    for (Worker w : GridEdit.workerList){
+                    for (Worker w : BrigEdit.workerList){
                         if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_1)){
                             w.setWorkTimeLikeFriday();
                             w.setWorkerStatusMassiveLikeFriday();}}
                 }
                 case "sborka2" -> {
-                    for (Worker w : GridEdit.workerList){
+                    for (Worker w : BrigEdit.workerList){
                         if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_2)){
                             w.setWorkTimeLikeFriday();
                             w.setWorkerStatusMassiveLikeFriday();}}
                 }
                 case "sborka3" -> {
-                    for (Worker w : GridEdit.workerList){
+                    for (Worker w : BrigEdit.workerList){
                         if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_3)){
                             w.setWorkTimeLikeFriday();
                             w.setWorkerStatusMassiveLikeFriday();}}
                 }
                 case "sborka4" -> {
-                    for (Worker w : GridEdit.workerList){
+                    for (Worker w : BrigEdit.workerList){
                         if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_4)){
                             w.setWorkTimeLikeFriday();
                             w.setWorkerStatusMassiveLikeFriday();}}
                 }
                 case "tech" -> {
-                    for (Worker w : GridEdit.workerList){
+                    for (Worker w : BrigEdit.workerList){
                         if (w.getDistrict().equals(District.TECH)||w.getDistrict().equals(District.LAB1)||w.getDistrict().equals(District.LAB2)||w.getDistrict().equals(District.LAB5)){
                             w.setWorkTimeLikeFriday();
                             w.setWorkerStatusMassiveLikeFriday();}}
@@ -222,24 +222,24 @@ public class WorkTime extends Div {
                 .setFlexGrow(0);
 
         switch (username) {
-            case "admin" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.workerList.size());
+            case "admin" -> fullNameColumn.setFooter("Сотрудников: " + BrigEdit.workerList.size());
             case "volna1" ->
-                    fullNameColumn.setFooter("Сотрудников: " + GridEdit.mountMap.get(ConveyLine.LINE_1).size());
+                    fullNameColumn.setFooter("Сотрудников: " + BrigEdit.mountMap.get(ConveyLine.LINE_1).size());
             case "volna2" ->
-                    fullNameColumn.setFooter("Сотрудников: " + GridEdit.mountMap.get(ConveyLine.LINE_2).size());
+                    fullNameColumn.setFooter("Сотрудников: " + BrigEdit.mountMap.get(ConveyLine.LINE_2).size());
             case "volna3" ->
-                    fullNameColumn.setFooter("Сотрудников: " + GridEdit.mountMap.get(ConveyLine.LINE_3).size());
+                    fullNameColumn.setFooter("Сотрудников: " + BrigEdit.mountMap.get(ConveyLine.LINE_3).size());
             case "volna4" ->
-                    fullNameColumn.setFooter("Сотрудников: " + GridEdit.mountMap.get(ConveyLine.LINE_4).size());
+                    fullNameColumn.setFooter("Сотрудников: " + BrigEdit.mountMap.get(ConveyLine.LINE_4).size());
             case "sborka1" ->
-                    fullNameColumn.setFooter("Сотрудников: " + GridEdit.builderMap.get(ConveyLine.LINE_1).size());
+                    fullNameColumn.setFooter("Сотрудников: " + BrigEdit.builderMap.get(ConveyLine.LINE_1).size());
             case "sborka2" ->
-                    fullNameColumn.setFooter("Сотрудников: " + GridEdit.builderMap.get(ConveyLine.LINE_2).size());
+                    fullNameColumn.setFooter("Сотрудников: " + BrigEdit.builderMap.get(ConveyLine.LINE_2).size());
             case "sborka3" ->
-                    fullNameColumn.setFooter("Сотрудников: " + GridEdit.builderMap.get(ConveyLine.LINE_3).size());
+                    fullNameColumn.setFooter("Сотрудников: " + BrigEdit.builderMap.get(ConveyLine.LINE_3).size());
             case "sborka4" ->
-                    fullNameColumn.setFooter("Сотрудников: " + GridEdit.builderMap.get(ConveyLine.LINE_4).size());
-            case "tech" -> fullNameColumn.setFooter("Сотрудников: " + GridEdit.techListUPC.size());
+                    fullNameColumn.setFooter("Сотрудников: " + BrigEdit.builderMap.get(ConveyLine.LINE_4).size());
+            case "tech" -> fullNameColumn.setFooter("Сотрудников: " + BrigEdit.techListUPC.size());
         }
 
 
@@ -287,7 +287,7 @@ public class WorkTime extends Div {
         if (username.equals("admin")) {
             try {
                 HeaderRow headerRow = workTimeGrid.appendHeaderRow();
-                GridListDataView<Worker> dataView = workTimeGrid.setItems(GridEdit.workerList);
+                GridListDataView<Worker> dataView = workTimeGrid.setItems(BrigEdit.workerList);
                 PersonFilter personFilter = new WorkTime.PersonFilter(dataView);
 
                 headerRow.getCell(lineColumn).setComponent(createFilterHeader(personFilter::setLine));
@@ -368,6 +368,9 @@ public class WorkTime extends Div {
                 case OTRABOTKA -> {
                     return "otrabotka";
                 }
+                case PERERABOTKA -> {
+                    return "pererabotka";
+                }
             }
             return null;
         });
@@ -375,18 +378,18 @@ public class WorkTime extends Div {
         add(workTimeDatePicker, save, likeYesterday, likeFriday, workTimeGrid);
     }
 
-    public void setItemforGrid(String sc, Grid<Worker> grid) {
+    public void setItemForGrid(String sc, Grid<Worker> grid) {
         switch (sc) {
-            case "admin", "owner" -> grid.setItems(GridEdit.workerList);
-            case "volna1" -> grid.setItems(GridEdit.mountMap.get(ConveyLine.LINE_1));
-            case "volna2" -> grid.setItems(GridEdit.mountMap.get(ConveyLine.LINE_2));
-            case "volna3" -> grid.setItems(GridEdit.mountMap.get(ConveyLine.LINE_3));
-            case "volna4" -> grid.setItems(GridEdit.mountMap.get(ConveyLine.LINE_4));
-            case "sborka1" -> grid.setItems(GridEdit.builderMap.get(ConveyLine.LINE_1));
-            case "sborka2" -> grid.setItems(GridEdit.builderMap.get(ConveyLine.LINE_2));
-            case "sborka3" -> grid.setItems(GridEdit.builderMap.get(ConveyLine.LINE_3));
-            case "sborka4" -> grid.setItems(GridEdit.builderMap.get(ConveyLine.LINE_4));
-            case "tech" -> grid.setItems(GridEdit.allTech);
+            case "admin", "owner" -> grid.setItems(BrigEdit.workerList);
+            case "volna1" -> grid.setItems(BrigEdit.mountMap.get(ConveyLine.LINE_1));
+            case "volna2" -> grid.setItems(BrigEdit.mountMap.get(ConveyLine.LINE_2));
+            case "volna3" -> grid.setItems(BrigEdit.mountMap.get(ConveyLine.LINE_3));
+            case "volna4" -> grid.setItems(BrigEdit.mountMap.get(ConveyLine.LINE_4));
+            case "sborka1" -> grid.setItems(BrigEdit.builderMap.get(ConveyLine.LINE_1));
+            case "sborka2" -> grid.setItems(BrigEdit.builderMap.get(ConveyLine.LINE_2));
+            case "sborka3" -> grid.setItems(BrigEdit.builderMap.get(ConveyLine.LINE_3));
+            case "sborka4" -> grid.setItems(BrigEdit.builderMap.get(ConveyLine.LINE_4));
+            case "tech" -> grid.setItems(BrigEdit.allTech);
         }
 
     }
