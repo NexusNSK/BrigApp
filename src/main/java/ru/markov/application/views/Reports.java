@@ -97,7 +97,6 @@ public class Reports extends Div {
             add(download);
         });
 
-
         add(selectReport, selectMonth, currentReport);
 
     }
