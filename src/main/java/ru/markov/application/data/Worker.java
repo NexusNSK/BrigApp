@@ -324,6 +324,9 @@ public class Worker implements Serializable, Comparable<Worker> {
             case ADMINOTP -> "Админ. отпуск";
         };
     }
+
+    public WorkerStatus gTwSd(int day){return (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(day));}
+
     @JsonIgnore
     public WorkerStatus getWorkerStatus() {
         return workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())

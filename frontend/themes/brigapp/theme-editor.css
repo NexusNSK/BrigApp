@@ -18,6 +18,9 @@ vaadin-button.main-layout-button-1::part(label) {
   font-size:var(--lumo-font-size-m);
   font-weight:normal;
 }
+vaadin-grid.work-time-grid::part(row) {
+  font-size: 6px;
+}
 
 vaadin-grid.work-time-grid::part(administrat) {
   background-color:rgba(138,43,226,0.24);
@@ -25,7 +28,7 @@ vaadin-grid.work-time-grid::part(administrat) {
   border-top:1px solid rgba(0,0,0,0.27);
 }
 
-vaadin-grid.table-view-grid::part(administrat) {
+.adminotp {
   background-color:rgba(138,43,226,0.24);
   border-bottom:1px solid rgba(0,0,0,0.27);
   border-top:1px solid rgba(0,0,0,0.27);
@@ -38,7 +41,7 @@ vaadin-grid.work-time-grid::part(bol) {
   border-top:1px solid rgba(0,0,0,0.27);
 }
 
-vaadin-grid.table-view-grid::part(bol) {
+vaadin-grid.table-view-grid.cell.hospital {
   background-color:rgba(255,0,0,0.34);
   border-bottom:1px solid rgba(0,0,0,0.27);
   border-top:1px solid rgba(0,0,0,0.27);
@@ -53,7 +56,7 @@ vaadin-grid.work-time-grid::part(nothing) {
   border-top:1px solid rgba(0,0,0,0.27);
 }
 
-vaadin-grid.table-view-grid::part(nothing) {
+.nothing {
   background-color:rgba(77,44,112,0.11);
   border-bottom:1px solid rgba(0,0,0,0.27);
   border-top:1px solid rgba(0,0,0,0.27);
@@ -77,7 +80,7 @@ vaadin-grid.work-time-grid::part(otrabotka) {
   border-top:1px solid rgba(0,0,0,0.27);
 }
 
-vaadin-grid.table-view-grid::part(otrabotka) {
+.otrabotka {
   background-color:rgba(85,163,210,0.24);
   border-bottom:1px solid rgba(0,0,0,0.27);
   border-top:1px solid rgba(0,0,0,0.27);
@@ -89,7 +92,7 @@ vaadin-grid.work-time-grid::part(work) {
   border-top:1px solid rgba(0,0,0,0.27);
 }
 
-vaadin-grid.table-view-grid::part(work) {
+.work {
   background-color:rgba(255,255,255,0);
   border-bottom:1px solid rgba(0,0,0,0.27);
   border-top:1px solid rgba(0,0,0,0.27);
@@ -101,7 +104,7 @@ vaadin-grid.work-time-grid::part(pererabotka) {
   border-top:1px solid rgba(0,0,0,0.27);
 }
 
-vaadin-grid.table-view-grid::part(pererabotka) {
+.pererabotka {
   background-color: rgba(255, 197, 0, 0.29);
   border-bottom:1px solid rgba(0,0,0,0.27);
   border-top:1px solid rgba(0,0,0,0.27);
@@ -164,3 +167,17 @@ vaadin-login-overlay-wrapper::part(brand) {
 vaadin-login-overlay-wrapper::part(title) { color:rgba(0,0,0,0.53); }
 
 vaadin-vertical-layout { gap:var(--lumo-space-xs); }
+
+
+.my-striped-grid {
+  border-collapse: collapse; /* Убираем слияние границ ячеек */
+}
+
+.my-striped-grid td, .my-striped-grid th {
+  border: 1px solid #ddd; /* Добавляем рамку к ячейкам */
+  padding: 8px; /* Добавляем отступ */
+}
+
+.my-striped-grid tr:nth-child(even) {
+  background-color: #f2f2f2; /* Чередуем цвет строк */
+}
