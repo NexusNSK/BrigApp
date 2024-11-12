@@ -348,6 +348,7 @@ public class WorkTime extends Div {
         });
 
         workTimeGrid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
+
         workTimeGrid.setPartNameGenerator(person -> {
             switch (person.getWorkerStatus()) {
                 case WORK -> {
