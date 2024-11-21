@@ -32,6 +32,7 @@ public class Worker implements Serializable, Comparable<Worker> {
     private final HashMap<Integer, HashMap<Integer, WorkerStatus>> workerStatusMassive = new HashMap<>(12);
     @JsonProperty("workTimeMassive")
     private final HashMap<Integer, HashMap<Integer, Integer>> workTimeMassive = new HashMap<>(12);
+
     //            hashmap <номер месяца : hashmap  <номер дня : часы>>
     @JsonProperty
     public void initWorkerStatusMap() {
@@ -45,6 +46,7 @@ public class Worker implements Serializable, Comparable<Worker> {
             //System.out.println(getFullName() +  ": Создание карты учета статуса работника завершено!");
         }
     }
+
     @JsonIgnore
     public void initWorkTimeMap() {
         if (workTimeMassive.isEmpty()) {
@@ -57,6 +59,7 @@ public class Worker implements Serializable, Comparable<Worker> {
             //System.out.println(getFullName() +  ": Создание карты учета времени завершено!");
         }
     }
+
     @JsonIgnore
     public void setWorkTime(int hours) {
         workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
@@ -65,13 +68,15 @@ public class Worker implements Serializable, Comparable<Worker> {
         if (hours > 8) {
             workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                     .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.PERERABOTKA);
-       } else if (hours > 0 && hours < 8) {workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
-                .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.OTRABOTKA);}
-        else if (hours == 8) {
+        } else if (hours > 0 && hours < 8) {
+            workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
+                    .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.OTRABOTKA);
+        } else if (hours == 8) {
             workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                     .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.WORK);
         }
     }
+
     /*
     @JsonIgnore
     public void setWorkTimeForWorkInHoliday(int hours){
@@ -84,80 +89,378 @@ public class Worker implements Serializable, Comparable<Worker> {
         workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), getWorkTimeLikeYesterday());
     }
+
     @JsonIgnore
     public void setWorkTimeLikeFriday() {
         workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), getWorkTimeLikeFriday());
     }
+
     @JsonIgnore
     public int getWorkTime() {
         return workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth());
     }
+
     @JsonIgnore
     public int getWorkTimeLikeYesterday() {
         return workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
-                .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth()-1);
+                .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth() - 1);
     }
+
     @JsonIgnore
     public int getWorkTimeLikeFriday() {
         return workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
-                .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth()-3);
+                .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth() - 3);
     }
+
     @JsonIgnore
     public int getWorkTimeToPOI(int day) {
         return workTimeMassive.get(Reports.month).get(day);
     }
-    public int getWorkTimeToTableView1(){
-        return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(1);
-    }public int getWorkTimeToTableView2(){
-        return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(2);
-    }
-    public int getWorkTimeToTableView3(){
-        return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(3);
-    }
-    public int getWorkTimeToTableView4(){
-        return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(4);
-    }
-    public int getWorkTimeToTableView5(){
-        return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(5);
-    }
-    public int getWorkTimeToTableView6(){
-        return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(6);
-    }
-    public int getWorkTimeToTableView7(){
-        return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(7);
-    }
-    public int getWorkTimeToTableView8(){
-        return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(8);
-    }
-    public int getWorkTimeToTableView9(){
-        return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(9);
-    }
-    public int getWorkTimeToTableView10(){return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(10);}
-    public int getWorkTimeToTableView11(){return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(11);}
-    public int getWorkTimeToTableView12(){return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(12);}
-    public int getWorkTimeToTableView13(){return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(13);}
-    public int getWorkTimeToTableView14(){return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(14);}
-    public int getWorkTimeToTableView15(){return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(15);}
-    public int getWorkTimeToTableView16(){return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(16);}
-    public int getWorkTimeToTableView17(){return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(17);}
-    public int getWorkTimeToTableView18(){return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(18);}
-    public int getWorkTimeToTableView19(){return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(19);}
-    public int getWorkTimeToTableView20(){return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(20);}
-    public int getWorkTimeToTableView21(){return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(21);}
-    public int getWorkTimeToTableView22(){return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(22);}
-    public int getWorkTimeToTableView23(){return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(23);}
-    public int getWorkTimeToTableView24(){return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(24);}
-    public int getWorkTimeToTableView25(){return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(25);}
-    public int getWorkTimeToTableView26(){return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(26);}
-    public int getWorkTimeToTableView27(){return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(27);}
-    public int getWorkTimeToTableView28(){return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(28);}
-    public int getWorkTimeToTableView29(){return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(29);}
-    public int getWorkTimeToTableView30(){return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(30);}
-    public int getWorkTimeToTableView31(){return workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(31);}
 
-    @JsonIgnore
+    public String getWorkTimeToTableView1() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(1)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(1));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView2() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(2)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(2));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView3() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(3)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(3));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView4() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(4)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(4));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView5() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(5)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(5));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView6() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(6)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(6));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView7() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(7)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(7));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView8() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(8)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(8));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView9() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(9)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(9));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView10() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(10)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(10));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView11() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(11)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(11));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView12() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(12)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(12));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView13() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(13)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(13));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView14() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(14)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(14));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView15() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(15)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(15));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView16() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(16)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(16));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView17() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(17)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(17));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView18() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(18)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(18));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView19() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(19)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(19));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView20() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(20)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(20));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView21() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(21)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(21));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView22() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(22)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(22));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView23() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(23)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(23));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView24() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(24)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(24));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView25() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(25)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(25));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView26() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(26)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(26));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView27() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(27)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(27));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView28() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(28)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(28));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView29() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(29)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(29));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView30() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(30)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(30));
+            }
+        }
+    }
+
+    public String getWorkTimeToTableView31() {
+        switch (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(31)) {
+            case NOTHING, ADMINOTP, HOLIDAY, HOSPITAL -> {
+                return "";
+            }
+            default -> {
+                return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(31));
+            }
+        }
+    }
+
+
     public String getPost() {
         String ps = "";
         switch (post) {
@@ -170,7 +473,8 @@ public class Worker implements Serializable, Comparable<Worker> {
         }
         return ps;
     }
-    @JsonIgnore
+
+
     public void setPost(String post) {
         switch (post) {
             case ("Бригадир монтажников") -> this.post = Post.BRIG_MOUNT;
@@ -181,7 +485,8 @@ public class Worker implements Serializable, Comparable<Worker> {
             case ("Техник") -> this.post = Post.TECHNIC;
         }
     }
-    @JsonIgnore
+
+
     public String getDistrictToString() {
         return switch (district) {
             case MOUNTING -> "Бригада монтажники";
@@ -192,11 +497,13 @@ public class Worker implements Serializable, Comparable<Worker> {
             case LAB5 -> "Лаборатория 5";
         };
     }
-    @JsonIgnore
+
+
     public District getDistrict() {
         return this.district;
     }
-    @JsonIgnore
+
+
     public void setDistrict(String district) {
         switch (district) {
             case ("Бригада монтажники") -> this.district = District.MOUNTING;
@@ -218,41 +525,45 @@ public class Worker implements Serializable, Comparable<Worker> {
         initWorkTimeMap();
         initWorkerStatusMap();
     }
-    //public Worker(){}
 
-    @JsonIgnore
+
     public String getFullName() {
         return lastName + " " + firstName + " " + patronymic;
     }
+
     public String getFullNameWithInitials() {
         return lastName + " " + firstName.substring(0, 1).toUpperCase() + "." + patronymic.substring(0, 1).toUpperCase() + ".";
     }
 
-    @JsonIgnore
     public String getFirstName() {
         return this.firstName;
     }
-    @JsonIgnore
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-    @JsonIgnore
+
+
     public String getLastName() {
         return this.lastName;
     }
-    @JsonIgnore
+
+
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-    @JsonIgnore
+
+
     public String getPatronymic() {
         return this.patronymic;
     }
-    @JsonIgnore
+
+
     public void setPatronymic(String patronymic) {
         this.patronymic = patronymic;
     }
-    @JsonIgnore
+
+
     public void setWorkerStatusMassive(String status) {
         switch (status) {
             case ("10") -> {
@@ -294,26 +605,30 @@ public class Worker implements Serializable, Comparable<Worker> {
             }
         }
     }
-    @JsonIgnore
+
+
     public void setWorkerStatusMassiveLikeYesterday() {
         workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), getWorkerStatusLikeYesterday());
     }
-    @JsonIgnore
+
+
     public void setWorkerStatusMassiveLikeFriday() {
         workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), getWorkerStatusLikeFriday());
     }
-    @JsonIgnore
+
+
     private WorkerStatus getWorkerStatusLikeYesterday() {
-        return workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue()).get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth()-1);
-    }
-    @JsonIgnore
-    private WorkerStatus getWorkerStatusLikeFriday() {
-        return workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue()).get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth()-3);
+        return workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue()).get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth() - 1);
     }
 
-    @JsonIgnore
+
+    private WorkerStatus getWorkerStatusLikeFriday() {
+        return workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue()).get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth() - 3);
+    }
+
+
     public String getWorkerStatusMassive() {
         return switch (workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth())) {
@@ -325,18 +640,22 @@ public class Worker implements Serializable, Comparable<Worker> {
         };
     }
 
-    public WorkerStatus gTwSd(int day){return (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(day));}
+    public WorkerStatus gTwSd(int day) {
+        return (workerStatusMassive.get(LocalDateTime.now().getMonthValue()).get(day));
+    }
 
-    @JsonIgnore
+
     public WorkerStatus getWorkerStatus() {
         return workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth());
     }
+
     public WorkerStatus getWorkerStatusTable(int day) {
         return workerStatusMassive.get(LocalDateTime.now().getMonthValue())
                 .get(day);
     }
-    @JsonIgnore
+
+
     public String getWorkerStatusAtDay(int day) {
         return switch (workerStatusMassive.get(Reports.month).get(day)) {
             case WORK, OTRABOTKA, PERERABOTKA -> "Работает";
@@ -346,12 +665,13 @@ public class Worker implements Serializable, Comparable<Worker> {
             case ADMINOTP -> "Админ. отпуск";
         };
     }
-    @JsonIgnore
+
+
     public WorkerStatus getWorkerStatusAtDayToRepo(int day) {
         return workerStatusMassive.get(Reports.month).get(day);
     }
 
-    @JsonIgnore
+
     public String getLineToString() {
         return switch (line) {
             case LINE_1 -> "1";
@@ -361,11 +681,13 @@ public class Worker implements Serializable, Comparable<Worker> {
             default -> "---";
         };
     }
-    @JsonIgnore
+
+
     public ConveyLine getLine() {
         return this.line;
     }
-    @JsonIgnore
+
+
     public void setLine(String line) {
         switch (line) {
             case "1" -> this.line = ConveyLine.LINE_1;
@@ -376,11 +698,12 @@ public class Worker implements Serializable, Comparable<Worker> {
         }
     }
 
-    @Override
+
     public int compareTo(Worker o) {
         return this.getLastName().compareTo(o.getLastName());
     }
-    public void eraseAllMassive(){
+
+    public void eraseAllMassive() {
         workerStatusMassive.clear();
         workTimeMassive.clear();
     }

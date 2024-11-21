@@ -2,6 +2,8 @@
  * This file has been created by the Vaadin Theme Editor. Please note that
  * manual changes to individual CSS properties may be overwritten by the theme editor.
  */
+body { font-size:var(--lumo-font-size-m); }
+
 h1.main-layout-h1-1 {
 
 }
@@ -18,9 +20,6 @@ vaadin-button.main-layout-button-1::part(label) {
   font-size:var(--lumo-font-size-m);
   font-weight:normal;
 }
-vaadin-grid.work-time-grid::part(row) {
-  font-size: 6px;
-}
 
 vaadin-grid.work-time-grid::part(administrat) {
   background-color:rgba(138,43,226,0.24);
@@ -28,35 +27,15 @@ vaadin-grid.work-time-grid::part(administrat) {
   border-top:1px solid rgba(0,0,0,0.27);
 }
 
-.adminotp {
-  background-color:rgba(138,43,226,0.24);
-  border-bottom:1px solid rgba(0,0,0,0.27);
-  border-top:1px solid rgba(0,0,0,0.27);
-}
-
-
 vaadin-grid.work-time-grid::part(bol) {
   background-color:rgba(255,0,0,0.34);
   border-bottom:1px solid rgba(0,0,0,0.27);
   border-top:1px solid rgba(0,0,0,0.27);
 }
 
-vaadin-grid.table-view-grid.cell.hospital {
-  background-color:rgba(255,0,0,0.34);
-  border-bottom:1px solid rgba(0,0,0,0.27);
-  border-top:1px solid rgba(0,0,0,0.27);
-}
-
 vaadin-grid.work-time-grid::part(font-weight-bold) { font-weight:bold; }
-vaadin-grid.table-view-grid::part(font-weight-bold) { font-weight:bold; }
 
 vaadin-grid.work-time-grid::part(nothing) {
-  background-color:rgba(77,44,112,0.11);
-  border-bottom:1px solid rgba(0,0,0,0.27);
-  border-top:1px solid rgba(0,0,0,0.27);
-}
-
-.nothing {
   background-color:rgba(77,44,112,0.11);
   border-bottom:1px solid rgba(0,0,0,0.27);
   border-top:1px solid rgba(0,0,0,0.27);
@@ -68,19 +47,7 @@ vaadin-grid.work-time-grid::part(otpusk) {
   border-top:1px solid rgba(0,0,0,0.27);
 }
 
-vaadin-grid.table-view-grid::part(otpusk) {
-  background-color:rgba(0,255,7,0.34);
-  border-bottom:1px solid rgba(0,0,0,0.27);
-  border-top:1px solid rgba(0,0,0,0.27);
-}
-
 vaadin-grid.work-time-grid::part(otrabotka) {
-  background-color:rgba(85,163,210,0.24);
-  border-bottom:1px solid rgba(0,0,0,0.27);
-  border-top:1px solid rgba(0,0,0,0.27);
-}
-
-.otrabotka {
   background-color:rgba(85,163,210,0.24);
   border-bottom:1px solid rgba(0,0,0,0.27);
   border-top:1px solid rgba(0,0,0,0.27);
@@ -88,24 +55,6 @@ vaadin-grid.work-time-grid::part(otrabotka) {
 
 vaadin-grid.work-time-grid::part(work) {
   background-color:rgba(255,255,255,0);
-  border-bottom:1px solid rgba(0,0,0,0.27);
-  border-top:1px solid rgba(0,0,0,0.27);
-}
-
-.work {
-  background-color:rgba(255,255,255,0);
-  border-bottom:1px solid rgba(0,0,0,0.27);
-  border-top:1px solid rgba(0,0,0,0.27);
-}
-
-vaadin-grid.work-time-grid::part(pererabotka) {
-  background-color: rgba(255, 197, 0, 0.29);
-  border-bottom:1px solid rgba(0,0,0,0.27);
-  border-top:1px solid rgba(0,0,0,0.27);
-}
-
-.pererabotka {
-  background-color: rgba(255, 197, 0, 0.29);
   border-bottom:1px solid rgba(0,0,0,0.27);
   border-top:1px solid rgba(0,0,0,0.27);
 }
@@ -146,10 +95,10 @@ vaadin-login-form [slot="forgot-password"] {
 
 vaadin-login-form-wrapper::part(form) {
   background-blend-mode:screen;
-  background-image:linear-gradient(rgb(255,255,255),rgb(60,121,197)),url(https://i.pinimg.com/originals/68/16/88/6816885d988b23a19281a69d25e673bd.jpg);
+  background-image:linear-gradient(rgb(255, 255, 255), rgb(60, 121, 197)),url(rm309-aew-001.jpg);
   background-position-x:center;
   background-repeat:no-repeat;
-  background-size:150%;
+  background-size:165%;
   block-size:auto;
   border-radius:0% 0% 0% 0%;
 }
@@ -157,27 +106,13 @@ vaadin-login-form-wrapper::part(form) {
 vaadin-login-overlay-wrapper::part(backdrop) { background-color:rgba(0,0,0,0.07); }
 
 vaadin-login-overlay-wrapper::part(brand) {
-  background-blend-mode:screen;
-  background-image:linear-gradient(rgb(12,36,65),rgb(255,255,255)),url(https://eltex.loc/templates/ja_purity/images/logo.png);
+  background-blend-mode: screen;
+  background-image: linear-gradient(rgb(60, 121, 197), rgba(255, 255, 255, 0.34)),url(logoBAPP.png);
   background-repeat:no-repeat;
-  background-size:100%;
+  background-size:120%;
   border-radius:0% 0% 0% 0%;
 }
 
 vaadin-login-overlay-wrapper::part(title) { color:rgba(0,0,0,0.53); }
 
 vaadin-vertical-layout { gap:var(--lumo-space-xs); }
-
-
-.my-striped-grid {
-  border-collapse: collapse; /* Убираем слияние границ ячеек */
-}
-
-.my-striped-grid td, .my-striped-grid th {
-  border: 1px solid #ddd; /* Добавляем рамку к ячейкам */
-  padding: 8px; /* Добавляем отступ */
-}
-
-.my-striped-grid tr:nth-child(even) {
-  background-color: #f2f2f2; /* Чередуем цвет строк */
-}

@@ -212,7 +212,7 @@ public class WorkTime extends Div {
         }
 
         Grid.Column<Worker> fullNameColumn = workTimeGrid
-                .addColumn(Worker::getFullName).setTextAlign(ColumnTextAlign.START)
+                .addColumn(Worker::getFullNameWithInitials).setTextAlign(ColumnTextAlign.START)
                 .setSortProperty("lastName")
                 .setHeader("ФИО сотрудника")
                 .setAutoWidth(false)

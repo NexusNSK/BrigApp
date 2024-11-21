@@ -31,7 +31,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 		LoginI18n login18n = LoginI18n.createDefault();
 
 		LoginI18n.Header login18nHeader = new LoginI18n.Header();
-		login18nHeader.setTitle("BrigApp");
+		//login18nHeader.setTitle("BrigApp");
 		login18n.setHeader(login18nHeader);
 
 		LoginI18n.Form i18nForm = login18n.getForm();
