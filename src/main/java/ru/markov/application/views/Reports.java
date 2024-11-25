@@ -29,9 +29,15 @@ import java.time.LocalDate;
 public class Reports extends Div {
     public static DatePicker datePickerForRepo = new DatePicker(LocalDate.now());
     public static int month;
+    public static String fileName = "reports.txt";
+    Button downloadButton = new Button("Скачать отчёт");
+    Anchor downloadLink = new Anchor("/download", "Скачать отчёт");
+
 
     @SuppressWarnings("CallToPrintStackTrace")
     public Reports(SecurityService securityService) {
+        downloadLink.setVisible(false);
+        downloadLink.getElement().setAttribute("download", "true");
         BrigEdit.initSplitDistrictWorkersList();
         ComboBox<String> selectReport = new ComboBox<>("Выбор бригады для отчета");
         ComboBox<String> selectMonth = new ComboBox<>("Месяц");
@@ -71,7 +77,7 @@ public class Reports extends Div {
                 Notification n = Notification.show("Отчёт был создан. \nТеперь можно скачать файл!");
                 n.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
                 n.setPosition(Notification.Position.MIDDLE);
-            } catch(NullPointerException npe){
+            } catch (NullPointerException npe) {
                 Notification error = Notification.show("""
                         Необходимо выбрать бригаду и отчётный месяц!\
                         
@@ -84,25 +90,26 @@ public class Reports extends Div {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            String fileName = "График " + selectReport.getValue() + " за " + selectMonth.getValue() + " " + datePickerForRepo.getValue().getYear() + ".xlsx";
-            Anchor download = new Anchor(new StreamResource(fileName, () -> {
-                try {
-                    return new FileInputStream("Template.xlsx");
-                } catch (FileNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
-            }), "");
-            download.getElement().setAttribute("download", true);
-            download.add(new Button(new Icon(VaadinIcon.DOWNLOAD_ALT)));
-            add(download);
+            fileName = "График " + selectReport.getValue() + " за " + selectMonth.getValue() + " " + datePickerForRepo.getValue().getYear() + ".xlsx";
+/**
+ Anchor download = new Anchor(new StreamResource(fileName, () -> {
+ try {
+ return new FileInputStream("Template.xlsx");
+ } catch (FileNotFoundException e) {
+ throw new RuntimeException(e);
+ }
+ }), "");
+ download.getElement().setAttribute("download", true);
+ download.add(new Button(new Icon(VaadinIcon.DOWNLOAD_ALT)));
+ add(download);
+ **/
+            downloadLink.setVisible(true);
+            downloadButton.addClickListener(event2 -> {
+            });
         });
 
-        add(selectReport, selectMonth, currentReport);
+
+        add(selectReport, selectMonth, currentReport, downloadLink);
 
     }
-
-
-
-
-
 }
