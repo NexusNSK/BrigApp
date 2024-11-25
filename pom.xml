@@ -6,7 +6,7 @@
     <groupId>ru.markov.application</groupId>
     <artifactId>BrigApp</artifactId>
     <name>BrigApp</name>
-    <version>1.0.9.6</version>
+    <version>1.0.9.7</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -52,7 +52,6 @@
     <dependencies>
         <dependency>
             <groupId>com.vaadin</groupId>
-            <!-- Replace artifactId with vaadin-core to use only free components -->
             <artifactId>vaadin</artifactId>
         </dependency>
         <dependency>
@@ -140,10 +139,12 @@
 
     <profiles>
         <profile>
-            <!-- Production mode is activated using -Pproduction -->
+            <!-- Production mode is activated using production -->
             <id>production</id>
+            <properties>
+                <vaadin.productionMode>true</vaadin.productionMode>
+            </properties>
             <dependencies>
-                <!-- Exclude development dependencies from production -->
                 <dependency>
                     <groupId>com.vaadin</groupId>
                     <artifactId>vaadin-core</artifactId>

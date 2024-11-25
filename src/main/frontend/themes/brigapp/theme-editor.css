@@ -22,38 +22,59 @@ vaadin-button.main-layout-button-1::part(label) {
 }
 
 vaadin-grid.work-time-grid::part(administrat) {
+  padding: 0px;
   background-color:rgba(138,43,226,0.24);
   border-bottom:1px solid rgba(0,0,0,0.27);
   border-top:1px solid rgba(0,0,0,0.27);
+  align-items: center;
+}
+vaadin-grid.work-time-grid::part(pererabotka) {
+  padding: 0px;
+  background-color: rgba(255, 167, 0, 0.67);
+  border-bottom:1px solid rgba(0,0,0,0.27);
+  border-top:1px solid rgba(0,0,0,0.27);
+  align-items: center;
 }
 
 vaadin-grid.work-time-grid::part(bol) {
+  padding: 0px;
   background-color:rgba(255,0,0,0.34);
   border-bottom:1px solid rgba(0,0,0,0.27);
   border-top:1px solid rgba(0,0,0,0.27);
+  align-items: center;
 }
 
 vaadin-grid.work-time-grid::part(font-weight-bold) { font-weight:bold; }
 
 vaadin-grid.work-time-grid::part(nothing) {
+  padding: 0px;
   background-color:rgba(77,44,112,0.11);
   border-bottom:1px solid rgba(0,0,0,0.27);
   border-top:1px solid rgba(0,0,0,0.27);
+  align-items: center;
 }
 
 vaadin-grid.work-time-grid::part(otpusk) {
+  padding: 0px;
   background-color:rgba(0,255,7,0.34);
   border-bottom:1px solid rgba(0,0,0,0.27);
   border-top:1px solid rgba(0,0,0,0.27);
+  align-items: center;
 }
 
 vaadin-grid.work-time-grid::part(otrabotka) {
+  padding: 0px;
   background-color:rgba(85,163,210,0.24);
   border-bottom:1px solid rgba(0,0,0,0.27);
   border-top:1px solid rgba(0,0,0,0.27);
+  align-items: center;
 }
-
+vaadin-grid.work-time-grid::part(cell.content) {
+  padding: 0px;
+  align-items: center;
+}
 vaadin-grid.work-time-grid::part(work) {
+  padding: 0px;
   background-color:rgba(255,255,255,0);
   border-bottom:1px solid rgba(0,0,0,0.27);
   border-top:1px solid rgba(0,0,0,0.27);

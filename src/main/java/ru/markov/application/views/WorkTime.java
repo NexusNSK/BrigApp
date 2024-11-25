@@ -50,7 +50,7 @@ public class WorkTime extends Div {
         ruPicker.setDateFormat("dd.MM.yyyy");
         ruPicker.setFirstDayOfWeek(1);
         ruPicker.setMonthNames(List.of("Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"));
-        ruPicker.setWeekdays(List.of("Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"));
+        ruPicker.setWeekdays(List.of("Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"));
         ruPicker.setWeekdaysShort(List.of(" __ВС__ ", " __ПН__ ", " __ВТ__ ", " __СР__ ", " __ЧТ__ ", " __ПТ__ ", " __СБ__"));
         ruPicker.setToday("Сегодня");
         ruPicker.setCancel("Отмена");

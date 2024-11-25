@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.markov.application.service.*;
 import ru.markov.application.views.Reports;
-import ru.markov.application.views.TableView;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -586,9 +584,11 @@ public class Worker implements Serializable, Comparable<Worker> {
                         .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.HOSPITAL);
                 setWorkTime(0);
             }
-            case ("ОТП") -> //setWorkTime(0);
-                    workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
-                            .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.HOLIDAY);
+            case ("ОТП") -> {
+                setWorkTime(0);
+                workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
+                        .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.HOLIDAY);
+            }
 
             case ("ОТГ") -> //setWorkTime(0);
                     workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
