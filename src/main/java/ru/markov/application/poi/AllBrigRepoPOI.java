@@ -332,6 +332,7 @@ public class AllBrigRepoPOI {
         }
         sheet.setColumnWidth(0, 1000);
         legendMap(sheet);
+        sheet.createFreezePane(0, 3);
 
     }
     public void reportList() {
@@ -1027,27 +1028,27 @@ public class AllBrigRepoPOI {
 
 
 
-        sheet.getRow(1).createCell(35).setCellValue("Работает");
-        sheet.getRow(1).createCell(36).setCellStyle(workStatusCell);
+        sheet.getRow(0).createCell(35).setCellValue("Работает");
+        sheet.getRow(0).createCell(36).setCellStyle(workStatusCell);
 
-        sheet.getRow(2).createCell(35).setCellValue("Больничный");
-        sheet.getRow(2).createCell(36).setCellStyle(hospitalStatusCell);
+        sheet.getRow(1).createCell(35).setCellValue("Больничный");
+        sheet.getRow(1).createCell(36).setCellStyle(hospitalStatusCell);
 
-        sheet.getRow(3).createCell(35).setCellValue("Отпуск");
-        sheet.getRow(3).createCell(36).setCellStyle(holidayStatusCell);
+        sheet.getRow(2).createCell(35).setCellValue("Отпуск");
+        sheet.getRow(2).createCell(36).setCellStyle(holidayStatusCell);
 
         sheet.setColumnWidth(37, 100);
         sheet.setColumnWidth(35, 4000);
         sheet.setColumnWidth(38, 4000);
 
 
-        sheet.getRow(1).createCell(38).setCellValue("С отработкой");
-        sheet.getRow(1).createCell(39).setCellStyle(otrabotkaStatusCell);
+        sheet.getRow(0).createCell(38).setCellValue("С отработкой");
+        sheet.getRow(0).createCell(39).setCellStyle(otrabotkaStatusCell);
 
-        sheet.getRow(2).createCell(38).setCellValue("Выходной");
-        sheet.getRow(2).createCell(39).setCellStyle(nothingStatusCell);
+        sheet.getRow(1).createCell(38).setCellValue("Выходной");
+        sheet.getRow(1).createCell(39).setCellStyle(nothingStatusCell);
 
-        sheet.getRow(3).createCell(38).setCellValue("Без отработки");
-        sheet.getRow(3).createCell(39).setCellStyle(adminOtpyskStatusCell);
+        sheet.getRow(2).createCell(38).setCellValue("Без отработки");
+        sheet.getRow(2).createCell(39).setCellStyle(adminOtpyskStatusCell);
     }
 }

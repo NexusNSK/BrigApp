@@ -36,6 +36,7 @@ public class Reports extends Div {
 
     @SuppressWarnings("CallToPrintStackTrace")
     public Reports(SecurityService securityService) {
+
         downloadLink.setVisible(false);
         downloadLink.getElement().setAttribute("download", "true");
         BrigEdit.initSplitDistrictWorkersList();
@@ -91,7 +92,7 @@ public class Reports extends Div {
                 throw new RuntimeException(e);
             }
             fileName = "График " + selectReport.getValue() + " за " + selectMonth.getValue() + " " + datePickerForRepo.getValue().getYear() + ".xlsx";
-/**
+/*
  Anchor download = new Anchor(new StreamResource(fileName, () -> {
  try {
  return new FileInputStream("Template.xlsx");
@@ -102,7 +103,7 @@ public class Reports extends Div {
  download.getElement().setAttribute("download", true);
  download.add(new Button(new Icon(VaadinIcon.DOWNLOAD_ALT)));
  add(download);
- **/
+ */
             downloadLink.setVisible(true);
             downloadButton.addClickListener(event2 -> {
             });
