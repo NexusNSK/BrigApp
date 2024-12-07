@@ -61,9 +61,8 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
 
 
-		add(/*new H1("BrigApp"),*/loginOverlay /*/login*/, visitorMode);
-		//<theme-editor-local-classname>
-				loginOverlay.setOpened(true);
+		add(loginOverlay, visitorMode);
+		loginOverlay.setOpened(true);
 		addClassName("login-view-vertical-layout-1");
 	}
 

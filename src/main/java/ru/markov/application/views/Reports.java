@@ -33,8 +33,6 @@ public class Reports extends Div {
     Button downloadButton = new Button("Скачать отчёт");
     Anchor downloadLink = new Anchor("/download", "Скачать отчёт");
 
-
-    @SuppressWarnings("CallToPrintStackTrace")
     public Reports(SecurityService securityService) {
 
         downloadLink.setVisible(false);
@@ -92,18 +90,6 @@ public class Reports extends Div {
                 throw new RuntimeException(e);
             }
             fileName = "График " + selectReport.getValue() + " за " + selectMonth.getValue() + " " + datePickerForRepo.getValue().getYear() + ".xlsx";
-/*
- Anchor download = new Anchor(new StreamResource(fileName, () -> {
- try {
- return new FileInputStream("Template.xlsx");
- } catch (FileNotFoundException e) {
- throw new RuntimeException(e);
- }
- }), "");
- download.getElement().setAttribute("download", true);
- download.add(new Button(new Icon(VaadinIcon.DOWNLOAD_ALT)));
- add(download);
- */
             downloadLink.setVisible(true);
             downloadButton.addClickListener(event2 -> {
             });
