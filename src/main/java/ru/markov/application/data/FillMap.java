@@ -4,22 +4,22 @@ import ru.markov.application.views.BrigEdit;
 
 public class FillMap {
     public static void fillArray(){
-        BrigEdit.workerList.add(new Worker("m0", "m0", "m0", "", "Бригада монтажники", "Монтажник"));
-        BrigEdit.workerList.add(new Worker("m1", "m1", "m1", "1", "Бригада монтажники", "Монтажник"));
-        BrigEdit.workerList.add(new Worker("m2", "m2", "m2", "2", "Бригада монтажники", "Монтажник"));
-        BrigEdit.workerList.add(new Worker("m3", "m3", "m3", "3", "Бригада монтажники", "Монтажник"));
-        BrigEdit.workerList.add(new Worker("m4", "m4", "m4", "4", "Бригада монтажники", "Монтажник"));
+        BrigEdit.workerList.add(new Worker("m0test", "m0test", "m0test", "", "Бригада монтажники", "Монтажник"));
+        BrigEdit.workerList.add(new Worker("m1test", "m1test", "m1test", "1", "Бригада монтажники", "Монтажник"));
+        BrigEdit.workerList.add(new Worker("m2test", "m2test", "m2test", "2", "Бригада монтажники", "Монтажник"));
+        BrigEdit.workerList.add(new Worker("m3test", "m3test", "m3test", "3", "Бригада монтажники", "Монтажник"));
+        BrigEdit.workerList.add(new Worker("m4test", "m4test", "m4test", "4", "Бригада монтажники", "Монтажник"));
 
-        BrigEdit.workerList.add(new Worker("s0", "s0", "s0", "", "Бригада сборщики", "Сборщик"));
-        BrigEdit.workerList.add(new Worker("s1", "s1", "s1", "1", "Бригада сборщики", "Сборщик"));
-        BrigEdit.workerList.add(new Worker("s2", "s2", "s2", "2", "Бригада сборщики", "Сборщик"));
-        BrigEdit.workerList.add(new Worker("s3", "s3", "s3", "3", "Бригада сборщики", "Сборщик"));
-        BrigEdit.workerList.add(new Worker("s4", "s4", "s4", "4", "Бригада сборщики", "Сборщик"));
+        BrigEdit.workerList.add(new Worker("s0test", "s0test", "s0test", "", "Бригада сборщики", "Сборщик"));
+        BrigEdit.workerList.add(new Worker("s1test", "s1test", "s1test", "1", "Бригада сборщики", "Сборщик"));
+        BrigEdit.workerList.add(new Worker("s2test", "s2test", "s2test", "2", "Бригада сборщики", "Сборщик"));
+        BrigEdit.workerList.add(new Worker("s3test", "s3test", "s3test", "3", "Бригада сборщики", "Сборщик"));
+        BrigEdit.workerList.add(new Worker("s4test", "s4test", "s4test", "4", "Бригада сборщики", "Сборщик"));
 
-        BrigEdit.workerList.add(new Worker("t0", "t0", "t0", "", "Бригада техники", "Техник"));
-        BrigEdit.workerList.add(new Worker("t1", "t1", "t1", "1", "Бригада техники", "Техник"));
-        BrigEdit.workerList.add(new Worker("t2", "t2", "t1", "2", "Бригада техники", "Техник"));
-        BrigEdit.workerList.add(new Worker("t3", "t3", "t1", "3", "Бригада техники", "Техник"));
-        BrigEdit.workerList.add(new Worker("t4", "t4", "t1", "4", "Бригада техники", "Техник"));
+        BrigEdit.workerList.add(new Worker("t0test", "t0test", "t0test", "", "Бригада техники", "Техник"));
+        BrigEdit.workerList.add(new Worker("t1test", "t1test", "t1test", "1", "Бригада техники", "Техник"));
+        BrigEdit.workerList.add(new Worker("t2test", "t2test", "t1test", "2", "Бригада техники", "Техник"));
+        BrigEdit.workerList.add(new Worker("t3test", "t3test", "t1test", "3", "Бригада техники", "Техник"));
+        BrigEdit.workerList.add(new Worker("t4test", "t4test", "t1test", "4", "Бригада техники", "Техник"));
     }
 }

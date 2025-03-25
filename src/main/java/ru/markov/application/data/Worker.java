@@ -75,13 +75,6 @@ public class Worker implements Serializable, Comparable<Worker> {
         }
     }
 
-    /*
-    @JsonIgnore
-    public void setWorkTimeForWorkInHoliday(int hours){
-        workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
-                .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), hours);
-    }
-    */
     @JsonIgnore
     public void setWorkTimeLikeYesterday() {
         workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
@@ -456,6 +449,14 @@ public class Worker implements Serializable, Comparable<Worker> {
                 return String.valueOf(workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(31));
             }
         }
+    }
+
+    public int getWorkerAllTimeToTableView(){
+        int timeSumm = 0;
+        for (int i = 1; i<32; i++){
+            timeSumm = timeSumm+workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(i);
+        }
+        return timeSumm;
     }
 
 

@@ -4,5 +4,5 @@
   / __  (   //  ) ) / / //   ) ) / ___  |   //   ) ) //   ) ) 
  //    ) ) //      / / ((___/ / //    | |  //___/ / //___/ /  
 //____/ / //      / /   //__   //     | | //       //         
-${application.title} ${application.version}
+
 Powered by Markov

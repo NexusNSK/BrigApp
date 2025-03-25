@@ -1088,6 +1088,14 @@ public class TableView extends VerticalLayout {
                     return null;
                 });
 
+        Grid.Column<Worker> d32Column = grid
+                .addColumn(Worker::getWorkerAllTimeToTableView)
+                        .setHeader("Итого")
+                                .setTextAlign(ColumnTextAlign.CENTER)
+                                        .setAutoWidth(false)
+                                                .setWidth("100px")
+                                                        .setFlexGrow(0);
+
         add(grid);
 
     }

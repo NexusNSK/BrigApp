@@ -18,12 +18,12 @@ public class Serial {
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(BrigEdit.workerList);
             oos.close();
-            System.out.println("Файл .bin был записан в резервную директорию " + workDir);
+            //System.out.println("Файл .bin был записан в резервную директорию " + workDir);
             fos = new FileOutputStream("worker list.bin");
             oos = new ObjectOutputStream(fos);
             oos.writeObject(BrigEdit.workerList);
             oos.close();
-            System.out.println("Файл .bin был записан в основную директорию ");
+            //System.out.println("Файл .bin был записан в основную директорию ");
         } catch (IOException e) {
             e.printStackTrace();
         }

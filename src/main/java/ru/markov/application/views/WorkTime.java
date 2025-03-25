@@ -77,12 +77,14 @@ public class WorkTime extends Div {
             TimeAdapter.workTimeDatePicker.setValue(workTimeDatePicker.getValue());
             workTimeGrid.getDataProvider().refreshAll();
         });
+
         Button save = new Button("Записать время");
         save.addClickListener(buttonClickEvent -> {
             Serial.save();
-            System.out.println("Рабочее время было записано");
+            //System.out.println("Рабочее время было записано");
             workTimeGrid.getDataProvider().refreshAll();
         });
+
         Button likeYesterday = new Button("\"Как вчера\"");
         likeYesterday.addClickListener(buttonClickEvent -> {
             switch (username){
