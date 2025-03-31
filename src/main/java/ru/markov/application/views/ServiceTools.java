@@ -36,11 +36,15 @@ public class ServiceTools extends VerticalLayout {
 
             FileBuffer fileBufferForPlan = new FileBuffer();
             Upload singleFileUploadPlan = new Upload(fileBufferForPlan);
+            Upload singleFileUploadPlanOtp = new Upload(fileBufferForPlan);
             int maxFileSizeInBytesPlan = 50 * 1024 * 1024; // 50MB
             singleFileUploadPlan.setMaxFileSize(maxFileSizeInBytesPlan);
-            UploadRussianI18N localizationPlan = new UploadRussianI18N("Plan");
+            UploadRussianI18N localizationPlan = new UploadRussianI18N("plan");
+            UploadRussianI18N localizationPlanOtp = new UploadRussianI18N("plan");
             singleFileUploadPlan.setI18n(localizationPlan);
+            singleFileUploadPlanOtp.setI18n(localizationPlanOtp);
             singleFileUploadPlan.setAcceptedFileTypes(".png");
+            singleFileUploadPlanOtp.setAcceptedFileTypes(".png");
 
 
             TextArea instructAreaPlan = new TextArea();
@@ -67,6 +71,37 @@ public class ServiceTools extends VerticalLayout {
                 }
             });
             singleFileUploadPlan.addFileRejectedListener(event -> {
+                String errorMessage = event.getErrorMessage();
+
+                Notification notification = Notification.show(errorMessage, 5000,
+                        Notification.Position.MIDDLE);
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);});
+
+            //Загрузка плана отпусков
+            TextArea instructOtpAreaPlan = new TextArea();
+            instructOtpAreaPlan.setMinWidth("600px");
+            instructOtpAreaPlan.setMaxWidth("2000px");
+            instructOtpAreaPlan.setReadOnly(true);
+            instructOtpAreaPlan.setPrefixComponent(VaadinIcon.QUESTION_CIRCLE.create());
+            instructOtpAreaPlan.setValue("""
+                    Выберите файл с текущим планом отпусков.\s
+                    Он будет отображаться во вкладке "Отпуска"\s
+                    Файл должен иметь расширение .png, имя файла может быть любым
+                    """);
+
+            singleFileUploadPlanOtp.addSucceededListener(event -> {
+                FileData savedFileData = fileBufferForPlan.getFileData();
+                String absolutePath = savedFileData.getFile().getAbsolutePath();
+                System.out.printf("Файл сохранён по пути: %s%n", absolutePath);
+                try {
+                    FileUtils.deleteQuietly(new File("src/main/resources/images/otpusk.png"));
+                    FileUtils.moveFile(new File(absolutePath), new File("src/main/resources/images/otpusk.png"));
+
+                } catch (IOException e) {
+                    System.out.println("Во время перемещения файла возникла непредвиденная ошибка. Попробуйте ещё раз, либо замените файл вручную.");
+                }
+            });
+            singleFileUploadPlanOtp.addFileRejectedListener(event -> {
                 String errorMessage = event.getErrorMessage();
 
                 Notification notification = Notification.show(errorMessage, 5000,
@@ -139,7 +174,7 @@ public class ServiceTools extends VerticalLayout {
 
 
             //добавляем кнопки в интерфейс приложения
-            add(eraseAllTime, download, instructArea ,singleFileUpload,instructAreaPlan, singleFileUploadPlan);
+            add(eraseAllTime, download, instructArea ,singleFileUpload,instructAreaPlan, singleFileUploadPlan, instructOtpAreaPlan, singleFileUploadPlanOtp);
 
         } else {
             Notification notification = Notification.show("У вас нет доступа к этой странице");

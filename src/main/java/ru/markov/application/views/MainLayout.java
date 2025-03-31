@@ -75,6 +75,9 @@ public class MainLayout extends AppLayout {
                 createTab(VaadinIcon.FILE_TABLE, "Отчёты", new RouterLink(Reports.class)),
                 createTab(VaadinIcon.SERVER, "Сервисный раздел", new RouterLink(ServiceTools.class)),
                 createTab(VaadinIcon.CALENDAR_USER, "Табель", new RouterLink(TableView.class)));
+        if (securityService.getAuthenticatedUser().getUsername().equals("tech")) {
+            tabs.add(createTab(VaadinIcon.EXIT, "Отпуска", new RouterLink(Exit.class)));
+        }
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
         return tabs;
     }
