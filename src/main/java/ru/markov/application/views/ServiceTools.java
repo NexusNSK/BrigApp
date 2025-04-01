@@ -40,7 +40,7 @@ public class ServiceTools extends VerticalLayout {
             int maxFileSizeInBytesPlan = 50 * 1024 * 1024; // 50MB
             singleFileUploadPlan.setMaxFileSize(maxFileSizeInBytesPlan);
             UploadRussianI18N localizationPlan = new UploadRussianI18N("plan");
-            UploadRussianI18N localizationPlanOtp = new UploadRussianI18N("plan");
+            UploadRussianI18N localizationPlanOtp = new UploadRussianI18N("otpusk");
             singleFileUploadPlan.setI18n(localizationPlan);
             singleFileUploadPlanOtp.setI18n(localizationPlanOtp);
             singleFileUploadPlan.setAcceptedFileTypes(".png");
@@ -114,7 +114,7 @@ public class ServiceTools extends VerticalLayout {
             Upload singleFileUpload = new Upload(fileBuffer);
             int maxFileSizeInBytes = 50 * 1024 * 1024; // 50MB
             singleFileUpload.setMaxFileSize(maxFileSizeInBytes);
-            UploadRussianI18N localization = new UploadRussianI18N();
+            UploadRussianI18N localization = new UploadRussianI18N("backup");
             singleFileUpload.setI18n(localization);
             singleFileUpload.setAcceptedFileTypes(".bin");
 
