@@ -117,331 +117,350 @@ public class BrigEdit extends Div {
     }
 
     public BrigEdit(SecurityService securityService) {
-        if (securityService.getAuthenticatedUser().getUsername().equals("admin")
-          ||securityService.getAuthenticatedUser().getUsername().equals("tech")) {
-            if (workerList.isEmpty()) FillMap.fillArray();
-            Grid<Worker> grid = new Grid<>(Worker.class, false); //основная таблица с сотрудниками
-            grid.setItems(workerList);
-            grid.getHeaderRows().clear();
+        if (!securityService.getAuthenticatedUser().getUsername().equals("admin") & ServiceTools.serviceFlag) {
+            TextArea serviceMessage = new TextArea();
+            serviceMessage.setMinWidth("500px");
+            serviceMessage.setMaxWidth("500px");
+            serviceMessage.setReadOnly(true);
+            serviceMessage.setLabel("Внимание");
+            serviceMessage.setPrefixComponent(VaadinIcon.QUESTION_CIRCLE.create());
+            serviceMessage.setValue("Извините, идут сервисные работы.\nПовторите попытку позже.");
+            add(serviceMessage);
+        } else {
+            if (securityService.getAuthenticatedUser().getUsername().equals("admin")
+                    || securityService.getAuthenticatedUser().getUsername().equals("tech")) {
 
-            grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
-            TextField firstNameT = new TextField("Имя"); //поле ввода имени при добавлении сотрудника
-            TextField lastNameT = new TextField("Фамилия"); //поле ввода фамилии при добавлении сотрудника
-            TextField fatherNameT = new TextField("Отчество"); //поле ввода отчества при добавлении сотрудника
-            ComboBox<String> districtBox = new ComboBox<>("Участок"); //поле выбора участка (волна, сборка, техники)
-            ComboBox<String> lineBox = new ComboBox<>("Линия");
-            lineBox.setItems("1", "2", "3", "4", "Не распределено");
-            districtBox.setAllowCustomValue(true);
-            districtBox.setItems(
-                    "Бригада монтажники",
-                    "Бригада сборщики",
-                    "Бригада техники",
-                    "Лаборатория 1",
-                    "Лаборатория 2",
-                    "Лаборатория 5"
-            );
-            ComboBox<String> postBox = new ComboBox<>("Должность"); //поле выбора должности (бригадир, монтажник, сборщик, техник)
-            postBox.setAllowCustomValue(true);
-            postBox.setItems(
-                    "Бригадир монтажников",
-                    "Бригадир сборщиков",
-                    "Бригадир техников",
-                    "Монтажник",
-                    "Сборщик",
-                    "Техник"
-            );
+                if (workerList.isEmpty()) FillMap.fillArray();
+                Grid<Worker> grid = new Grid<>(Worker.class, false); //основная таблица с сотрудниками
+                grid.setItems(workerList);
+                grid.getHeaderRows().clear();
 
-            grid.setMinHeight("710px");
+                grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+                TextField firstNameT = new TextField("Имя"); //поле ввода имени при добавлении сотрудника
+                TextField lastNameT = new TextField("Фамилия"); //поле ввода фамилии при добавлении сотрудника
+                TextField fatherNameT = new TextField("Отчество"); //поле ввода отчества при добавлении сотрудника
+//
+                HorizontalLayout headerLayout = new HorizontalLayout();
+                headerLayout.setWidthFull();
+                headerLayout.setHeight("100px");
+                ComboBox<String> districtBox = new ComboBox<>("Бригада"); //поле выбора участка (волна, сборка, техники)
+                districtBox.setAllowCustomValue(true);
+                districtBox.setItems(
+                        "Бригада монтажники",
+                        "Бригада сборщики",
+                        "Бригада техники",
+                        "Лаборатория 1",
+                        "Лаборатория 2",
+                        "Лаборатория 5"
+                );
+                headerLayout.add(districtBox);
+//
+                ComboBox<String> lineBox = new ComboBox<>("Линия");
+                lineBox.setItems("1", "2", "3", "4", "Не распределено");
 
-            Editor<Worker> editor = grid.getEditor();
+                ComboBox<String> postBox = new ComboBox<>("Должность"); //поле выбора должности (бригадир, монтажник, сборщик, техник)
+                postBox.setAllowCustomValue(true);
+                postBox.setItems(
+                        "Бригадир монтажников",
+                        "Бригадир сборщиков",
+                        "Бригадир техников",
+                        "Монтажник",
+                        "Сборщик",
+                        "Техник"
+                );
 
+                grid.setMinHeight("710px");
 
-            //блок добавления сотрудника во временный список без глобального сохранения
-            Button addWorker = new Button("Добавить сотрудника", new Icon(VaadinIcon.AUTOMATION));
-            addWorker.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_PRIMARY);
-            addWorker.addClickListener(buttonClickEvent -> {
-                if (!(firstNameT.getValue().isEmpty())
-                        && !(lastNameT.getValue().isEmpty())
-                        && !(fatherNameT.getValue().isEmpty())
-                        && !(districtBox.getValue() == null)
-                        && !(postBox.getValue() == null)) {
-                    workerList.add(new Worker(
-                            lastNameT.getValue(),
-                            firstNameT.getValue(),
-                            fatherNameT.getValue(),
-                            lineBox.getValue(),
-                            districtBox.getValue(),
-                            postBox.getValue()));
-                    Notification notification = Notification
-                            .show("Сотрудник был добавлен!");
-                    notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-                    notification.setPosition(Notification.Position.MIDDLE);
-                    firstNameT.clear();
-                    lastNameT.clear();
-                    fatherNameT.clear();
-                    districtBox.clear();
-                    postBox.clear();
-                    initSplitDistrictWorkersList(); //
-                    grid.getDataProvider().refreshAll();
-                } else {
-                    Notification notification = Notification
-                            .show("Сотрудник не был добавлен!\nНеобходимо заполнить все поля.");
-                    notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
-                    notification.setPosition(Notification.Position.MIDDLE);
-                }
-            });
-
-            //блок глобального сохранения состояния бригады
-            Button saveWorkers = new Button("Сохранить изменения", new Icon(VaadinIcon.HANDSHAKE));
-            saveWorkers.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
-            saveWorkers.addClickListener(buttonClickEvent -> {
-                Serial.save();
-                Notification brigNote = Notification.show("Состав бригады сохранён");
-                brigNote.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-                brigNote.setPosition(Notification.Position.MIDDLE);
-            });
-
-            //объявление формы, отвечающей за вывод инструкции
-            TextArea instructArea = new TextArea();
-            instructArea.setMinWidth("500px");
-            instructArea.setMaxWidth("1500px");
-            instructArea.setReadOnly(true);
-            instructArea.setLabel("Подсказки по добавлению и редактированию списка");
-            instructArea.setPrefixComponent(VaadinIcon.QUESTION_CIRCLE.create());
-            instructArea.setValue("ВСЕ поля должны быть заполнены. Поля с выпадающими списками " +
-                    "должны иметь значения, которые предлагает программа. После заполнения нажать \"Добавить сотрудника\". Проверить, что сотрудник" +
-                    " есть в списке и нажать \"Сохранить изменения\"");
-
-            //объявление формы, отвечающей за добавление сотрудников и сохранения бригады
-            FormLayout formToAddWorkers = new FormLayout();
-            formToAddWorkers.add(lastNameT, firstNameT, fatherNameT, lineBox, districtBox, postBox, addWorker, saveWorkers, instructArea);
-            formToAddWorkers.setResponsiveSteps(
-                    new FormLayout.ResponsiveStep("600px", 3),
-                    new FormLayout.ResponsiveStep("1500px", 6));
-            formToAddWorkers.setColspan(instructArea, 4);
-            formToAddWorkers.setMaxWidth("1700px");
-
-            add(formToAddWorkers);
-
-            HorizontalLayout topHead = new HorizontalLayout();
+                Editor<Worker> editor = grid.getEditor();
 
 
-            //объявление полей для таблицы со списком сотрудников
-            ValidationName firstNameValid = new ValidationName();
-            ValidationName lastNameValid = new ValidationName();
-            ValidationName fatherNameValid = new ValidationName();
-            ValidationName districtValid = new ValidationName();
-            ValidationName postValid = new ValidationName();
-            ValidationName lineValid = new ValidationName();
-
-            //добавление столбцов
-            Grid.Column<Worker> lastNameColumn = grid
-                    .addColumn(Worker::getLastName)
-                    .setTextAlign(ColumnTextAlign.START)
-                    .setHeader("Фамилия")
-                    .setSortable(true)
-                    .setAutoWidth(true)
-                    .setResizable(true)
-                    .setFlexGrow(1);
-            Grid.Column<Worker> firstNameColumn = grid
-                    .addColumn(Worker::getFirstName)
-                    .setTextAlign(ColumnTextAlign.START)
-                    .setHeader("Имя")
-                    .setAutoWidth(true)
-                    .setResizable(true)
-                    .setFlexGrow(1);
-            Grid.Column<Worker> fatherNameColumn = grid
-                    .addColumn(Worker::getPatronymic)
-                    .setTextAlign(ColumnTextAlign.START)
-                    .setHeader("Отчество")
-                    .setAutoWidth(true)
-                    .setResizable(true)
-                    .setFlexGrow(1);
-            Grid.Column<Worker> lineColumn = grid
-                    .addColumn(Worker::getLineToString)
-                    .setHeader("Линия")
-                    .setSortable(true)
-                    .setAutoWidth(true)
-                    .setResizable(true)
-                    .setFlexGrow(1);
-            Grid.Column<Worker> districtColumn = grid
-                    .addColumn(Worker::getDistrictToString)
-                    .setHeader("Участок")
-                    .setSortable(true)
-                    .setAutoWidth(true)
-                    .setResizable(true)
-                    .setFlexGrow(1);
-            Grid.Column<Worker> postColumn = grid
-                    .addColumn(Worker::getPost)
-                    .setHeader("Должность")
-                    .setAutoWidth(true)
-                    .setResizable(true)
-                    .setFlexGrow(1);
-
-            //добавляем фильтры в таблицу
-            HeaderRow headerRow = grid.appendHeaderRow();
-            GridListDataView<Worker> dataView = grid.setItems(workerList);
-            PersonFilter personFilter = new PersonFilter(dataView);
-
-            headerRow.getCell(lineColumn).setComponent(createFilterHeader(personFilter::setLine));
-            headerRow.getCell(districtColumn).setComponent(createFilterHeader(personFilter::setDistrict));
-            headerRow.getCell(postColumn).setComponent(createFilterHeader(personFilter::setPost));
-            headerRow.getCell(lastNameColumn).setComponent(createFilterHeader(personFilter::setSecondName));
-            headerRow.getCell(firstNameColumn).setComponent(createFilterHeader(personFilter::setFirstName));
-            headerRow.getCell(fatherNameColumn).setComponent(createFilterHeader(personFilter::setFatherName));
-
-
-            Grid.Column<Worker> deleteColumn = grid.addComponentColumn(worker -> {
-                Dialog dialog = new Dialog();
-                Button deleteButton = new Button("", new Icon(VaadinIcon.TRASH), d -> dialog.open());
-                dialog.setHeaderTitle(
-                        String.format("Удалить сотрудника \"%s\"?", worker.getFullName()));
-                dialog.add("Вы уверены, что хотите удалить сотрудника из списка бригады?");
-
-                Button dialogDeleteButton = new Button("Удалить", new Icon(VaadinIcon.TRASH), (t) -> {
-                    workerList.remove(worker);
-                    initSplitDistrictWorkersList();
-                    dialog.close();
-                    grid.getDataProvider().refreshAll();
+                //блок добавления сотрудника во временный список без глобального сохранения
+                Button addWorker = new Button("Добавить сотрудника", new Icon(VaadinIcon.AUTOMATION));
+                addWorker.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_PRIMARY);
+                addWorker.addClickListener(buttonClickEvent -> {
+                    if (!(firstNameT.getValue().isEmpty())
+                            && !(lastNameT.getValue().isEmpty())
+                            && !(fatherNameT.getValue().isEmpty())
+                            && !(districtBox.getValue() == null)
+                            && !(postBox.getValue() == null)) {
+                        workerList.add(new Worker(
+                                lastNameT.getValue(),
+                                firstNameT.getValue(),
+                                fatherNameT.getValue(),
+                                lineBox.getValue(),
+                                districtBox.getValue(),
+                                postBox.getValue()));
+                        Notification notification = Notification
+                                .show("Сотрудник был добавлен!");
+                        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                        notification.setPosition(Notification.Position.MIDDLE);
+                        firstNameT.clear();
+                        lastNameT.clear();
+                        fatherNameT.clear();
+                        districtBox.clear();
+                        postBox.clear();
+                        initSplitDistrictWorkersList(); //
+                        grid.getDataProvider().refreshAll();
+                    } else {
+                        Notification notification = Notification
+                                .show("Сотрудник не был добавлен!\nНеобходимо заполнить все поля.");
+                        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                        notification.setPosition(Notification.Position.MIDDLE);
+                    }
                 });
-                dialogDeleteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
-                deleteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY,
-                        ButtonVariant.LUMO_ERROR);
-                deleteButton.getStyle().set("margin-right", "auto");
-                //   dialog.getFooter().add(deleteButton);
 
-                Button cancelButton = new Button("Отмена", (t) -> dialog.close());
-                cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-                dialog.getFooter().add(cancelButton);
-                dialog.getFooter().add(dialogDeleteButton);
+                //блок глобального сохранения состояния бригады
+                Button saveWorkers = new Button("Сохранить изменения", new Icon(VaadinIcon.HANDSHAKE));
+                saveWorkers.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
+                saveWorkers.addClickListener(buttonClickEvent -> {
+                    Serial.save();
+                    Notification brigNote = Notification.show("Состав бригады сохранён");
+                    brigNote.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                    brigNote.setPosition(Notification.Position.MIDDLE);
+                });
 
-                return deleteButton;
-            });
-            deleteColumn.setWidth("120px").setFlexGrow(1);
+                //объявление формы, отвечающей за вывод инструкции
+                TextArea instructArea = new TextArea();
+                instructArea.setMinWidth("500px");
+                instructArea.setMaxWidth("1500px");
+                instructArea.setReadOnly(true);
+                instructArea.setLabel("Подсказки по добавлению и редактированию списка");
+                instructArea.setPrefixComponent(VaadinIcon.QUESTION_CIRCLE.create());
+                instructArea.setValue("ВСЕ поля должны быть заполнены. Поля с выпадающими списками " +
+                        "должны иметь значения, которые предлагает программа. После заполнения нажать \"Добавить сотрудника\". Проверить, что сотрудник" +
+                        " есть в списке и нажать \"Сохранить изменения\"");
 
-            //объявление привязки изменяемого поля к объявляемому
-            Binder<Worker> binder = new Binder<>(Worker.class);
-            editor.setBinder(binder);
-            // editor.setBuffered(true);
+                //объявление формы, отвечающей за добавление сотрудников и сохранения бригады
+                FormLayout formToAddWorkers = new FormLayout();
+                formToAddWorkers.add(lastNameT, firstNameT, fatherNameT, lineBox, postBox, addWorker, saveWorkers, instructArea);
+                formToAddWorkers.setResponsiveSteps(
+                        new FormLayout.ResponsiveStep("600px", 3),
+                        new FormLayout.ResponsiveStep("1500px", 6));
+                formToAddWorkers.setColspan(instructArea, 4);
+                formToAddWorkers.setMaxWidth("1700px");
 
-            //при изменении фамилии
-            TextField lastNameField = new TextField();
-            lastNameField.setWidthFull();
-            addCloseHandler(lastNameField, editor);
-            binder.forField(lastNameField)
-                    .asRequired("Фамилия не может быть пустой")
-                    .withStatusLabel(lastNameValid)
-                    .bind(Worker::getLastName, Worker::setLastName);
-            lastNameColumn.setEditorComponent(lastNameField);
+                add(headerLayout ,formToAddWorkers);
 
-            //при изменении линии
-            ComboBox<String> lineEditCol = new ComboBox<>();
-            lineEditCol.setItems("Не распределено", "1", "2", "3", "4");
-            lineEditCol.setWidthFull();
-            addCloseHandler(lineEditCol, editor);
-            binder.forField(lineEditCol)
-                    .withStatusLabel(lineValid)
-                    .bind(Worker::getLineToString, Worker::setLine);
-            lineColumn.setEditorComponent(lineEditCol);
-
-            //при изменении участка
-            ComboBox<String> districtEditCol = new ComboBox<>();
-            districtEditCol.setItems(
-                    "Бригада монтажники",
-                    "Бригада сборщики",
-                    "Бригада техники",
-                    "Лаборатория 1",
-                    "Лаборатория 2",
-                    "Лаборатория 5"
-            );
-            districtEditCol.setWidthFull();
-            addCloseHandler(districtEditCol, editor);
-            binder.forField(districtEditCol)
-                    .asRequired("Участок не может быть пустым")
-                    .withStatusLabel(districtValid)
-                    .bind(Worker::getDistrictToString, Worker::setDistrict);
-            districtColumn.setEditorComponent(districtEditCol);
-
-            //при изменении должности
-            ComboBox<String> postEditCol = new ComboBox<>();
-            postEditCol.setItems(
-                    "Бригадир монтажников",
-                    "Бригадир сборщиков",
-                    "Бригадир техников",
-                    "Монтажник",
-                    "Сборщик",
-                    "Техник"
-            );
-            postEditCol.setWidthFull();
-            addCloseHandler(postEditCol, editor);
-            binder.forField(postEditCol)
-                    .asRequired("Должность не может быть пустой")
-                    .withStatusLabel(postValid)
-                    .bind(Worker::getPost, Worker::setPost);
-            postColumn.setEditorComponent(postEditCol);
+                //HorizontalLayout topHead = new HorizontalLayout();
 
 
-            //при изменении имени
-            TextField firstNameField = new TextField();
-            firstNameField.setWidthFull();
-            addCloseHandler(firstNameField, editor);
-            binder.forField(firstNameField).asRequired("Имя не может быть пустым")
-                    .withStatusLabel(firstNameValid)
-                    .bind(Worker::getFirstName, Worker::setFirstName);
-            firstNameColumn.setEditorComponent(firstNameField);
+                //объявление полей для таблицы со списком сотрудников
+                ValidationName firstNameValid = new ValidationName();
+                ValidationName lastNameValid = new ValidationName();
+                ValidationName fatherNameValid = new ValidationName();
+                ValidationName districtValid = new ValidationName();
+                ValidationName postValid = new ValidationName();
+                ValidationName lineValid = new ValidationName();
 
-            //при изменении отчества
-            TextField fatherNameField = new TextField();
-            fatherNameField.setWidthFull();
-            addCloseHandler(fatherNameField, editor);
-            binder.forField(fatherNameField).asRequired("Отчество не может быть пустым")
-                    .withStatusLabel(fatherNameValid)
-                    .bind(Worker::getPatronymic, Worker::setPatronymic);
-            fatherNameColumn.setEditorComponent(fatherNameField);
+                //добавление столбцов
+                Grid.Column<Worker> lastNameColumn = grid
+                        .addColumn(Worker::getLastName)
+                        .setTextAlign(ColumnTextAlign.START)
+                        .setHeader("Фамилия")
+                        .setSortable(true)
+                        .setAutoWidth(true)
+                        .setResizable(true)
+                        .setFlexGrow(1);
+                Grid.Column<Worker> firstNameColumn = grid
+                        .addColumn(Worker::getFirstName)
+                        .setTextAlign(ColumnTextAlign.START)
+                        .setHeader("Имя")
+                        .setAutoWidth(true)
+                        .setResizable(true)
+                        .setFlexGrow(1);
+                Grid.Column<Worker> fatherNameColumn = grid
+                        .addColumn(Worker::getPatronymic)
+                        .setTextAlign(ColumnTextAlign.START)
+                        .setHeader("Отчество")
+                        .setAutoWidth(true)
+                        .setResizable(true)
+                        .setFlexGrow(1);
+                Grid.Column<Worker> lineColumn = grid
+                        .addColumn(Worker::getLineToString)
+                        .setHeader("Линия")
+                        .setSortable(true)
+                        .setAutoWidth(true)
+                        .setResizable(true)
+                        .setFlexGrow(1);
+                Grid.Column<Worker> districtColumn = grid
+                        .addColumn(Worker::getDistrictToString)
+                        .setHeader("Участок")
+                        .setSortable(true)
+                        .setAutoWidth(true)
+                        .setResizable(true)
+                        .setFlexGrow(1);
+                Grid.Column<Worker> postColumn = grid
+                        .addColumn(Worker::getPost)
+                        .setHeader("Должность")
+                        .setAutoWidth(true)
+                        .setResizable(true)
+                        .setFlexGrow(1);
+
+                //добавляем фильтры в таблицу
+                HeaderRow headerRow = grid.appendHeaderRow();
+                GridListDataView<Worker> dataView = grid.setItems(workerList);
+                PersonFilter personFilter = new PersonFilter(dataView);
+
+                headerRow.getCell(lineColumn).setComponent(createFilterHeader(personFilter::setLine));
+                headerRow.getCell(districtColumn).setComponent(createFilterHeader(personFilter::setDistrict));
+                headerRow.getCell(postColumn).setComponent(createFilterHeader(personFilter::setPost));
+                headerRow.getCell(lastNameColumn).setComponent(createFilterHeader(personFilter::setSecondName));
+                headerRow.getCell(firstNameColumn).setComponent(createFilterHeader(personFilter::setFirstName));
+                headerRow.getCell(fatherNameColumn).setComponent(createFilterHeader(personFilter::setFatherName));
 
 
-            //объявление и конфигурация кнопки дял сохранения (или отмены) изменений в данных сотрудника
-            Button saveButton = new Button("Сохранить", e -> {
-                editor.save();
-                initSplitDistrictWorkersList();
-            }
-            );
-            grid.addItemDoubleClickListener(e -> {
-                editor.editItem(e.getItem());
-                Component editorComponent = e.getColumn().getEditorComponent();
-                if (editorComponent instanceof Focusable) {
-                    ((Focusable<?>) editorComponent).focus();
+                Grid.Column<Worker> deleteColumn = grid.addComponentColumn(worker -> {
+                    Dialog dialog = new Dialog();
+                    Button deleteButton = new Button("", new Icon(VaadinIcon.TRASH), d -> dialog.open());
+                    dialog.setHeaderTitle(
+                            String.format("Удалить сотрудника \"%s\"?", worker.getFullName()));
+                    dialog.add("Вы уверены, что хотите удалить сотрудника из списка бригады?");
+
+                    Button dialogDeleteButton = new Button("Удалить", new Icon(VaadinIcon.TRASH), (t) -> {
+                        workerList.remove(worker);
+                        initSplitDistrictWorkersList();
+                        dialog.close();
+                        grid.getDataProvider().refreshAll();
+                    });
+                    dialogDeleteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
+                    deleteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY,
+                            ButtonVariant.LUMO_ERROR);
+                    deleteButton.getStyle().set("margin-right", "auto");
+                    //   dialog.getFooter().add(deleteButton);
+
+                    Button cancelButton = new Button("Отмена", (t) -> dialog.close());
+                    cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+                    dialog.getFooter().add(cancelButton);
+                    dialog.getFooter().add(dialogDeleteButton);
+
+                    return deleteButton;
+                });
+                deleteColumn.setWidth("120px").setFlexGrow(1);
+
+                //объявление привязки изменяемого поля к объявляемому
+                Binder<Worker> binder = new Binder<>(Worker.class);
+                editor.setBinder(binder);
+                // editor.setBuffered(true);
+
+                //при изменении фамилии
+                TextField lastNameField = new TextField();
+                lastNameField.setWidthFull();
+                addCloseHandler(lastNameField, editor);
+                binder.forField(lastNameField)
+                        .asRequired("Фамилия не может быть пустой")
+                        .withStatusLabel(lastNameValid)
+                        .bind(Worker::getLastName, Worker::setLastName);
+                lastNameColumn.setEditorComponent(lastNameField);
+
+                //при изменении линии
+                ComboBox<String> lineEditCol = new ComboBox<>();
+                lineEditCol.setItems("Не распределено", "1", "2", "3", "4");
+                lineEditCol.setWidthFull();
+                addCloseHandler(lineEditCol, editor);
+                binder.forField(lineEditCol)
+                        .withStatusLabel(lineValid)
+                        .bind(Worker::getLineToString, Worker::setLine);
+                lineColumn.setEditorComponent(lineEditCol);
+
+                //при изменении участка
+                ComboBox<String> districtEditCol = new ComboBox<>();
+                districtEditCol.setItems(
+                        "Бригада монтажники",
+                        "Бригада сборщики",
+                        "Бригада техники",
+                        "Лаборатория 1",
+                        "Лаборатория 2",
+                        "Лаборатория 5"
+                );
+                districtEditCol.setWidthFull();
+                addCloseHandler(districtEditCol, editor);
+                binder.forField(districtEditCol)
+                        .asRequired("Участок не может быть пустым")
+                        .withStatusLabel(districtValid)
+                        .bind(Worker::getDistrictToString, Worker::setDistrict);
+                districtColumn.setEditorComponent(districtEditCol);
+
+                //при изменении должности
+                ComboBox<String> postEditCol = new ComboBox<>();
+                postEditCol.setItems(
+                        "Бригадир монтажников",
+                        "Бригадир сборщиков",
+                        "Бригадир техников",
+                        "Монтажник",
+                        "Сборщик",
+                        "Техник"
+                );
+                postEditCol.setWidthFull();
+                addCloseHandler(postEditCol, editor);
+                binder.forField(postEditCol)
+                        .asRequired("Должность не может быть пустой")
+                        .withStatusLabel(postValid)
+                        .bind(Worker::getPost, Worker::setPost);
+                postColumn.setEditorComponent(postEditCol);
+
+
+                //при изменении имени
+                TextField firstNameField = new TextField();
+                firstNameField.setWidthFull();
+                addCloseHandler(firstNameField, editor);
+                binder.forField(firstNameField).asRequired("Имя не может быть пустым")
+                        .withStatusLabel(firstNameValid)
+                        .bind(Worker::getFirstName, Worker::setFirstName);
+                firstNameColumn.setEditorComponent(firstNameField);
+
+                //при изменении отчества
+                TextField fatherNameField = new TextField();
+                fatherNameField.setWidthFull();
+                addCloseHandler(fatherNameField, editor);
+                binder.forField(fatherNameField).asRequired("Отчество не может быть пустым")
+                        .withStatusLabel(fatherNameValid)
+                        .bind(Worker::getPatronymic, Worker::setPatronymic);
+                fatherNameColumn.setEditorComponent(fatherNameField);
+
+
+                //объявление и конфигурация кнопки дял сохранения (или отмены) изменений в данных сотрудника
+                Button saveButton = new Button("Сохранить", e -> {
+                    editor.save();
+                    initSplitDistrictWorkersList();
                 }
-            });
-            Button cancelButton = new Button(VaadinIcon.CLOSE.create(),
-                    e -> editor.cancel());
+                );
+                grid.addItemDoubleClickListener(e -> {
+                    editor.editItem(e.getItem());
+                    Component editorComponent = e.getColumn().getEditorComponent();
+                    if (editorComponent instanceof Focusable) {
+                        ((Focusable<?>) editorComponent).focus();
+                    }
+                });
+                Button cancelButton = new Button(VaadinIcon.CLOSE.create(),
+                        e -> editor.cancel());
 
-            cancelButton.addThemeVariants(ButtonVariant.LUMO_ICON,
-                    ButtonVariant.LUMO_ERROR);
-            HorizontalLayout actions = new HorizontalLayout(saveButton,
-                    cancelButton);
-            actions.setPadding(false);
-            //       editColumn.setEditorComponent(actions);
-            editor.addCancelListener(e -> {
-                firstNameValid.setText("");
-                lastNameValid.setText("");
-                fatherNameValid.setText("");
-                grid.getDataProvider().refreshAll();
+                cancelButton.addThemeVariants(ButtonVariant.LUMO_ICON,
+                        ButtonVariant.LUMO_ERROR);
+                HorizontalLayout actions = new HorizontalLayout(saveButton,
+                        cancelButton);
+                actions.setPadding(false);
+                //       editColumn.setEditorComponent(actions);
+                editor.addCancelListener(e -> {
+                    firstNameValid.setText("");
+                    lastNameValid.setText("");
+                    fatherNameValid.setText("");
+                    grid.getDataProvider().refreshAll();
 
-            });
-            grid.getElement().getThemeList().clear();
-            grid.getElement().getThemeList().add("spacing-m");
+                });
+                grid.getElement().getThemeList().clear();
+                grid.getElement().getThemeList().add("spacing-m");
 
-            //добавляем возможность устанавливать диапазон отпусков для автозаполнения в табеле
-            // ---------------------------------------------------------
-            //пока этой реализации нет, а код ниже относится к другому функционалу
+                //добавляем возможность устанавливать диапазон отпусков для автозаполнения в табеле
+                // ---------------------------------------------------------
+                //пока этой реализации нет, а код ниже относится к другому функционалу
 
-            add(topHead, grid, firstNameValid, lastNameValid, fatherNameValid);
-        }else{
-            Notification notification =  Notification.show("У вас нет доступа с этой странице");
-            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
-            notification.setPosition(Notification.Position.MIDDLE);
+                add(grid, firstNameValid, lastNameValid, fatherNameValid);
+            } else {
+                Notification notification = Notification.show("У вас нет доступа с этой странице");
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                notification.setPosition(Notification.Position.MIDDLE);
 
+            }
         }
     }
 
