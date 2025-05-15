@@ -75,6 +75,14 @@ public class Worker implements Serializable, Comparable<Worker> {
         }
     }
 
+    public boolean checkTimeAndStatus(){
+        boolean acceptChanges = true;
+        if (!workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue()).get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth()).equals(WorkerStatus.NOTHING)) {
+            acceptChanges = false;
+        }
+        return acceptChanges;
+    }
+
     @JsonIgnore
     public void setWorkTimeLikeYesterday() {
         workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())

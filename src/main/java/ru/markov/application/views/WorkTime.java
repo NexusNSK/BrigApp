@@ -14,6 +14,8 @@ import com.vaadin.flow.component.grid.editor.Editor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.IntegerField;
@@ -104,72 +106,146 @@ public class WorkTime extends Div {
                     case "volna1" -> {
                         for (Worker w : BrigEdit.workerList) {
                             if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_1)) {
-                                w.setWorkTimeLikeYesterday();
-                                w.setWorkerStatusMassiveLikeYesterday();
+                                if (w.checkTimeAndStatus()){
+                                    w.setWorkTimeLikeYesterday();
+                                    w.setWorkerStatusMassiveLikeYesterday();
+                                }
+                                else {
+                                    Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
+                                    notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
+                                    notification.setPosition(Notification.Position.MIDDLE);
+                                    notification.setDuration(9000);
+
+                                }
                             }
                         }
                     }
                     case "volna2" -> {
                         for (Worker w : BrigEdit.workerList) {
                             if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_2)) {
-                                w.setWorkTimeLikeYesterday();
-                                w.setWorkerStatusMassiveLikeYesterday();
+                                if (w.checkTimeAndStatus()){
+                                    w.setWorkTimeLikeYesterday();
+                                    w.setWorkerStatusMassiveLikeYesterday();
+                                }
+                                else {
+                                    Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
+                                    notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
+                                    notification.setPosition(Notification.Position.MIDDLE);
+                                    notification.setDuration(9000);
+
+                                }
                             }
                         }
                     }
                     case "volna3" -> {
                         for (Worker w : BrigEdit.workerList) {
-                            if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_3)) {
+                            if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_3)) { if (w.checkTimeAndStatus()){
                                 w.setWorkTimeLikeYesterday();
                                 w.setWorkerStatusMassiveLikeYesterday();
+                            }
+                            else {
+                                Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
+                                notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
+                                notification.setPosition(Notification.Position.MIDDLE);
+                                notification.setDuration(9000);
+
+                            }
                             }
                         }
                     }
                     case "volna4" -> {
                         for (Worker w : BrigEdit.workerList) {
-                            if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_4)) {
+                            if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_4)) { if (w.checkTimeAndStatus()){
                                 w.setWorkTimeLikeYesterday();
                                 w.setWorkerStatusMassiveLikeYesterday();
+                            }
+                            else {
+                                Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
+                                notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
+                                notification.setPosition(Notification.Position.MIDDLE);
+                                notification.setDuration(9000);
+
+                            }
                             }
                         }
                     }
                     case "sborka1" -> {
                         for (Worker w : BrigEdit.workerList) {
-                            if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_1)) {
+                            if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_1)) { if (w.checkTimeAndStatus()){
                                 w.setWorkTimeLikeYesterday();
                                 w.setWorkerStatusMassiveLikeYesterday();
+                            }
+                            else {
+                                Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
+                                notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
+                                notification.setPosition(Notification.Position.MIDDLE);
+                                notification.setDuration(9000);
+
+                            }
                             }
                         }
                     }
                     case "sborka2" -> {
                         for (Worker w : BrigEdit.workerList) {
-                            if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_2)) {
+                            if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_2)) { if (w.checkTimeAndStatus()){
                                 w.setWorkTimeLikeYesterday();
                                 w.setWorkerStatusMassiveLikeYesterday();
+                            }
+                            else {
+                                Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
+                                notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
+                                notification.setPosition(Notification.Position.MIDDLE);
+                                notification.setDuration(9000);
+
+                            }
                             }
                         }
                     }
                     case "sborka3" -> {
                         for (Worker w : BrigEdit.workerList) {
-                            if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_3)) {
+                            if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_3)) { if (w.checkTimeAndStatus()){
                                 w.setWorkTimeLikeYesterday();
                                 w.setWorkerStatusMassiveLikeYesterday();
+                            }
+                            else {
+                                Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
+                                notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
+                                notification.setPosition(Notification.Position.MIDDLE);
+                                notification.setDuration(9000);
+
+                            }
                             }
                         }
                     }
                     case "sborka4" -> {
                         for (Worker w : BrigEdit.workerList) {
-                            if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_4)) {
+                            if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_4)) { if (w.checkTimeAndStatus()){
                                 w.setWorkTimeLikeYesterday();
                                 w.setWorkerStatusMassiveLikeYesterday();
+                            }
+                            else {
+                                Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
+                                notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
+                                notification.setPosition(Notification.Position.MIDDLE);
+                                notification.setDuration(9000);
+
+                            }
                             }
                         }
                     }
                     case "tech" -> {
                         for (Worker w : BrigEdit.workerList) {
                             if (w.getDistrict().equals(District.TECH) || w.getDistrict().equals(District.LAB1) || w.getDistrict().equals(District.LAB2) || w.getDistrict().equals(District.LAB5)) {
-                                w.setWorkTimeLikeYesterday();
-                                w.setWorkerStatusMassiveLikeYesterday();
+                                if (w.checkTimeAndStatus()){
+                                    w.setWorkTimeLikeYesterday();
+                                    w.setWorkerStatusMassiveLikeYesterday();
+                                }
+                                else {
+                                    Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
+                                    notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
+                                    notification.setPosition(Notification.Position.MIDDLE);
+                                    notification.setDuration(9000);
+                                }
                             }
                         }
                     }
@@ -182,72 +258,144 @@ public class WorkTime extends Div {
                     case "volna1" -> {
                         for (Worker w : BrigEdit.workerList) {
                             if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_1)) {
-                                w.setWorkTimeLikeFriday();
-                                w.setWorkerStatusMassiveLikeFriday();
+                                if (w.checkTimeAndStatus()){
+                                    w.setWorkTimeLikeFriday();
+                                    w.setWorkerStatusMassiveLikeFriday();
+                                }
+                                else {
+                                    Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
+                                    notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
+                                    notification.setPosition(Notification.Position.MIDDLE);
+                                    notification.setDuration(9000);
+                                }
                             }
                         }
                     }
                     case "volna2" -> {
                         for (Worker w : BrigEdit.workerList) {
                             if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_2)) {
-                                w.setWorkTimeLikeFriday();
-                                w.setWorkerStatusMassiveLikeFriday();
+                                if (w.checkTimeAndStatus()){
+                                    w.setWorkTimeLikeFriday();
+                                    w.setWorkerStatusMassiveLikeFriday();
+                                }
+                                else {
+                                    Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
+                                    notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
+                                    notification.setPosition(Notification.Position.MIDDLE);
+                                    notification.setDuration(9000);
+                                }
                             }
                         }
                     }
                     case "volna3" -> {
                         for (Worker w : BrigEdit.workerList) {
                             if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_3)) {
-                                w.setWorkTimeLikeFriday();
-                                w.setWorkerStatusMassiveLikeFriday();
+                                if (w.checkTimeAndStatus()){
+                                    w.setWorkTimeLikeFriday();
+                                    w.setWorkerStatusMassiveLikeFriday();
+                                }
+                                else {
+                                    Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
+                                    notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
+                                    notification.setPosition(Notification.Position.MIDDLE);
+                                    notification.setDuration(9000);
+                                }
                             }
                         }
                     }
                     case "volna4" -> {
                         for (Worker w : BrigEdit.workerList) {
                             if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_4)) {
-                                w.setWorkTimeLikeFriday();
-                                w.setWorkerStatusMassiveLikeFriday();
+                                if (w.checkTimeAndStatus()){
+                                    w.setWorkTimeLikeFriday();
+                                    w.setWorkerStatusMassiveLikeFriday();
+                                }
+                                else {
+                                    Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
+                                    notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
+                                    notification.setPosition(Notification.Position.MIDDLE);
+                                    notification.setDuration(9000);
+                                }
                             }
                         }
                     }
                     case "sborka1" -> {
                         for (Worker w : BrigEdit.workerList) {
                             if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_1)) {
-                                w.setWorkTimeLikeFriday();
-                                w.setWorkerStatusMassiveLikeFriday();
+                                if (w.checkTimeAndStatus()){
+                                    w.setWorkTimeLikeFriday();
+                                    w.setWorkerStatusMassiveLikeFriday();
+                                }
+                                else {
+                                    Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
+                                    notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
+                                    notification.setPosition(Notification.Position.MIDDLE);
+                                    notification.setDuration(9000);
+                                }
                             }
                         }
                     }
                     case "sborka2" -> {
                         for (Worker w : BrigEdit.workerList) {
                             if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_2)) {
-                                w.setWorkTimeLikeFriday();
-                                w.setWorkerStatusMassiveLikeFriday();
+                                if (w.checkTimeAndStatus()){
+                                    w.setWorkTimeLikeFriday();
+                                    w.setWorkerStatusMassiveLikeFriday();
+                                }
+                                else {
+                                    Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
+                                    notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
+                                    notification.setPosition(Notification.Position.MIDDLE);
+                                    notification.setDuration(9000);
+                                }
                             }
                         }
                     }
                     case "sborka3" -> {
                         for (Worker w : BrigEdit.workerList) {
                             if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_3)) {
-                                w.setWorkTimeLikeFriday();
-                                w.setWorkerStatusMassiveLikeFriday();
+                                if (w.checkTimeAndStatus()){
+                                    w.setWorkTimeLikeFriday();
+                                    w.setWorkerStatusMassiveLikeFriday();
+                                }
+                                else {
+                                    Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
+                                    notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
+                                    notification.setPosition(Notification.Position.MIDDLE);
+                                    notification.setDuration(9000);
+                                }
                             }
                         }
                     }
                     case "sborka4" -> {
                         for (Worker w : BrigEdit.workerList) {
                             if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_4)) {
-                                w.setWorkTimeLikeFriday();
-                                w.setWorkerStatusMassiveLikeFriday();
+                                if (w.checkTimeAndStatus()){
+                                    w.setWorkTimeLikeFriday();
+                                    w.setWorkerStatusMassiveLikeFriday();
+                                }
+                                else {
+                                    Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
+                                    notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
+                                    notification.setPosition(Notification.Position.MIDDLE);
+                                    notification.setDuration(9000);
+                                }
                             }
                         }
                     }
                     case "tech" -> {
                         for (Worker w : BrigEdit.workerList) {
                             if (w.getDistrict().equals(District.TECH) || w.getDistrict().equals(District.LAB1) || w.getDistrict().equals(District.LAB2) || w.getDistrict().equals(District.LAB5)) {
-                                w.setWorkTimeLikeFriday();
-                                w.setWorkerStatusMassiveLikeFriday();
+                                if (w.checkTimeAndStatus()){
+                                    w.setWorkTimeLikeFriday();
+                                    w.setWorkerStatusMassiveLikeFriday();
+                                }
+                                else {
+                                    Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
+                                    notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
+                                    notification.setPosition(Notification.Position.MIDDLE);
+                                    notification.setDuration(9000);
+                                }
                             }
                         }
                     }
