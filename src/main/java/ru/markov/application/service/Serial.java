@@ -2,13 +2,14 @@ package ru.markov.application.service;
 
 import ru.markov.application.data.Worker;
 import ru.markov.application.views.BrigEdit;
-import ru.markov.application.views.BDView;
+import ru.markov.application.views.DeviceDefectView;
 
 import java.io.*;
 import java.util.List;
 
 public class Serial {
     private static final String filename = "worker list.bin";
+    private static final String defect_devise_file = "device.bin";
 
     private static final String workDir = System.getProperty("user.home");
 
@@ -55,4 +56,4 @@ public class Serial {
             }
         }
     }
-}
+    }
