@@ -1,10 +1,12 @@
 package ru.markov.application.service;
 
+import ru.markov.application.data.Device;
 import ru.markov.application.data.Worker;
 import ru.markov.application.views.BrigEdit;
 import ru.markov.application.views.DeviceDefectView;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.List;
 
 public class Serial {
@@ -27,6 +29,18 @@ public class Serial {
             oos.writeObject(BrigEdit.workerList);
             oos.close();
             //System.out.println("Файл .bin был записан в основную директорию ");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void saveDevice() {
+        try {
+            final String fullFilename = workDir + File.separator + defect_devise_file;
+            FileOutputStream fos = new FileOutputStream(fullFilename);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(DeviceDefectView.devices);
+            oos.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -56,4 +70,18 @@ public class Serial {
             }
         }
     }
+
+    public static void loadDevice() throws ClassNotFoundException {
+        try {
+            System.out.println("...Ищу данные о списке устройств...\n / | \\");
+            FileInputStream fis = new FileInputStream(workDir + File.separator + defect_devise_file);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            DeviceDefectView.devices = (HashMap<String, Device>) ois.readObject();
+            System.out.println("...Список устройств был успешно загружен из основного файла...");
+            ois.close();
+        } catch (IOException e) {
+            DeviceDefectView.devices = new HashMap<String, Device>();
+            System.out.println("Файл \"device.bin\" не был загружен");
+        }
     }
+}

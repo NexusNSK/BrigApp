@@ -1,12 +1,16 @@
 package ru.markov.application.data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
 
 public class Device implements Serializable, Comparable<Device>{
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private String deviceName;
 
-    private HashMap<String, HashMap<Integer,HashMap<Integer, Integer>>> deviceMap = new HashMap<>();
+    public HashMap<String, HashMap<Integer,HashMap<Integer, Integer>>> deviceMap = new HashMap<>();
     //      HashMap<Брак,   HashMap<Месяц,  HashMap<День, количество>>>
     //      Обращаемся браку по ключу, указываем ключ месяца, ключ дня, получаем количество брака в конкретный день/партию
 
