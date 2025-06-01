@@ -8,7 +8,7 @@ public class Device implements Serializable, Comparable<Device>{
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private String deviceName;
+    private final String deviceName;
 
     public HashMap<String, HashMap<Integer,HashMap<Integer, Integer>>> deviceMap = new HashMap<>();
     //      HashMap<Брак,   HashMap<Месяц,  HashMap<День, количество>>>
@@ -17,15 +17,6 @@ public class Device implements Serializable, Comparable<Device>{
     public Device(String deviceName) {
         this.deviceName = deviceName;
     }
-
-    public void setDeviceName(String deviceName) {
-        this.deviceName = deviceName;
-    }
-
-    public String getDeviceName() {
-        return deviceName;
-    }
-
 
     @Override
     public int compareTo(Device o) {
