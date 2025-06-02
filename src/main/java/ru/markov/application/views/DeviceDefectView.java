@@ -3,8 +3,11 @@ package ru.markov.application.views;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
@@ -13,7 +16,9 @@ import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.RolesAllowed;
 import ru.markov.application.data.Device;
 import ru.markov.application.service.Serial;
+import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.Map;
 
 @Route(value = "device_defect", layout = MainLayout.class)
 @RolesAllowed({"ADMIN"})
@@ -21,35 +26,28 @@ public class DeviceDefectView extends VerticalLayout {
     public static HashMap<String, Device> devices = new HashMap<>();
 
     public DeviceDefectView() {
-        // Создаём контейнер с вкладками
         Tabs tabs = new Tabs();
         VerticalLayout contentArea = new VerticalLayout();
-
-        // Вкладка "Настройки"
         Tab settingsTab = new Tab("Настройки");
         VerticalLayout settingsContent = createSettingsContent();
-
-        // Пустая вкладка
         Tab emptyTab = new Tab("Учёт");
-        VerticalLayout emptyContent = new VerticalLayout();
-
+        VerticalLayout defectContent = createDefectContent();
         tabs.add(emptyTab, settingsTab);
 
-        // Обработчик переключения вкладок
+        // чтобы вкладки перерисовывали содержимое
         tabs.addSelectedChangeListener(event -> {
             contentArea.removeAll();
             if (event.getSelectedTab().equals(settingsTab)) {
                 contentArea.add(settingsContent);
             } else {
-                contentArea.add(emptyContent);
+                contentArea.add(defectContent);
             }
         });
-
-        // Первоначальное отображение
-        contentArea.add(emptyContent);
+        // дефолтное содержимое (учёт)
+        contentArea.add(defectContent);
         add(tabs, contentArea);
     }
-
+        // наполнение вкладки "настройки"
     private VerticalLayout createSettingsContent() {
         // Переносим весь оригинальный код сюда
         VerticalLayout settingsContent = new VerticalLayout();
@@ -128,5 +126,73 @@ public class DeviceDefectView extends VerticalLayout {
 
         settingsContent.add(addDevice, comboBox, editDefect, grid);
         return settingsContent;
+    }
+        // наполнение вкладки "учёт"
+    private VerticalLayout createDefectContent() {
+        VerticalLayout defectContent = new VerticalLayout();
+        DatePicker datePicker = new DatePicker("Выберите дату");
+        defectContent.add(datePicker);
+
+        datePicker.addValueChangeListener(event -> {
+            LocalDate selectedDate = event.getValue();
+            if (selectedDate != null) {
+                openDeviceSelectionDialog(selectedDate);
+            }
+        });
+        return defectContent;
+    }
+
+    private void openDeviceSelectionDialog(LocalDate date) {
+        Dialog deviceDialog = new Dialog();
+        deviceDialog.setWidth("300px");
+
+        // ListBox для выбора устройства
+        ListBox<String> deviceListBox = new ListBox<>();
+        deviceListBox.setItems(devices.keySet());
+
+        Button selectButton = new Button("Выбрать", event -> {
+            String selectedDevice = deviceListBox.getValue();
+            if (selectedDevice != null) {
+                deviceDialog.close();
+                openFormDialog(selectedDevice);
+            }
+        });
+
+        deviceDialog.add(deviceListBox, selectButton);
+        deviceDialog.open();
+    }
+
+    private void openFormDialog(String deviceName) {
+        Dialog formDialog = new Dialog();
+        formDialog.setWidth("400px");
+
+        FormLayout formLayout = new FormLayout();
+
+        TextField partTotalField = new TextField("Партия шт.");
+        formLayout.add(partTotalField);
+
+        // строки по ключам из device
+        Map<String, TextField> parameterFields = new HashMap<>();
+        for (String key : devices.get(deviceName).deviceMap.keySet()) {
+            TextField field = new TextField(key);
+            parameterFields.put(key, field);
+            formLayout.add(field);
+        }
+
+        Button saveButton = new Button("Сохранить", event -> {
+            String batch = partTotalField.getValue();
+            Map<String, String> params = new HashMap<>();
+            parameterFields.forEach((k, v) -> params.put(k, v.getValue()));
+
+            // Пример вывода в консоль
+            System.out.println("Устройство: " + deviceName);
+            System.out.println("Партия шт.: " + batch);
+            params.forEach((k, v) -> System.out.println(k + ": " + v));
+
+            formDialog.close();
+        });
+
+        formDialog.add(formLayout, saveButton);
+        formDialog.open();
     }
 }
