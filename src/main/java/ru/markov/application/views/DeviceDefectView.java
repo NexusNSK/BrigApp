@@ -24,6 +24,8 @@ import java.util.Map;
 @RolesAllowed({"ADMIN"})
 public class DeviceDefectView extends VerticalLayout {
     public static HashMap<String, Device> devices = new HashMap<>();
+    private int month;
+    private int day;
 
     public DeviceDefectView() {
         Tabs tabs = new Tabs();
@@ -93,7 +95,8 @@ public class DeviceDefectView extends VerticalLayout {
                     if (comp instanceof TextField keyField) {
                         String key = keyField.getValue();
                         if (key != null && !key.isEmpty()) {
-                            devices.get(selectedKey).deviceMap.put(key, new HashMap<>(12));
+                            //devices.get(selectedKey).deviceMap.put(key, new HashMap<>(12));
+                            devices.get(selectedKey).initMapWithDefect(key);
                         }
                     }
                 }
@@ -137,6 +140,8 @@ public class DeviceDefectView extends VerticalLayout {
             LocalDate selectedDate = event.getValue();
             if (selectedDate != null) {
                 openDeviceSelectionDialog(selectedDate);
+                month = selectedDate.getMonthValue();
+                day = selectedDate.getDayOfMonth();
             }
         });
         return defectContent;
@@ -188,6 +193,9 @@ public class DeviceDefectView extends VerticalLayout {
             System.out.println("Устройство: " + deviceName);
             System.out.println("Партия шт.: " + batch);
             params.forEach((k, v) -> System.out.println(k + ": " + v));
+
+            // сохраняем в мапу девайса
+
 
             formDialog.close();
         });
