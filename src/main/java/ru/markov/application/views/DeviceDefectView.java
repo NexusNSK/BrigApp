@@ -32,17 +32,21 @@ public class DeviceDefectView extends VerticalLayout {
         VerticalLayout contentArea = new VerticalLayout();
         Tab settingsTab = new Tab("Настройки");
         VerticalLayout settingsContent = createSettingsContent();
-        Tab emptyTab = new Tab("Учёт");
+        Tab manageTab = new Tab("Учёт");
         VerticalLayout defectContent = createDefectContent();
-        tabs.add(emptyTab, settingsTab);
+        Tab tableDefect = new Tab("Сводка");
+        VerticalLayout tableDefectContent = createTableDefectContent();
+        tabs.add(tableDefect, manageTab, settingsTab);
 
         // чтобы вкладки перерисовывали содержимое
         tabs.addSelectedChangeListener(event -> {
             contentArea.removeAll();
             if (event.getSelectedTab().equals(settingsTab)) {
                 contentArea.add(settingsContent);
-            } else {
+            } else if (event.getSelectedTab().equals(manageTab)) {
                 contentArea.add(defectContent);
+            } else {
+                contentArea.add(tableDefectContent);
             }
         });
         // дефолтное содержимое (учёт)
@@ -146,7 +150,16 @@ public class DeviceDefectView extends VerticalLayout {
         });
         return defectContent;
     }
+        // наполнение вкладки "сводка"
+    private VerticalLayout createTableDefectContent() {
+        VerticalLayout tableDefectContent = new VerticalLayout();
+        ListBox<String> monthBox = new ListBox<>();
+        monthBox.setItems("Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь");
 
+        tableDefectContent.add(monthBox);
+        return tableDefectContent;
+    }
+        // выбор из списка устройств
     private void openDeviceSelectionDialog(LocalDate date) {
         Dialog deviceDialog = new Dialog();
         deviceDialog.setWidth("300px");
@@ -166,7 +179,7 @@ public class DeviceDefectView extends VerticalLayout {
         deviceDialog.add(deviceListBox, selectButton);
         deviceDialog.open();
     }
-
+        // окно ввода количества брака
     private void openFormDialog(String deviceName) {
         Dialog formDialog = new Dialog();
         formDialog.setWidth("400px");
@@ -176,7 +189,7 @@ public class DeviceDefectView extends VerticalLayout {
         TextField partTotalField = new TextField("Партия шт.");
         formLayout.add(partTotalField);
 
-        // строки по ключам из device
+        // строки во временную мапу по ключам из device
         Map<String, TextField> parameterFields = new HashMap<>();
         for (String key : devices.get(deviceName).deviceMap.keySet()) {
             TextField field = new TextField(key);
@@ -189,13 +202,19 @@ public class DeviceDefectView extends VerticalLayout {
             Map<String, String> params = new HashMap<>();
             parameterFields.forEach((k, v) -> params.put(k, v.getValue()));
 
-            // Пример вывода в консоль
-            System.out.println("Устройство: " + deviceName);
-            System.out.println("Партия шт.: " + batch);
-            params.forEach((k, v) -> System.out.println(k + ": " + v));
+            //прописываем общее количество устройств партии в мапу Device.totalPartMap
+            devices.get(deviceName).totalPartMap.get(month).put(day, Integer.valueOf(batch));
 
-            // сохраняем в мапу девайса
+            // прописываем брак по пунктам, месяцу и дню в мапу Device.deviceMap
+            params.forEach((defect, volume) -> devices.get(deviceName).deviceMap.get(defect).get(month).put(day, Integer.valueOf(volume)));
 
+            // пример вывода в консоль
+            //System.out.println("Устройство: " + deviceName);
+            //System.out.println("Партия шт.: " + batch);
+            //params.forEach((k, v) -> System.out.println(k + ": " + v));
+
+            // вывод консоль сохраненного количества брака
+            devices.get(deviceName).printNestedMap(devices.get(deviceName).deviceMap, 0);
 
             formDialog.close();
         });

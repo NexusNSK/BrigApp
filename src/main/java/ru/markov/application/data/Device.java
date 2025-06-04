@@ -3,6 +3,7 @@ package ru.markov.application.data;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Device implements Serializable, Comparable<Device>{
     @Serial
@@ -39,6 +40,7 @@ public class Device implements Serializable, Comparable<Device>{
                 deviceMap.get(defect).get(month).put(day, 0); // добавляем каждому месяцу 31 день с дефолтным значением брака 0
             }
         }
+        System.out.println("Для устройства " + deviceName + " был добавлен и проинициализирован пункт брака " + defect);
     }
 
     public void initTotalPartMap(){
@@ -48,10 +50,27 @@ public class Device implements Serializable, Comparable<Device>{
                 totalPartMap.get(month).put(day, 0);
             }
         }
+        System.out.println("Total Part Map для " + deviceName + " инициализирована.");
     }
 
     @Override
     public int hashCode() {
         return deviceName.hashCode();
     }
+
+    public void printNestedMap(Map<?, ?> map, int indent) {
+        String indentStr = " ".repeat(indent);
+        for (Map.Entry<?, ?> entry : map.entrySet()) {
+            System.out.print(indentStr + entry.getKey() + " : ");
+            if (entry.getValue() instanceof Map) {
+                System.out.println();
+                // Рекурсивно вызываем для вложенной Map с увеличенным отступом
+                printNestedMap((Map<?, ?>) entry.getValue(), indent + 4);
+            } else {
+                // Выводим значение, если это не Map
+                System.out.println(entry.getValue());
+            }
+        }
+    }
+
 }
