@@ -79,6 +79,7 @@ public class Serial {
             DeviceDefectView.devices = (HashMap<String, Device>) ois.readObject();
             System.out.println("...Список устройств был успешно загружен из основного файла...");
             ois.close();
+            System.out.println("Загружено устройств: " + DeviceDefectView.devices.size());
         } catch (IOException e) {
             DeviceDefectView.devices = new HashMap<String, Device>();
             System.out.println("Файл \"device.bin\" не был загружен");

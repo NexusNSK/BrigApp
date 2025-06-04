@@ -9,6 +9,10 @@ public class Device implements Serializable, Comparable<Device>{
     @Serial
     private static final long serialVersionUID = 1L;
 
+    public String getDeviceName() {
+        return deviceName;
+    }
+
     private final String deviceName;
 
     public HashMap<String, HashMap<Integer,HashMap<Integer, Integer>>> deviceMap = new HashMap<>();
