@@ -74,7 +74,7 @@ public class DeviceDefectView extends VerticalLayout {
             }
         });
         // дефолтное содержимое (учёт)
-        contentArea.add(defectContent);
+        contentArea.add(tableDefectContent);
         add(tabs, contentArea);
     }
         // наполнение вкладки "настройки"
@@ -198,6 +198,7 @@ public class DeviceDefectView extends VerticalLayout {
 
     private void updateGrid(Grid grid) {
         Month selectedMonth = monthSelect.getValue();
+
         if (selectedMonth == null)
             selectedMonth = LocalDate.now().getMonth();
 
@@ -211,8 +212,8 @@ public class DeviceDefectView extends VerticalLayout {
         // Добавляем новые колонки дней
         days.forEach(day -> {
             grid.addComponentColumn(device -> {
-                        Integer count = devices.get(device.toString()).totalPartMap.getOrDefault(monthValue, new HashMap<>())
-                                .getOrDefault(day, null);
+                        Integer count = devices.get(device.toString()).totalPartMap.get(monthValue)
+                                .get(day);
 
                         Span content = new Span(count != null ? count.toString() : "");
                         if (count != null) {
@@ -273,15 +274,16 @@ public class DeviceDefectView extends VerticalLayout {
 
         // Кнопка закрытия
         Button closeButton = new Button("Закрыть", e -> dialog.close());
-        layout.add(closeButton);
+        Button downloadReport = new Button("Скачать отчёт", event -> generateExcelReport(device.getDeviceName(), month, day));
+        layout.add(closeButton, downloadReport);
         dialog.add(layout);
         dialog.open();
     }
 
-    private void generateExcelReport(int month, int day) {
+    private void generateExcelReport(String deviceName, int month, int day) {
         try {
             SXSSFWorkbook workbook = new SXSSFWorkbook();
-            Sheet sheet = workbook.createSheet("Отчет");
+            Sheet sheet = workbook.createSheet("Отчет по браку " + deviceName + " " + day+"."+month);
 
             // Заголовки
             Row headerRow = sheet.createRow(0);
@@ -375,12 +377,12 @@ public class DeviceDefectView extends VerticalLayout {
             // прописываем брак по пунктам, месяцу и дню в мапу Device.deviceMap
             params.forEach((defect, volume) -> devices.get(deviceName).deviceMap.get(defect).get(month).put(day, Integer.valueOf(volume)));
 
-            // пример вывода в консоль
+            // вывод в консоль
             //System.out.println("Устройство: " + deviceName);
             //System.out.println("Партия шт.: " + batch);
             //params.forEach((k, v) -> System.out.println(k + ": " + v));
 
-            // вывод консоль сохраненного количества брака
+            // вывод в консоль сохраненного количества брака
             //devices.get(deviceName).printNestedMap(devices.get(deviceName).deviceMap, 0);
             Serial.saveDevice();
             formDialog.close();
