@@ -14,41 +14,43 @@ import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 import jakarta.annotation.security.RolesAllowed;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import ru.markov.application.data.Device;
+import ru.markov.application.service.ConveyLine;
 import ru.markov.application.service.Serial;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Route(value = "device_defect", layout = MainLayout.class)
 @RolesAllowed({"ADMIN"})
 public class DeviceDefectView extends VerticalLayout {
-
+    private String selectDeviceName = "";
     public static HashMap<String, Device> devices = new HashMap<>();
     private int month;
     private int day;
     private ComboBox<Month> monthSelect = new ComboBox<>();
     Grid<Device> grid = new Grid<>(Device.class, false);
+    Grid<String> gridDefect = new Grid<>();
 
 
     public DeviceDefectView() {
@@ -116,13 +118,13 @@ public class DeviceDefectView extends VerticalLayout {
         });
 
         Button saveButton = new Button("Сохранить", e -> {
+            selectDeviceName = comboBox.getValue();
             String selectedKey = comboBox.getValue();
             if (selectedKey != null && !selectedKey.equals("Список устройств")) {
                 for (Component comp : itemsLayout.getChildren().toList()) {
                     if (comp instanceof TextField keyField) {
                         String key = keyField.getValue();
                         if (key != null && !key.isEmpty()) {
-                            //devices.get(selectedKey).deviceMap.put(key, new HashMap<>(12));
                             devices.get(selectedKey).initMapWithDefect(key);
                         }
                     }
@@ -130,6 +132,7 @@ public class DeviceDefectView extends VerticalLayout {
                 dialogDefect.close();
                 Serial.saveDevice();
             }
+            gridDefect.setItems(devices.get(selectedKey).deviceMap.keySet());
         });
 
         dialogDefect.add(itemsLayout, addItemButton, saveButton);
@@ -142,19 +145,30 @@ public class DeviceDefectView extends VerticalLayout {
             }
         });
 
-        Grid<String> grid = new Grid<>();
-        grid.addColumn(key -> key).setHeader("Наименование брака");
+
+        gridDefect.addColumn(key -> key).setHeader("Наименование брака");
+        gridDefect.addComponentColumn(key -> {
+            Button deleteButton = new Button("Удалить");
+            deleteButton.addClickListener(click -> {
+                String selectedKey = comboBox.getValue(); // текущий выбранный ключ в ComboBox
+                if (selectedKey != null && devices.containsKey(selectedKey)) {
+                    devices.get(selectedKey).deviceMap.remove(key);
+                    gridDefect.setItems(devices.get(selectedKey).deviceMap.keySet());
+                }
+            });
+            return deleteButton;
+        }).setHeader("");
 
         comboBox.addValueChangeListener(event -> {
             String selectedKey = event.getValue();
-            if (selectedKey != null) {
-                grid.setItems(devices.get(selectedKey).deviceMap.keySet());
+            if (selectedKey != null && devices.containsKey(selectedKey)) {
+                gridDefect.setItems(devices.get(selectedKey).deviceMap.keySet());
             } else {
-                grid.setItems();
+                gridDefect.setItems(Collections.emptyList());
             }
         });
 
-        settingsContent.add(addDevice, comboBox, editDefect, grid);
+        settingsContent.add(addDevice, comboBox, editDefect, gridDefect);
         return settingsContent;
     }
         // наполнение вкладки "учёт"
@@ -218,7 +232,6 @@ public class DeviceDefectView extends VerticalLayout {
                         Span content = new Span(count != null ? count.toString() : "");
                         if (count != null) {
                             content.addClickListener(e -> showReportDialog(devices.get(device.toString()), monthValue, day));
-
                             content.getStyle().setCursor("pointer");
                             content.getStyle().setColor("var(--lumo-primary-text-color)");
                         }
@@ -230,8 +243,8 @@ public class DeviceDefectView extends VerticalLayout {
     }
     private void showReportDialog(Device device, int month, int day) {
         Dialog dialog = new Dialog();
-        dialog.setWidth("400px");
-        dialog.setHeight("300px");
+        dialog.setWidth("500px");
+       // dialog.setHeight("600px");
 
         VerticalLayout layout = new VerticalLayout();
         layout.setPadding(true);
@@ -274,53 +287,71 @@ public class DeviceDefectView extends VerticalLayout {
 
         // Кнопка закрытия
         Button closeButton = new Button("Закрыть", e -> dialog.close());
-        Button downloadReport = new Button("Скачать отчёт", event -> generateExcelReport(device.getDeviceName(), month, day));
+        Button downloadReport = new Button("Скачать отчёт", event -> {
+            try {
+                generateExcelReport();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
         layout.add(closeButton, downloadReport);
         dialog.add(layout);
         dialog.open();
     }
 
-    private void generateExcelReport(String deviceName, int month, int day) {
-        try {
-            SXSSFWorkbook workbook = new SXSSFWorkbook();
-            Sheet sheet = workbook.createSheet("Отчет по браку " + deviceName + " " + day+"."+month);
+    private void generateExcelReport() throws IOException {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Линия 1");
 
-            // Заголовки
-            Row headerRow = sheet.createRow(0);
-            headerRow.createCell(0).setCellValue("Устройство");
-            headerRow.createCell(1).setCellValue("Количество");
+        // Стиль для заголовка
+        CellStyle headerStyle = workbook.createCellStyle();
+        Font font = workbook.createFont();
+        font.setBold(true);
+        headerStyle.setFont(font);
 
-            // Данные
-            int rowNum = 1;
-            for (Device device : devices.values()) {
-                Row row = sheet.createRow(rowNum++);
-                row.createCell(0).setCellValue(device.getDeviceName());
-                row.createCell(1).setCellValue(device.totalPartMap.get(month).get(day));
+        // Первая строка: Линия 1 | MES2408. Партия 01.01.2025-10.01.2025
+        Row row0 = sheet.createRow(0);
+        row0.createCell(0).setCellValue("Линия 1");
+        row0.createCell(1).setCellValue("MES2408. Партия 01.01.2025-10.01.2025");
+
+        // Вторая строка: Наименование | Количество брака
+        Row row1 = sheet.createRow(1);
+        row1.createCell(0).setCellValue("Наименование");
+        row1.createCell(1).setCellValue("Количество брака");
+        row1.getCell(0).setCellStyle(headerStyle);
+        row1.getCell(1).setCellStyle(headerStyle);
+
+        // Данные
+        String[] names = {"Нет питания", "LAN", "LED", "Итого", "Партия", "Процент"};
+        Object[] values = {1, 3, 2, 6, 1000, 0.6};
+
+        for (int i = 0; i < names.length; i++) {
+            Row row = sheet.createRow(i + 2);
+            row.createCell(0).setCellValue(names[i]);
+            if (i < 3) {
+                row.createCell(1).setCellValue((int) values[i]);
+            } else if (i == 3) {
+                row.createCell(1).setCellValue((int) values[i]);
+            } else if (i == 4) {
+                row.createCell(1).setCellValue((int) values[i]);
+            } else {
+                row.createCell(1).setCellValue((double) values[i]);
             }
+        }
 
-            // Сохранение файла
-            StreamResource resource = new StreamResource("report.xlsx", () -> {
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                try {
-                    workbook.write(stream);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                return new ByteArrayInputStream(stream.toByteArray());
-            });
+        // Автоширина
+        sheet.autoSizeColumn(0);
+        sheet.autoSizeColumn(1);
 
-            Anchor downloadLink = new Anchor(resource, "Скачать отчет");
-            downloadLink.getElement().setAttribute("download", true);
-            downloadLink.setVisible(false); // скрываем ссылку, если нужно
-
-            add(downloadLink);
-
-// Программно кликаем по ссылке, чтобы инициировать скачивание
-            downloadLink.getElement().callJsFunction("click");
-        } catch (Exception e) {
+        // Сохраняем в файл
+        try (FileOutputStream fileOut = new FileOutputStream("output.xlsx")) {
+            workbook.write(fileOut);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        workbook.close();
     }
+
 
     private List<Integer> getDaysInMonth(Month month) {
         return IntStream.rangeClosed(1, month.length(Year.now().isLeap()))
@@ -351,39 +382,38 @@ public class DeviceDefectView extends VerticalLayout {
         // окно ввода количества брака
     private void openFormDialog(String deviceName) {
         Dialog formDialog = new Dialog();
-        formDialog.setWidth("400px");
-
+        formDialog.setWidth("450px");
+        formDialog.setMinHeight("600px");
         FormLayout formLayout = new FormLayout();
+        IntegerField partTotalField = new IntegerField("Партия шт.");
+        partTotalField.setValue(0);
+        ComboBox<String> lineComboBox = new ComboBox<>();
+        lineComboBox.setItems("Линия 1" , "Линия 2", "Линия 3", "Линия 4");
+        lineComboBox.setValue("Линия 1");
+        DatePicker startDate = new DatePicker("Начало партии");
+        DatePicker finishDate = new DatePicker("Конец партии");
+        startDate
+                .addValueChangeListener(e -> finishDate.setMin(e.getValue()));
+        finishDate.addValueChangeListener(
+                e -> startDate.setMax(e.getValue()));
+        formLayout.add(partTotalField, lineComboBox);
+        formLayout.add(new HorizontalLayout(startDate, finishDate));
 
-        TextField partTotalField = new TextField("Партия шт.");
-        formLayout.add(partTotalField);
-
-        // строки во временную мапу по ключам из device
-        Map<String, TextField> parameterFields = new HashMap<>();
-        for (String key : devices.get(deviceName).deviceMap.keySet()) {
-            TextField field = new TextField(key);
+        Map<String, IntegerField> parameterFields = new HashMap<>();
+        for (String key : devices.get(deviceName).deviceMap.keySet()) {   // строки во временную мапу по ключам из device
+            IntegerField field = new IntegerField(key);
+            field.setValue(0);
             parameterFields.put(key, field);
             formLayout.add(field);
         }
 
         Button saveButton = new Button("Сохранить", event -> {
-            String batch = partTotalField.getValue();
-            Map<String, String> params = new HashMap<>();
+            int batch = partTotalField.getValue();
+            Map<String, Integer> params = new HashMap<>();
             parameterFields.forEach((k, v) -> params.put(k, v.getValue()));
-
-            //прописываем общее количество устройств партии в мапу Device.totalPartMap
-            devices.get(deviceName).totalPartMap.get(month).put(day, Integer.valueOf(batch));
-
-            // прописываем брак по пунктам, месяцу и дню в мапу Device.deviceMap
-            params.forEach((defect, volume) -> devices.get(deviceName).deviceMap.get(defect).get(month).put(day, Integer.valueOf(volume)));
-
-            // вывод в консоль
-            //System.out.println("Устройство: " + deviceName);
-            //System.out.println("Партия шт.: " + batch);
-            //params.forEach((k, v) -> System.out.println(k + ": " + v));
-
-            // вывод в консоль сохраненного количества брака
-            //devices.get(deviceName).printNestedMap(devices.get(deviceName).deviceMap, 0);
+            devices.get(deviceName).totalPartMap.get(month).put(day, batch); //прописываем общее количество устройств партии в мапу Device.totalPartMap
+            devices.get(deviceName).lineMap.get(month).put(day, lineComboBox.getValue()); // прописываем линию для брака
+            params.forEach((defect, volume) -> devices.get(deviceName).deviceMap.get(defect).get(month).put(day, volume)); // прописываем брак по пунктам, месяцу и дню в мапу Device.deviceMap
             Serial.saveDevice();
             formDialog.close();
         });

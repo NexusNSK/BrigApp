@@ -20,10 +20,16 @@ public class Device implements Serializable, Comparable<Device>{
     //      Обращаемся браку по ключу, указываем ключ месяца, ключ дня, получаем количество брака в конкретный день/партию
     public HashMap<Integer,HashMap<Integer, Integer>> totalPartMap = new HashMap<>();
     //     HashMap<Месяц,  HashMap<День, сколько в партии>>
+    public HashMap<Integer, HashMap<Integer, String>> lineMap = new HashMap<>();
+    //     HashMap<Месяц.  HashMap<День, Линия>>
+    public HashMap<Integer, HashMap<Integer, String>> startPartDate = new HashMap();
+    //     HashMap<Месяц.  HashMap<День, Дата начало партии>>
+    public HashMap<Integer, HashMap<Integer, String>> finishPartDate = new HashMap();
+    //     HashMap<Месяц.  HashMap<День, Дата окончания партии>>
 
     public Device(String deviceName) {
         this.deviceName = deviceName;
-        initTotalPartMap();
+        initOtherMap();
     }
 
     @Override
@@ -35,6 +41,9 @@ public class Device implements Serializable, Comparable<Device>{
     public String toString() {
         return deviceName;
     }
+    public void deleteDefect(String defectToDelete){
+        deviceMap.remove(defectToDelete);
+    }
 
     public void initMapWithDefect(String defect) {
         deviceMap.put(defect, new HashMap<>()); // добавляем в мапу дефект и мапу с месяцами
@@ -44,19 +53,24 @@ public class Device implements Serializable, Comparable<Device>{
                 deviceMap.get(defect).get(month).put(day, 0); // добавляем каждому месяцу 31 день с дефолтным значением брака 0
             }
         }
-        System.out.println("Для устройства " + deviceName + " был добавлен и проинициализирован пункт брака " + defect);
+        //System.out.println("Для устройства " + deviceName + " был добавлен и проинициализирован пункт брака " + defect);
     }
 
-    public void initTotalPartMap(){
+    public void initOtherMap(){
         for (int month = 1; month <= 12; month++) {
             totalPartMap.put(month, new HashMap<>());
+            lineMap.put(month, new HashMap<>());
+            startPartDate.put(month, new HashMap<>());
+            finishPartDate.put(month, new HashMap<>());
             for (int day = 1; day <= 31 ; day++) {
                 totalPartMap.get(month).put(day, 0);
+                lineMap.get(month).put(day, "");
+                startPartDate.get(month).put(day,"");
+                finishPartDate.get(month).put(day, "");
             }
         }
         System.out.println("Total Part Map для " + deviceName + " инициализирована.");
     }
-
     @Override
     public int hashCode() {
         return deviceName.hashCode();
