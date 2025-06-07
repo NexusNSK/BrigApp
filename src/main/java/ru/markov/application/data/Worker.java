@@ -31,7 +31,7 @@ public class Worker implements Serializable, Comparable<Worker> {
     @JsonProperty("workTimeMassive")
     private final HashMap<Integer, HashMap<Integer, Integer>> workTimeMassive = new HashMap<>(12);
 
-    //            hashmap <номер месяца : hashmap  <номер дня : часы>>
+    //            hashmap <номер месяца : hashmap  <номер дня : ч  асы>>
     @JsonProperty
     public void initWorkerStatusMap() {
         if (workerStatusMassive.isEmpty()) {
@@ -73,6 +73,14 @@ public class Worker implements Serializable, Comparable<Worker> {
             workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                     .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.WORK);
         }
+    }
+
+    public boolean checkTimeAndStatus(){
+        boolean acceptChanges = true;
+        if (!workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue()).get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth()).equals(WorkerStatus.NOTHING)) {
+            acceptChanges = false;
+        }
+        return acceptChanges;
     }
 
     @JsonIgnore

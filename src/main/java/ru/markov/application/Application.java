@@ -17,6 +17,7 @@ public class Application implements AppShellConfigurator {
         SpringApplication.run(Application.class, args);
         TimeAdapter.initWorkTime();
         Serial.load();
+        Serial.loadDevice();
         BrigEdit.initSplitDistrictWorkersList();
     }
 }
