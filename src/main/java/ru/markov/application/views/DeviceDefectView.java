@@ -20,13 +20,15 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.IntegerField;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
-import jakarta.annotation.security.RolesAllowed;
+import jakarta.annotation.security.PermitAll;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import ru.markov.application.data.Device;
+import ru.markov.application.security.SecurityService;
 import ru.markov.application.service.Serial;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -34,12 +36,13 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Route(value = "device_defect", layout = MainLayout.class)
-@RolesAllowed({"ADMIN"})
+@PermitAll
 @CssImport("./styles/styles.css")
 public class DeviceDefectView extends VerticalLayout {
     private String selectDeviceName = "";
@@ -51,36 +54,49 @@ public class DeviceDefectView extends VerticalLayout {
     Grid<String> gridDefect = new Grid<>();
 
 
-    public DeviceDefectView() {
-        Tabs tabs = new Tabs();
-        grid.addClassName("repoGrid");
-        VerticalLayout contentArea = new VerticalLayout();
-        Tab settingsTab = new Tab("Настройки");
-        VerticalLayout settingsContent = createSettingsContent();
-        Tab manageTab = new Tab("Учёт");
-        VerticalLayout defectContent = createDefectContent();
-        Tab tableDefect = new Tab("Сводка");
-        VerticalLayout tableDefectContent = createTableDefectContent();
-        tabs.add(tableDefect, manageTab, settingsTab);
+    public DeviceDefectView(SecurityService securityService) {
+        if (!securityService.getAuthenticatedUser().getUsername().equals("admin") & ServiceTools.serviceFlag) {
+            TextArea serviceMessage = new TextArea();
+            serviceMessage.setMinWidth("500px");
+            serviceMessage.setMaxWidth("500px");
+            serviceMessage.setReadOnly(true);
+            serviceMessage.setLabel("Внимание");
+            serviceMessage.setPrefixComponent(VaadinIcon.QUESTION_CIRCLE.create());
+            serviceMessage.setValue("Извините, идут сервисные работы.\nПовторите попытку позже.");
+            add(serviceMessage);
+        } else if (securityService.getAuthenticatedUser().getUsername().equals("admin")
+                || securityService.getAuthenticatedUser().getUsername().equals("tech")) {
 
-        // чтобы вкладки перерисовывали содержимое
-        tabs.addSelectedChangeListener(event -> {
-            contentArea.removeAll();
-            if (event.getSelectedTab().equals(settingsTab)) {
-                contentArea.add(settingsContent);
-            } else if (event.getSelectedTab().equals(manageTab)) {
-                contentArea.add(defectContent);
-            } else {
-                contentArea.add(tableDefectContent);
-            }
-        });
 
-        contentArea.add(tableDefectContent); // дефолтное содержимое (учёт)
-        add(tabs, contentArea);
+            Tabs tabs = new Tabs();
+            grid.addClassName("repoGrid");
+            VerticalLayout contentArea = new VerticalLayout();
+            Tab settingsTab = new Tab("Настройки");
+            VerticalLayout settingsContent = createSettingsContent();
+            Tab manageTab = new Tab("Учёт");
+            VerticalLayout defectContent = createDefectContent();
+            Tab tableDefect = new Tab("Сводка");
+            VerticalLayout tableDefectContent = createTableDefectContent();
+            tabs.add(tableDefect, manageTab, settingsTab);
+
+            // чтобы вкладки перерисовывали содержимое
+            tabs.addSelectedChangeListener(event -> {
+                contentArea.removeAll();
+                if (event.getSelectedTab().equals(settingsTab)) {
+                    contentArea.add(settingsContent);
+                } else if (event.getSelectedTab().equals(manageTab)) {
+                    contentArea.add(defectContent);
+                } else {
+                    contentArea.add(tableDefectContent);
+                }
+            });
+
+            contentArea.add(tableDefectContent); // дефолтное содержимое (сводка)
+            add(tabs, contentArea);
+        }
     }
         // наполнение вкладки "настройки"
     private VerticalLayout createSettingsContent() {
-        // Переносим весь оригинальный код сюда
         VerticalLayout settingsContent = new VerticalLayout();
 
         Button addDevice = new Button("Добавить устройство");
@@ -188,55 +204,68 @@ public class DeviceDefectView extends VerticalLayout {
     }
         // наполнение вкладки "сводка"
     private VerticalLayout createTableDefectContent() {
-        VerticalLayout tableDefectLayout = new VerticalLayout();
-        initializeMonthSelector();
-        configureGrid(grid);
-        tableDefectLayout.add(monthSelect, grid);
-        updateGrid(grid);
-        grid.setItems(devices.values());
-        return tableDefectLayout;
-    }
+            VerticalLayout tableDefectLayout = new VerticalLayout();
+            initializeMonthSelector();
+            configureGrid(grid);
+            monthSelect.addValueChangeListener(event -> updateGrid(grid)); //  слушатель на изменение месяца, чтобы обновлять грид
+            tableDefectLayout.add(monthSelect, grid);
+            updateGrid(grid); // инициализируем грид при создании
+
+            return tableDefectLayout;
+        }
 
     private void initializeMonthSelector() {
         monthSelect.setItems(Month.values());
+        monthSelect.setItemLabelGenerator(month -> month.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("RU")));
         monthSelect.setLabel("Выберите месяц");
+        monthSelect.setValue(LocalDate.now().getMonth());
         monthSelect.addValueChangeListener(e -> updateGrid(grid));
     }
 
     private void configureGrid(Grid<Device> grid) {
-        grid.addClassName("my-custom-grid");
+        grid.addClassName("repoGrid");
+        grid.removeAllColumns();
         grid.addColumn(Device::getDeviceName)
                 .setHeader("Устройство")
                 .setFlexGrow(0)
-                .setAutoWidth(true);
-
-        grid.setItems(devices.values());
+                .setAutoWidth(true)
+                .addClassName("repoGrid::part(cell).first-column-cell");
     }
 
     private void updateGrid(Grid<Device> grid) {
         Month selectedMonth = monthSelect.getValue();
-        if (selectedMonth == null)
+        if (selectedMonth == null) {
             selectedMonth = LocalDate.now().getMonth();
+        }
         int monthValue = selectedMonth.getValue();
 
-        List<Integer> days = getDaysInMonth(selectedMonth);
-
+        // удаляем динамические колонки с днями, оставляя только первую
         List<Grid.Column<Device>> columnsToRemove = new ArrayList<>(grid.getColumns().subList(1, grid.getColumns().size()));
         columnsToRemove.forEach(grid::removeColumn);
 
+
+        List<Integer> days = getDaysInMonth(selectedMonth);
+
+        //  колонки для каждого дня
         days.forEach(day -> {
             grid.addComponentColumn(device -> {
                         int count = 0;
-                        if (device.totalPartMap != null) {
-                            Map<Integer, Integer> monthMap = device.totalPartMap.get(monthValue);
-                            if (monthMap != null) {
-                                Integer val = monthMap.get(day);
-                                if (val != null) {
-                                    count = val;
-                                }
+
+                        // проверяем наличие данных по устройству в deviceMap
+                        for (String defectType : device.deviceMap.keySet()) {
+                            HashMap<Integer, HashMap<Integer, Integer>> monthMap = device.deviceMap.get(defectType);
+                            if (monthMap == null) continue;
+
+                            HashMap<Integer, Integer> dayMap = monthMap.get(monthValue);
+                            if (dayMap == null) continue;
+
+                            Integer val = dayMap.get(day);
+                            if (val != null && val > 0) {
+                                count += val;
                             }
                         }
-                        if (count != 0) {
+
+                        if (count > 0) {
                             Icon content = VaadinIcon.CHECK.create();
                             content.getElement().getThemeList().add("badge success");
                             content.getStyle().set("cursor", "pointer");
@@ -250,7 +279,13 @@ public class DeviceDefectView extends VerticalLayout {
                     .setAutoWidth(true)
                     .setFlexGrow(0);
         });
+
+        // Устанавливаем отфильтрованные устройства
+        Collection<Device> filteredDevices = filterDevicesByMonth(monthValue);
+        grid.setItems(filteredDevices);
     }
+
+    // окно для заполнения отчёта о браку
     private void showReportDialog(Device device, int month, int day) {
         Dialog dialog = new Dialog();
         dialog.setWidth("500px");
@@ -268,14 +303,12 @@ public class DeviceDefectView extends VerticalLayout {
         H4 startFinishPart = new H4(device.startPartDate.get(month).get(day) + " - " + device.finishPartDate.get(month).get(day)+"\n");
         layout.add(startFinishPart);
 
-        // Количество в партии на выбранный день
         Integer count = device.totalPartMap
                 .get(month)
                 .get(day);
         Span countSpan = new Span("Количество в партии: " + count);
         layout.add(countSpan);
 
-        // Заголовок для дефектов
         H4 defectsTitle = new H4("Брак в этой партии:");
         layout.add(defectsTitle);
 
@@ -307,13 +340,14 @@ public class DeviceDefectView extends VerticalLayout {
         dialog.open();
     }
 
+    // чисто узнать сколько дней в месяце
     private List<Integer> getDaysInMonth(Month month) {
         return IntStream.rangeClosed(1, month.length(Year.now().isLeap()))
                 .boxed()
                 .collect(Collectors.toList());
     }
 
-        // выбор из списка устройств
+    // выбор из списка устройств
     private void openDeviceSelectionDialog(LocalDate date) {
         Dialog deviceDialog = new Dialog();
         deviceDialog.setWidth("300px");
@@ -385,7 +419,7 @@ public class DeviceDefectView extends VerticalLayout {
         formDialog.open();
     }
 
-    // Создание StreamResource для отчета
+    // создание StreamResource для отчета
     private StreamResource createExcelResource(Device device, int month, int day) {
         return new StreamResource("Отчёт по " + device.getDeviceName() + ".xlsx", () -> {
             try {
@@ -486,5 +520,30 @@ public class DeviceDefectView extends VerticalLayout {
                 return null;
             }
         });
+    }
+
+    // проверка на наличие записи в выбранном месяце
+    private boolean deviceHasAnyRecordInMonth(Device device, int monthValue) {
+        for (String defectType : device.deviceMap.keySet()) {
+            HashMap<Integer, HashMap<Integer, Integer>> monthMap = device.deviceMap.get(defectType);
+            if (monthMap == null) continue;
+
+            HashMap<Integer, Integer> dayMap = monthMap.get(monthValue);
+            if (dayMap == null) continue;
+
+            for (Integer count : dayMap.values()) {
+                if (count != null && count > 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // отбор списка устройств по месяцу
+    private Collection<Device> filterDevicesByMonth(int monthValue) {
+        return devices.values().stream()
+                .filter(device -> deviceHasAnyRecordInMonth(device, monthValue))
+                .collect(Collectors.toList());
     }
 }

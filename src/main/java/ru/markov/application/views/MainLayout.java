@@ -76,11 +76,9 @@ public class MainLayout extends AppLayout {
                 createTab(VaadinIcon.SERVER, "Сервисный раздел", new RouterLink(ServiceTools.class)),
                 createTab(VaadinIcon.CALENDAR_USER, "Табель", new RouterLink(TableView.class)),
                 createTab(VaadinIcon.DATABASE, "Настройки БД", new RouterLink(BDView.class)),
-                createTab(VaadinIcon.CLUSTER, "Учёт брака", new RouterLink(DeviceDefectView.class)));
+                createTab(VaadinIcon.CLUSTER, "Учёт брака", new RouterLink(DeviceDefectView.class)),
+                createTab(VaadinIcon.EXIT, "Отпуска", new RouterLink(Exit.class)));
 
-        if (securityService.getAuthenticatedUser().getUsername().equals("tech")) {
-            tabs.add(createTab(VaadinIcon.EXIT, "Отпуска", new RouterLink(Exit.class)));
-        }
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
         return tabs;
     }

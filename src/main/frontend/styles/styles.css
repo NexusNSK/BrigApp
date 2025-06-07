@@ -1,6 +1,23 @@
 .repoGrid::part(cell) {
-        border: 1px solid black;
-        box-sizing: border-box;
-        align-content: center;
-        font-size: 15px;
-    }
+    border: 1px solid black;
+    box-sizing: border-box;
+    font-size: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.repoGrid::part(cell).first-column-cell {
+    background-color: #003366;
+    color: white;
+}
+
+.repoGrid::part(header-cell):first-child {
+    background-color: #003366;
+    color: white;
+}
+
+.repoGrid::part(row).first-row {
+    background-color: #003366;
+    color: white;
+}
