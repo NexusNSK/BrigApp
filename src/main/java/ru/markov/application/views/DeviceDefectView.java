@@ -74,8 +74,8 @@ public class DeviceDefectView extends VerticalLayout {
                 contentArea.add(tableDefectContent);
             }
         });
-        // дефолтное содержимое (учёт)
-        contentArea.add(tableDefectContent);
+
+        contentArea.add(tableDefectContent); // дефолтное содержимое (учёт)
         add(tabs, contentArea);
     }
         // наполнение вкладки "настройки"
@@ -99,7 +99,7 @@ public class DeviceDefectView extends VerticalLayout {
                 }
                 comboBox.setItems(devices.keySet());
                 if (!devices.isEmpty()) {
-                    comboBox.setValue(devices.keySet().iterator().next());
+                    comboBox.setValue(devices.get(newDevice).getDeviceName());
                 }
                 Serial.saveDevice();
             });

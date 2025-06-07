@@ -1,0 +1,6 @@
+.repoGrid::part(cell) {
+        border: 1px solid black;
+        box-sizing: border-box;
+        align-content: center;
+        font-size: 15px;
+    }
