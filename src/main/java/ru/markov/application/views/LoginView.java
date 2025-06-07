@@ -2,6 +2,7 @@ package ru.markov.application.views;
 
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.login.LoginForm;
@@ -56,12 +57,15 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 		LoginOverlay loginOverlay = new LoginOverlay();
 		loginOverlay.setI18n(login18n);
 		loginOverlay.setAction("login");
+		Checkbox rememberMe = new Checkbox("Запомнить меня");
+
 		loginOverlay.getElement().setAttribute("no-autofocus", "");
 		loginOverlay.addForgotPasswordListener(event -> visitorMode.getUI().ifPresent(ui -> ui.navigate("plan")));
 
 
 
 		add(/*new H1("BrigApp"),*/loginOverlay /*/login*/, visitorMode);
+		loginOverlay.getCustomFormArea().add(rememberMe);
 		//<theme-editor-local-classname>
 				loginOverlay.setOpened(true);
 		addClassName("login-view-vertical-layout-1");
