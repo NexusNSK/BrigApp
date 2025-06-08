@@ -26,6 +26,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 import jakarta.annotation.security.PermitAll;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import ru.markov.application.data.Device;
 import ru.markov.application.security.SecurityService;
@@ -380,7 +381,7 @@ public class DeviceDefectView extends VerticalLayout {
         lineComboBox.setItems("Линия 1" , "Линия 2", "Линия 3", "Линия 4");
         lineComboBox.setValue("Линия 1");
         DatePicker.DatePickerI18n i18n = new DatePicker.DatePickerI18n();
-        i18n.setDateFormat("dd/MM/yyyy");  // задаем формат отображения даты
+        i18n.setDateFormat("dd.MM.yyyy");  // задаем формат отображения даты
         DatePicker startDate = new DatePicker("Начало партии");
         startDate.setI18n(i18n);
         DatePicker finishDate = new DatePicker("Конец партии");
@@ -408,7 +409,7 @@ public class DeviceDefectView extends VerticalLayout {
             devices.get(deviceName).lineMap.get(month).put(day, lineComboBox.getValue()); // прописываем линию для брака
             params.forEach((defect, volume) -> devices.get(deviceName).deviceMap.get(defect).get(month).put(day, volume)); // прописываем брак по пунктам, месяцу и дню в мапу Device.deviceMap
             devices.get(deviceName).lineMap.get(month).put(day, lineComboBox.getValue());
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
             devices.get(deviceName).startPartDate.get(month).put(day, startDate.getValue().format(formatter));
             devices.get(deviceName).finishPartDate.get(month).put(day, finishDate.getValue().format(formatter));
             Serial.saveDevice();
@@ -422,15 +423,52 @@ public class DeviceDefectView extends VerticalLayout {
     // создание StreamResource для отчета
     private StreamResource createExcelResource(Device device, int month, int day) {
         return new StreamResource("Отчёт по " + device.getDeviceName() + ".xlsx", () -> {
-            try {
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                Workbook workbook = new XSSFWorkbook();
+            try (Workbook workbook = new XSSFWorkbook();
+                 ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+
                 Sheet sheet = workbook.createSheet("Отчет");
 
-                // Стили для ячеек
-                CellStyle yellowStyle = workbook.createCellStyle();
-                yellowStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
-                yellowStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                // Шрифты
+                Font boldFont = workbook.createFont();
+                boldFont.setBold(true);
+
+                // Стили с обводкой и выравниванием
+                CellStyle boldLeft = workbook.createCellStyle();
+                boldLeft.setFont(boldFont);
+                boldLeft.setAlignment(HorizontalAlignment.LEFT);
+                boldLeft.setVerticalAlignment(VerticalAlignment.TOP);
+                setBorders(boldLeft);
+                boldLeft.setWrapText(true);
+
+                CellStyle boldRight = workbook.createCellStyle();
+                boldRight.setFont(boldFont);
+                boldRight.setAlignment(HorizontalAlignment.RIGHT);
+                setBorders(boldRight);
+
+                CellStyle normalLeft = workbook.createCellStyle();
+                normalLeft.setAlignment(HorizontalAlignment.LEFT);
+                setBorders(normalLeft);
+
+                CellStyle normalRight = workbook.createCellStyle();
+                normalRight.setAlignment(HorizontalAlignment.RIGHT);
+                setBorders(normalRight);
+
+                CellStyle yellowBoldLeft = workbook.createCellStyle();
+                yellowBoldLeft.cloneStyleFrom(boldLeft);
+                yellowBoldLeft.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+                yellowBoldLeft.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+                CellStyle yellowBoldRight = workbook.createCellStyle();
+                yellowBoldRight.cloneStyleFrom(boldRight);
+                yellowBoldRight.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+                yellowBoldRight.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+                // Стиль для названия устройства (объединённая ячейка B1:B2), выравнивание по центру и вертикали
+                CellStyle boldCenter = workbook.createCellStyle();
+                boldCenter.setFont(boldFont);
+                boldCenter.setAlignment(HorizontalAlignment.CENTER);
+                boldCenter.setVerticalAlignment(VerticalAlignment.CENTER);
+                setBorders(boldCenter);
 
                 // Получаем данные
                 String deviceName = device.getDeviceName();
@@ -439,25 +477,16 @@ public class DeviceDefectView extends VerticalLayout {
                 String finishDate = device.finishPartDate.getOrDefault(month, new HashMap<>()).getOrDefault(day, "—");
                 int totalPart = device.totalPartMap.getOrDefault(month, new HashMap<>()).getOrDefault(day, 0);
 
-                // Собираем все виды брака
                 Set<String> defects = device.deviceMap.entrySet().stream()
                         .filter(entry -> {
-                            // Получаем карту месяцев
                             HashMap<Integer, HashMap<Integer, Integer>> monthsMap = entry.getValue();
-
-                            // Считаем сумму по всем месяцам и дням
-                            int totalCount = monthsMap.values().stream()
-                                    .flatMap(daysMap -> daysMap.values().stream())
-                                    .mapToInt(Integer::intValue)
-                                    .sum();
-
-                            // Фильтруем по сумме > 0
-                            return totalCount != 0;
+                            HashMap<Integer, Integer> daysMap = monthsMap.get(month);
+                            int count = daysMap != null ? daysMap.getOrDefault(day, 0) : 0;
+                            return count > 0;
                         })
-                        .map(Map.Entry::getKey)  // берем ключ (название брака)
-                        .collect(Collectors.toSet());
+                        .map(Map.Entry::getKey)
+                        .collect(Collectors.toCollection(LinkedHashSet::new));
 
-                // Считаем общее количество брака
                 int defectTotal = 0;
                 Map<String, Integer> defectCounts = new LinkedHashMap<>();
                 for (String defect : defects) {
@@ -468,59 +497,99 @@ public class DeviceDefectView extends VerticalLayout {
                     defectTotal += count;
                 }
 
-                // Считаем процент брака
                 double defectPercent = totalPart > 0 ? (double) defectTotal / totalPart * 100 : 0;
 
                 int rowNum = 0;
 
-                // 1. Линия и диапазон дат
+                // A1 - линия
                 Row row1 = sheet.createRow(rowNum++);
-                row1.createCell(0).setCellValue(line);
-                row1.createCell(1).setCellValue(deviceName);
+                Cell cellLine = row1.createCell(0);
+                cellLine.setCellValue(line);
+                cellLine.setCellStyle(boldLeft);
 
+                // A2 - даты с точкой как разделителем
                 Row row2 = sheet.createRow(rowNum++);
-                row2.createCell(0).setCellValue(startDate + " - " + finishDate);
+                Cell cellDates = row2.createCell(0);
+                String dates = startDate + " - " + finishDate;
+                cellDates.setCellValue(dates);
+                cellDates.setCellStyle(boldLeft);
 
-                // 2. Партия
+                // Объединяем B1 и B2 - название устройства, выравнивание по центру и вертикали
+                sheet.addMergedRegion(new CellRangeAddress(0, 1, 1, 1));
+                Cell cellDevice = row1.createCell(1);
+                cellDevice.setCellValue(deviceName);
+                cellDevice.setCellStyle(boldCenter);
+
+                Cell cellDevice2 = row2.createCell(1);
+                cellDevice2.setCellStyle(boldCenter);
+
+                // Партия (шт) и значение
                 Row row3 = sheet.createRow(rowNum++);
-                row3.createCell(0).setCellValue("Партия (шт)");
-                row3.createCell(1).setCellValue(totalPart);
+                Cell cellPartLabel = row3.createCell(0);
+                cellPartLabel.setCellValue("Партия (шт)");
+                cellPartLabel.setCellStyle(boldLeft);
 
-                // 3. Брак по видам
+                Cell cellPartValue = row3.createCell(1);
+                cellPartValue.setCellValue(totalPart);
+                cellPartValue.setCellStyle(boldRight);
+
+                // Виды брака
                 for (String defect : defects) {
                     Row row = sheet.createRow(rowNum++);
-                    row.createCell(0).setCellValue(defect);
-                    row.createCell(1).setCellValue(defectCounts.get(defect));
+                    Cell cellDefect = row.createCell(0);
+                    cellDefect.setCellValue(defect);
+                    cellDefect.setCellStyle(normalLeft);
+
+                    Cell cellDefectCount = row.createCell(1);
+                    cellDefectCount.setCellValue(defectCounts.get(defect));
+                    cellDefectCount.setCellStyle(normalRight);
                 }
 
-                // 4. Итого (жёлтая строка)
+                // Итого (жёлтая строка)
                 Row rowItogo = sheet.createRow(rowNum++);
                 Cell cellItogo = rowItogo.createCell(0);
                 cellItogo.setCellValue("итого");
-                cellItogo.setCellStyle(yellowStyle);
+                cellItogo.setCellStyle(yellowBoldLeft);
 
-                Cell cellTotalDefect = rowItogo.createCell(1);
-                cellTotalDefect.setCellValue(defectTotal);
-                cellTotalDefect.setCellStyle(yellowStyle);
+                Cell cellItogoValue = rowItogo.createCell(1);
+                cellItogoValue.setCellValue(defectTotal);
+                cellItogoValue.setCellStyle(yellowBoldRight);
 
-                // 5. Процент брака (жёлтая строка)
+                // Процент брака
                 Row rowPercent = sheet.createRow(rowNum++);
-                rowPercent.createCell(0).setCellValue("процент брака");
-                rowPercent.createCell(1).setCellValue(String.format("%.2f%%", defectPercent));
+                Cell cellPercentLabel = rowPercent.createCell(0);
+                cellPercentLabel.setCellValue("процент брака");
+                cellPercentLabel.setCellStyle(boldLeft);
 
-                // Авто ширина
-                sheet.autoSizeColumn(0);
-                sheet.autoSizeColumn(1);
+                Cell cellPercentValue = rowPercent.createCell(1);
+                cellPercentValue.setCellValue(String.format("%.2f%%", defectPercent));
+                cellPercentValue.setCellStyle(boldRight);
+
+                // Автоширина с запасом
+                for (int col = 0; col <= 1; col++) {
+                    sheet.autoSizeColumn(col);
+                    int currentWidth = sheet.getColumnWidth(col);
+                    sheet.setColumnWidth(col, currentWidth + 512); // ~2 символа запаса
+                }
+
                 workbook.write(bos);
-                workbook.close();
-
                 return new ByteArrayInputStream(bos.toByteArray());
+
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
             }
         });
     }
+
+    // Вспомогательный метод для установки границ
+    private void setBorders(CellStyle style) {
+        style.setBorderTop(BorderStyle.THIN);
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBorderLeft(BorderStyle.THIN);
+        style.setBorderRight(BorderStyle.THIN);
+    }
+
 
     // проверка на наличие записи в выбранном месяце
     private boolean deviceHasAnyRecordInMonth(Device device, int monthValue) {
