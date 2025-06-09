@@ -33,6 +33,7 @@ import ru.markov.application.security.SecurityService;
 import ru.markov.application.service.Serial;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
@@ -52,6 +53,7 @@ public class DeviceDefectView extends VerticalLayout {
     private ComboBox<Month> monthSelect = new ComboBox<>();
     private int monthToOperations;
     private int dayToOperations;
+    DatePicker tempDatePicker = new DatePicker();
     Grid<Device> grid = new Grid<>(Device.class, false);
     Grid<String> gridDefect = new Grid<>();
 
@@ -218,6 +220,7 @@ public class DeviceDefectView extends VerticalLayout {
                 monthToOperations = selectedDate.getMonthValue();
                 dayToOperations = selectedDate.getDayOfMonth();
             }
+            tempDatePicker.setValue(datePicker.getValue());
         });
         return defectContent;
     }
@@ -436,11 +439,13 @@ public class DeviceDefectView extends VerticalLayout {
                 formLayout.add(field);
             }
         } else {
-            partTotalField.setValue(0);
+            partTotalField.setPlaceholder("0");
             lineComboBox.setValue("Линия 1");
+            finishDate.setValue(tempDatePicker.getValue());
+            finishDate.setReadOnly(true);
             for (String key : devices.get(deviceName).deviceMap.keySet()) {   // строки во временную мапу по ключам из device
                 IntegerField field = new IntegerField(key);
-                field.setValue(0);
+                field.setPlaceholder("0");
                 parameterFields.put(key, field);
                 formLayout.add(field);
             }
