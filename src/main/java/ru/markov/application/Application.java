@@ -18,6 +18,7 @@ public class Application implements AppShellConfigurator {
         TimeAdapter.initWorkTime();
         Serial.load();
         Serial.loadDevice();
+        Serial.loadPreset();
         BrigEdit.initSplitDistrictWorkersList();
     }
 }

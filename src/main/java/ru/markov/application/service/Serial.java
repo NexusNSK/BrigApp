@@ -12,6 +12,7 @@ import java.util.List;
 public class Serial {
     private static final String filename = "worker list.bin";
     private static final String defect_devise_file = "device.bin";
+    private static final String defect_presets = "defect presets.srl";
 
     private static final String workDir = System.getProperty("user.home");
 
@@ -85,4 +86,40 @@ public class Serial {
             System.out.println("Файл \"device.bin\" не был загружен");
         }
     }
+
+    public static void savePreset(){
+        try {
+            final String fullFilename = workDir + File.separator + defect_presets;
+            FileOutputStream fos = new FileOutputStream(fullFilename);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(DeviceDefectView.familyDefectList);
+            oos.close();
+            //System.out.println("Файл .bin был записан в резервную директорию " + workDir);
+            fos = new FileOutputStream("defect presets.srl");
+            oos = new ObjectOutputStream(fos);
+            oos.writeObject(DeviceDefectView.familyDefectList);
+            oos.close();
+            //System.out.println("Файл .bin был записан в основную директорию ");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void loadPreset(){
+        try {
+            System.out.println("...Ищу данные о пресетах брака...\n / | \\");
+            FileInputStream fis = new FileInputStream(workDir + File.separator + defect_presets);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            DeviceDefectView.familyDefectList = (HashMap<String, String>) ois.readObject();
+            System.out.println("...Список пресетов был успешно загружен из основного файла...");
+            ois.close();
+            System.out.println("Загружено пресетов: " + DeviceDefectView.familyDefectList.size());
+        } catch (IOException e) {
+            DeviceDefectView.familyDefectList = new HashMap<String, String>();
+            System.out.println("Файл \"defect presets.srl\" не был загружен");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

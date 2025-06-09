@@ -22,14 +22,14 @@
     color: white;
 }
 .yellow-button {
-    background-color: rgba(255, 255, 0, 0.84);
+    background-color: rgb(255 255 0 / 70%);
     color: black;
 }
 .red-button {
-    background-color: rgba(255, 0, 0, 0.7);
+    background-color: rgb(255 0 0 / 70%);
     color: black;
 }
 .green-button {
-    background-color: rgba(31, 207, 22, 0.75);
+    background-color: rgb(48 217 40 / 70%);
     color: black;
 }

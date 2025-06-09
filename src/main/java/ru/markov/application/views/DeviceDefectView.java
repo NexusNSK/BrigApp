@@ -50,6 +50,7 @@ import com.vaadin.flow.component.datepicker.DatePicker.DatePickerI18n;
 public class DeviceDefectView extends VerticalLayout {
     private String selectDeviceName = "";
     public static HashMap<String, Device> devices = new HashMap<>();
+    public static HashMap<String, String> familyDefectList = new HashMap<>();
     private ComboBox<Month> monthSelect = new ComboBox<>();
     private int monthToOperations;
     private int dayToOperations;
@@ -124,6 +125,7 @@ public class DeviceDefectView extends VerticalLayout {
         addDevice.addClickListener(event -> {
             Dialog dialogAddDevice = new Dialog();
             TextField newDeviceField = new TextField("Введите название устройства");
+            newDeviceField.setWidth("100%");
             Button addButton = new Button("Добавить", e -> {
                 String newDevice = newDeviceField.getValue();
                 if (newDevice != null && !newDevice.trim().isEmpty()) {
@@ -136,7 +138,14 @@ public class DeviceDefectView extends VerticalLayout {
                 }
                 Serial.saveDevice();
             });
-            dialogAddDevice.add(new VerticalLayout(newDeviceField, addButton));
+            ComboBox<String> familyDefect = new ComboBox<>();
+            if (familyDefectList.isEmpty()) {
+                familyDefect.setPlaceholder("Нет пресетов брака");
+            } else familyDefect.setItems(familyDefectList.keySet());
+
+            HorizontalLayout horLay = new HorizontalLayout();
+            horLay.add(addDevice, familyDefect);
+            dialogAddDevice.add(new VerticalLayout(newDeviceField, horLay));
             dialogAddDevice.open();
         });
 
@@ -164,9 +173,9 @@ public class DeviceDefectView extends VerticalLayout {
                 dialogDefect.close();
                 Serial.saveDevice();
             }
-
             gridDefect.setItems(devices.get(selectedKey).deviceMap.keySet());
         });
+
         saveButton.setIcon(new Icon(VaadinIcon.CURLY_BRACKETS));
         saveButton.setClassName("green-button");
         dialogDefect.add(itemsLayout, addItemButton, saveButton);
@@ -179,7 +188,6 @@ public class DeviceDefectView extends VerticalLayout {
                 dialogDefect.open();
             }
         });
-
 
         gridDefect.addColumn(key -> key).setHeader("Наименование брака");
         gridDefect.addComponentColumn(key -> {
@@ -203,8 +211,15 @@ public class DeviceDefectView extends VerticalLayout {
                 gridDefect.setItems(Collections.emptyList());
             }
         });
+        Button editDefectPreset = new Button("Настроить пересеты");
+        editDefectPreset.setIcon(new Icon(VaadinIcon.EDIT));
+        editDefectPreset.addClickListener(click -> {
+            openFormEditPresets();
+        });
 
-        settingsContent.add(addDevice, comboBox, editDefect, gridDefect);
+        HorizontalLayout editButtonLayout = new HorizontalLayout();
+        editButtonLayout.add(editDefect, editDefectPreset);
+        settingsContent.add(addDevice, comboBox, editButtonLayout, gridDefect);
         return settingsContent;
     }
         // наполнение вкладки "учёт"
@@ -398,6 +413,42 @@ public class DeviceDefectView extends VerticalLayout {
 
         deviceDialog.add(deviceListBox, selectButton);
         deviceDialog.open();
+    }
+
+
+    //НЕ СОХРАНЯЕТ МАПУ, РАЗОБРАТЬСЯ С УСЛОВИЕМ
+    private void openFormEditPresets(){
+        Dialog presetDialog = new Dialog();
+        VerticalLayout layout = new VerticalLayout();
+        TextField presetName = new TextField();
+        presetName.setPlaceholder("Название пресета");
+        Button addItemButton = new Button("Добавить пункт");
+        addItemButton.addClickListener(e -> {
+            TextField keyField = new TextField("Наименование брака");
+            layout.add(keyField);if (presetName.getValue() != null && !presetName.getValue().isEmpty()) {
+                for (Component comp : layout.getChildren().toList()) {
+                    if (comp instanceof TextField) {
+                        String key = keyField.getValue();
+                        if (key != null) {
+                            familyDefectList.put(presetName.getValue(), key);
+                            System.out.println(familyDefectList.toString());
+                        }
+                    }
+                }
+            }
+        });
+
+        Button saveButton = new Button("Сохранить", e -> {
+            presetDialog.close();
+            Serial.savePreset();
+        });
+        saveButton.setClassName("green-button");
+        HorizontalLayout addSaveLayout = new HorizontalLayout();
+        addSaveLayout.add(addItemButton, saveButton);
+
+        layout.add(presetName);
+        presetDialog.add(layout, addSaveLayout);
+        presetDialog.open();
     }
 
         // окно ввода количества брака
@@ -641,7 +692,6 @@ public class DeviceDefectView extends VerticalLayout {
         style.setBorderLeft(BorderStyle.THIN);
         style.setBorderRight(BorderStyle.THIN);
     }
-
 
     // проверка на наличие записи в выбранном месяце
     private boolean deviceHasAnyRecordInMonth(Device device, int monthValue) {
