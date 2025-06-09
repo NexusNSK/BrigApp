@@ -1,5 +1,5 @@
 .repoGrid::part(cell) {
-    border: 1px solid black;
+    border: 1px solid #050f55;
     box-sizing: border-box;
     font-size: 15px;
     display: flex;
@@ -20,4 +20,16 @@
 .repoGrid::part(row).first-row {
     background-color: #003366;
     color: white;
+}
+.yellow-button {
+    background-color: rgba(255, 255, 0, 0.84);
+    color: black;
+}
+.red-button {
+    background-color: rgba(255, 0, 0, 0.7);
+    color: black;
+}
+.green-button {
+    background-color: rgba(31, 207, 22, 0.75);
+    color: black;
 }
