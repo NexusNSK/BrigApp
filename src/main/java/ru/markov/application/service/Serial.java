@@ -6,6 +6,7 @@ import ru.markov.application.views.BrigEdit;
 import ru.markov.application.views.DeviceDefectView;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,12 +25,10 @@ public class Serial {
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(BrigEdit.workerList);
             oos.close();
-            //System.out.println("Файл .bin был записан в резервную директорию " + workDir);
             fos = new FileOutputStream("worker list.bin");
             oos = new ObjectOutputStream(fos);
             oos.writeObject(BrigEdit.workerList);
             oos.close();
-            //System.out.println("Файл .bin был записан в основную директорию ");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -82,7 +81,7 @@ public class Serial {
             ois.close();
             System.out.println("Загружено устройств: " + DeviceDefectView.devices.size());
         } catch (IOException e) {
-            DeviceDefectView.devices = new HashMap<String, Device>();
+            DeviceDefectView.devices = new HashMap<>();
             System.out.println("Файл \"device.bin\" не был загружен");
         }
     }
@@ -94,12 +93,10 @@ public class Serial {
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(DeviceDefectView.familyDefectList);
             oos.close();
-            //System.out.println("Файл .bin был записан в резервную директорию " + workDir);
             fos = new FileOutputStream("defect presets.srl");
             oos = new ObjectOutputStream(fos);
             oos.writeObject(DeviceDefectView.familyDefectList);
             oos.close();
-            //System.out.println("Файл .bin был записан в основную директорию ");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -110,12 +107,12 @@ public class Serial {
             System.out.println("...Ищу данные о пресетах брака...\n / | \\");
             FileInputStream fis = new FileInputStream(workDir + File.separator + defect_presets);
             ObjectInputStream ois = new ObjectInputStream(fis);
-            DeviceDefectView.familyDefectList = (HashMap<String, String>) ois.readObject();
+            DeviceDefectView.familyDefectList = (HashMap<String, ArrayList<String>>) ois.readObject();
             System.out.println("...Список пресетов был успешно загружен из основного файла...");
             ois.close();
             System.out.println("Загружено пресетов: " + DeviceDefectView.familyDefectList.size());
         } catch (IOException e) {
-            DeviceDefectView.familyDefectList = new HashMap<String, String>();
+            DeviceDefectView.familyDefectList = new HashMap<>();
             System.out.println("Файл \"defect presets.srl\" не был загружен");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);

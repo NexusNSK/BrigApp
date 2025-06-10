@@ -15,6 +15,8 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.listbox.ListBox;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -33,7 +35,6 @@ import ru.markov.application.security.SecurityService;
 import ru.markov.application.service.Serial;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
@@ -44,13 +45,15 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import com.vaadin.flow.component.datepicker.DatePicker.DatePickerI18n;
 
+
 @Route(value = "device_defect", layout = MainLayout.class)
 @PermitAll
 @CssImport("./grid.css")
 public class DeviceDefectView extends VerticalLayout {
     private String selectDeviceName = "";
     public static HashMap<String, Device> devices = new HashMap<>();
-    public static HashMap<String, String> familyDefectList = new HashMap<>();
+    public static HashMap<String, ArrayList<String>> familyDefectList = new HashMap<>();
+    public ArrayList<String> presets = new ArrayList<>();
     private ComboBox<Month> monthSelect = new ComboBox<>();
     private int monthToOperations;
     private int dayToOperations;
@@ -126,27 +129,32 @@ public class DeviceDefectView extends VerticalLayout {
             Dialog dialogAddDevice = new Dialog();
             TextField newDeviceField = new TextField("Введите название устройства");
             newDeviceField.setWidth("100%");
+            dialogAddDevice.open();
             Button addButton = new Button("Добавить", e -> {
                 String newDevice = newDeviceField.getValue();
                 if (newDevice != null && !newDevice.trim().isEmpty()) {
-                    devices.put(newDevice, new Device(newDevice));
+                    devices.put(newDevice, new Device(newDevice, presets));
                     dialogAddDevice.close();
+                    if (!devices.isEmpty()) comboBox.setValue(devices.get(newDevice).getDeviceName());
+                } else {
+                    Notification warning = Notification.show("Необходимо ввести название устройства.");
+                    warning.setPosition(Notification.Position.MIDDLE);
+                    warning.addThemeVariants(NotificationVariant.LUMO_WARNING);
                 }
                 comboBox.setItems(devices.keySet());
-                if (!devices.isEmpty()) {
-                    comboBox.setValue(devices.get(newDevice).getDeviceName());
-                }
                 Serial.saveDevice();
             });
             ComboBox<String> familyDefect = new ComboBox<>();
             if (familyDefectList.isEmpty()) {
                 familyDefect.setPlaceholder("Нет пресетов брака");
             } else familyDefect.setItems(familyDefectList.keySet());
-
+            familyDefect.addValueChangeListener(changeEvent -> {
+                presets = familyDefectList.get(familyDefect.getValue());
+            });
             HorizontalLayout horLay = new HorizontalLayout();
-            horLay.add(addDevice, familyDefect);
+            horLay.add(addButton, familyDefect);
             dialogAddDevice.add(new VerticalLayout(newDeviceField, horLay));
-            dialogAddDevice.open();
+
         });
 
         Dialog dialogDefect = new Dialog();
@@ -421,24 +429,27 @@ public class DeviceDefectView extends VerticalLayout {
         Dialog presetDialog = new Dialog();
         VerticalLayout layout = new VerticalLayout();
         TextField presetName = new TextField();
+        VerticalLayout otherFieldLayout = new VerticalLayout();
         presetName.setPlaceholder("Название пресета");
         Button addItemButton = new Button("Добавить пункт");
         addItemButton.addClickListener(e -> {
             TextField keyField = new TextField("Наименование брака");
-            layout.add(keyField);if (presetName.getValue() != null && !presetName.getValue().isEmpty()) {
-                for (Component comp : layout.getChildren().toList()) {
-                    if (comp instanceof TextField) {
-                        String key = keyField.getValue();
+            otherFieldLayout.add(keyField);
+        });
+
+        Button saveButton = new Button("Сохранить", e -> {
+            if (presetName.getValue() != null && !presetName.getValue().isEmpty()) {
+                for (Component comp : otherFieldLayout.getChildren().toList()) {
+                    if (comp instanceof TextField txt) {
+                        String key = txt.getValue();
                         if (key != null) {
-                            familyDefectList.put(presetName.getValue(), key);
-                            System.out.println(familyDefectList.toString());
+                            presets.add(key);
                         }
                     }
                 }
             }
-        });
-
-        Button saveButton = new Button("Сохранить", e -> {
+            familyDefectList.put(presetName.getValue(), presets);
+            System.out.println(presets.toString());
             presetDialog.close();
             Serial.savePreset();
         });
@@ -447,7 +458,7 @@ public class DeviceDefectView extends VerticalLayout {
         addSaveLayout.add(addItemButton, saveButton);
 
         layout.add(presetName);
-        presetDialog.add(layout, addSaveLayout);
+        presetDialog.add(layout, otherFieldLayout, addSaveLayout);
         presetDialog.open();
     }
 
