@@ -121,8 +121,8 @@ public class DeviceDefectView extends VerticalLayout {
         ComboBox<String> comboBox = new ComboBox<>("Выберите устройство");
         comboBox.setItems(devices.keySet());
         comboBox.setValue("Список устройств");
-
         addDevice.addClickListener(event -> {
+            // тут дополнить пресетом
             Dialog dialogAddDevice = new Dialog();
             TextField newDeviceField = new TextField("Введите название устройства");
             newDeviceField.setWidth("100%");
