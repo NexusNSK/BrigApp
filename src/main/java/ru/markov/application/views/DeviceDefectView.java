@@ -121,9 +121,9 @@ public class DeviceDefectView extends VerticalLayout {
         VerticalLayout settingsContent = new VerticalLayout();
 
         Button addDevice = new Button("Добавить устройство");
-        ComboBox<String> comboBox = new ComboBox<>("Выберите устройство");
-        comboBox.setItems(devices.keySet());
-        comboBox.setValue("Список устройств");
+        ComboBox<String> comboBoxSelectDevice = new ComboBox<>("Выберите устройство");
+        comboBoxSelectDevice.setItems(devices.keySet());
+        comboBoxSelectDevice.setValue("Список устройств");
         addDevice.addClickListener(event -> {
             // тут дополнить пресетом
             Dialog dialogAddDevice = new Dialog();
@@ -135,14 +135,15 @@ public class DeviceDefectView extends VerticalLayout {
                 if (newDevice != null && !newDevice.trim().isEmpty()) {
                     devices.put(newDevice, new Device(newDevice, presets));
                     dialogAddDevice.close();
-                    if (!devices.isEmpty()) comboBox.setValue(devices.get(newDevice).getDeviceName());
+                    if (!devices.isEmpty()) comboBoxSelectDevice.setValue(devices.get(newDevice).getDeviceName());
                 } else {
                     Notification warning = Notification.show("Необходимо ввести название устройства.");
                     warning.setPosition(Notification.Position.MIDDLE);
                     warning.addThemeVariants(NotificationVariant.LUMO_WARNING);
                 }
-                comboBox.setItems(devices.keySet());
+                comboBoxSelectDevice.setItems(devices.keySet());
                 Serial.saveDevice();
+                comboBoxSelectDevice.setValue(newDeviceField.getValue());
             });
             ComboBox<String> familyDefect = new ComboBox<>();
             if (familyDefectList.isEmpty()) {
@@ -167,8 +168,8 @@ public class DeviceDefectView extends VerticalLayout {
         });
 
         Button saveButton = new Button("Сохранить", e -> {
-            selectDeviceName = comboBox.getValue();
-            String selectedKey = comboBox.getValue();
+            selectDeviceName = comboBoxSelectDevice.getValue();
+            String selectedKey = comboBoxSelectDevice.getValue();
             if (selectedKey != null && !selectedKey.equals("Список устройств")) {
                 for (Component comp : itemsLayout.getChildren().toList()) {
                     if (comp instanceof TextField keyField) {
@@ -190,7 +191,7 @@ public class DeviceDefectView extends VerticalLayout {
         Button editDefect = new Button("Редактировать список брака");
         editDefect.setIcon(new Icon(VaadinIcon.OPTIONS));
         editDefect.addClickListener(e -> {
-            if (comboBox.getValue() != null && !comboBox.getValue().equals("Список устройств")) {
+            if (comboBoxSelectDevice.getValue() != null && !comboBoxSelectDevice.getValue().equals("Список устройств")) {
                 itemsLayout.removeAll();
                 addItemButton.click();
                 dialogDefect.open();
@@ -201,7 +202,7 @@ public class DeviceDefectView extends VerticalLayout {
         gridDefect.addComponentColumn(key -> {
             Button deleteButton = new Button("Удалить");
             deleteButton.addClickListener(click -> {
-                String selectedKey = comboBox.getValue(); // текущий выбранный ключ в ComboBox
+                String selectedKey = comboBoxSelectDevice.getValue(); // текущий выбранный ключ в ComboBox
                 if (selectedKey != null && devices.containsKey(selectedKey)) {
                     devices.get(selectedKey).deviceMap.remove(key);
                     gridDefect.setItems(devices.get(selectedKey).deviceMap.keySet());
@@ -211,7 +212,7 @@ public class DeviceDefectView extends VerticalLayout {
             return deleteButton;
         }).setHeader("");
 
-        comboBox.addValueChangeListener(event -> {
+        comboBoxSelectDevice.addValueChangeListener(event -> {
             String selectedKey = event.getValue();
             if (selectedKey != null && devices.containsKey(selectedKey)) {
                 gridDefect.setItems(devices.get(selectedKey).deviceMap.keySet());
@@ -227,7 +228,7 @@ public class DeviceDefectView extends VerticalLayout {
 
         HorizontalLayout editButtonLayout = new HorizontalLayout();
         editButtonLayout.add(editDefect, editDefectPreset);
-        settingsContent.add(addDevice, comboBox, editButtonLayout, gridDefect);
+        settingsContent.add(addDevice, comboBoxSelectDevice, editButtonLayout, gridDefect);
         return settingsContent;
     }
         // наполнение вкладки "учёт"
@@ -425,44 +426,123 @@ public class DeviceDefectView extends VerticalLayout {
 
 
     //НЕ СОХРАНЯЕТ МАПУ, РАЗОБРАТЬСЯ С УСЛОВИЕМ
-    private void openFormEditPresets(){
+    private void openFormEditPresets() {
         Dialog presetDialog = new Dialog();
         VerticalLayout layout = new VerticalLayout();
+
+        Button editExistPreset = new Button("Редактировать пресет");
+        editExistPreset.addClickListener(clickEvent -> {
+            presetDialog.close();
+            openDialogEditPresets();
+        });
+
         TextField presetName = new TextField();
+        presetName.setPlaceholder("Введите пресет");
+        presetName.setLabel("Название пресета");
+
         VerticalLayout otherFieldLayout = new VerticalLayout();
-        presetName.setPlaceholder("Название пресета");
-        Button addItemButton = new Button("Добавить пункт");
+
+        Button addItemButton = new Button("Добавить брак");
         addItemButton.addClickListener(e -> {
             TextField keyField = new TextField("Наименование брака");
+            keyField.setPlaceholder("Пустая строка - удаление пункта");
             otherFieldLayout.add(keyField);
         });
 
         Button saveButton = new Button("Сохранить", e -> {
             if (presetName.getValue() != null && !presetName.getValue().isEmpty()) {
+                this.presets.clear();  // Очистим перед добавлением новых значений
                 for (Component comp : otherFieldLayout.getChildren().toList()) {
                     if (comp instanceof TextField txt) {
                         String key = txt.getValue();
-                        if (key != null) {
-                            presets.add(key);
+                        if (key != null && !key.isEmpty()) {
+                            this.presets.add(key);
                         }
                     }
                 }
+                familyDefectList.put(presetName.getValue(), this.presets);
+                System.out.println(this.presets.toString());
+                presetDialog.close();
+                Serial.savePreset();
+            } else {
+                Notification.show("Пожалуйста, введите название пресета", 3000, Notification.Position.MIDDLE);
             }
-            familyDefectList.put(presetName.getValue(), presets);
-            System.out.println(presets.toString());
-            presetDialog.close();
-            Serial.savePreset();
         });
         saveButton.setClassName("green-button");
-        HorizontalLayout addSaveLayout = new HorizontalLayout();
-        addSaveLayout.add(addItemButton, saveButton);
 
-        layout.add(presetName);
+        HorizontalLayout addSaveLayout = new HorizontalLayout(addItemButton, saveButton);
+        layout.add(editExistPreset, presetName);
         presetDialog.add(layout, otherFieldLayout, addSaveLayout);
         presetDialog.open();
     }
 
-        // окно ввода количества брака
+    private void openDialogEditPresets() {
+        Dialog editPresetDialog = new Dialog();
+        ComboBox<String> presetComboBox = new ComboBox<>("Выберите пресет");
+        VerticalLayout layout = new VerticalLayout();
+        VerticalLayout editorLayout = new VerticalLayout();
+
+        presetComboBox.setItems(familyDefectList.keySet());
+        presetComboBox.addValueChangeListener(changeEvent -> {
+            editorLayout.removeAll();
+            String selectedPreset = presetComboBox.getValue();
+            if (selectedPreset != null) {
+                List<String> items = familyDefectList.get(selectedPreset);
+                if (items != null) {
+                    for (String item : items) {
+                        TextField textField = new TextField();
+                        textField.setValue(item);
+                        textField.setWidthFull();
+                        textField.setPlaceholder("Пустая строка - удаление пункта");
+                        editorLayout.add(textField);
+                    }
+                }
+            }
+        });
+
+        Button addRowButton = new Button("Добавить брак", event -> {
+            TextField newTextField = new TextField();
+            newTextField.setWidthFull();
+            newTextField.setPlaceholder("Введите значение");
+            editorLayout.add(newTextField);
+        });
+
+        Button saveButton = new Button("Сохранить", event -> {
+            String selectedPreset = presetComboBox.getValue();
+            if (selectedPreset != null) {
+                ArrayList<String> newItems = new ArrayList<>();
+                for (Component comp : editorLayout.getChildren().toList()) {
+                    if (comp instanceof TextField) {
+                        String value = ((TextField) comp).getValue().trim();
+                        if (!value.isEmpty()) {
+                            newItems.add(value);
+                        }
+                    }
+                }
+                familyDefectList.put(selectedPreset, newItems);
+                Notification.show("Пресет успешно сохранён");
+                editPresetDialog.close();
+            } else {
+                Notification.show("Пожалуйста, выберите пресет для редактирования", 3000, Notification.Position.MIDDLE);
+            }
+        });
+        saveButton.setClassName("green-button");
+
+        Button cancelButton = new Button("Отмена", event -> editPresetDialog.close());
+        cancelButton.setClassName("red-button");
+
+        HorizontalLayout buttonsLayout = new HorizontalLayout(addRowButton, saveButton, cancelButton);
+        layout.add(presetComboBox, editorLayout, buttonsLayout);
+        layout.setSpacing(true);
+        layout.setPadding(true);
+
+        editPresetDialog.add(layout);
+        editPresetDialog.open();
+    }
+
+
+
+    // окно ввода количества брака
     private void openFormDialog(String deviceName) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         String dateString = "01.01.2025";
@@ -536,7 +616,8 @@ public class DeviceDefectView extends VerticalLayout {
 
     // создание StreamResource для отчета
     private StreamResource createExcelResource(Device device, int month, int day) {
-        return new StreamResource("Отчёт по " + device.getDeviceName() + ".xlsx", () -> {
+        String safeDeviceName = device.getDeviceName().replace('/', 'x').replace(',', 'x');
+        return new StreamResource("Отчёт по " + safeDeviceName + ".xlsx", () -> {
             try (Workbook workbook = new XSSFWorkbook();
                  ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
 
