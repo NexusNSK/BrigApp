@@ -33,7 +33,7 @@ import ru.markov.application.data.Worker;
 import ru.markov.application.security.SecurityService;
 import ru.markov.application.service.*;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 
@@ -61,14 +61,17 @@ public class WorkTime extends Div {
 
             BrigEdit.initSplitDistrictWorkersList();
             String username = securityService.getAuthenticatedUser().getUsername();
-            DatePicker.DatePickerI18n ruPicker = new DatePicker.DatePickerI18n();
-            ruPicker.setDateFormat("dd.MM.yyyy");
-            ruPicker.setFirstDayOfWeek(1);
-            ruPicker.setMonthNames(List.of("Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"));
-            ruPicker.setWeekdays(List.of("Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"));
-            ruPicker.setWeekdaysShort(List.of(" __ВС__ ", " __ПН__ ", " __ВТ__ ", " __СР__ ", " __ЧТ__ ", " __ПТ__ ", " __СБ__"));
-            ruPicker.setToday("Сегодня");
-            ruPicker.setCancel("Отмена");
+            DatePicker.DatePickerI18n ruPicker = new DatePicker.DatePickerI18n()
+                    .setWeekdays(Arrays.asList(
+                            "Воскресенье", "Понедельник", "Вторник", "Среда",
+                            "Четверг", "Пятница", "Суббота"))
+                    .setWeekdaysShort(Arrays.asList("Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"))
+                    .setMonthNames(Arrays.asList(
+                            "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
+                            "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"))
+                    .setToday("Сегодня")
+                    .setCancel("Отмена")
+                    .setFirstDayOfWeek(1);
             workTimeDatePicker.setI18n(ruPicker);
             workTimeDatePicker.setValue(LocalDate.now());
             Grid<Worker> workTimeGrid = new Grid<>(Worker.class, false);

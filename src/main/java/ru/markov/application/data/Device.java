@@ -2,6 +2,7 @@ package ru.markov.application.data;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,11 +23,16 @@ public class Device implements Serializable, Comparable<Device>{
     //     HashMap<Месяц,  HashMap<День, сколько в партии>>
     public HashMap<Integer, HashMap<Integer, String>> lineMap = new HashMap<>();
     //     HashMap<Месяц.  HashMap<День, Линия>>
-    public HashMap<Integer, HashMap<Integer, String>> startPartDate = new HashMap();
+    public HashMap<Integer, HashMap<Integer, String>> startPartDate = new HashMap<>();
     //     HashMap<Месяц.  HashMap<День, Дата начало партии>>
-    public HashMap<Integer, HashMap<Integer, String>> finishPartDate = new HashMap();
+    public HashMap<Integer, HashMap<Integer, String>> finishPartDate = new HashMap<>();
     //     HashMap<Месяц.  HashMap<День, Дата окончания партии>>
 
+    public Device(String deviceName, ArrayList<String> parts) {
+        this.deviceName = deviceName;
+        initMapWithPreset(parts);
+        initOtherMap();
+    }
     public Device(String deviceName) {
         this.deviceName = deviceName;
         initOtherMap();
@@ -46,6 +52,10 @@ public class Device implements Serializable, Comparable<Device>{
     }
 
     public void initMapWithDefect(String defect) {
+        operateToInitMap(defect);
+    }
+
+    private void operateToInitMap(String defect) {
         deviceMap.put(defect, new HashMap<>()); // добавляем в мапу дефект и мапу с месяцами
         for (int month = 1; month <= 12; month++) {
             deviceMap.get(defect).put(month, new HashMap<>()); // добавляем 12 месяцев в мапу месяцев
@@ -53,8 +63,12 @@ public class Device implements Serializable, Comparable<Device>{
                 deviceMap.get(defect).get(month).put(day, 0); // добавляем каждому месяцу 31 день с дефолтным значением брака 0
             }
         }
-        //System.out.println("Для устройства " + deviceName + " был добавлен и проинициализирован пункт брака " + defect);
     }
+
+    public void initMapWithPreset(ArrayList<String> preset) {
+        preset.forEach(this::operateToInitMap);
+    }
+
 
     public void initOtherMap(){
         for (int month = 1; month <= 12; month++) {
