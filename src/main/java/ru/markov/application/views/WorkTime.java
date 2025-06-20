@@ -423,7 +423,7 @@ public class WorkTime extends Div {
                     .setWidth("170px")
                     .setFlexGrow(0);
 
-            switch (username) {
+            switch (securityService.getAuthenticatedUser().getUsername()) {
                 case "admin" -> fullNameColumn.setFooter("Сотрудников: " + BrigEdit.workerList.size());
                 case "volna1" ->
                         fullNameColumn.setFooter("Сотрудников: " + BrigEdit.mountMap.get(ConveyLine.LINE_1).size());

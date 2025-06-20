@@ -14,12 +14,13 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
-
+import org.springframework.cache.annotation.CacheEvict;
 
 
 @Route("login")
 @PageTitle("BrigApp א Вход")
 @AnonymousAllowed
+@CacheEvict(value = "users", key = "#username")
 
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
