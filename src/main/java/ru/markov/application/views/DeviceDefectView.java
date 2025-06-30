@@ -622,6 +622,7 @@ public class DeviceDefectView extends VerticalLayout {
                  ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
 
                 Sheet sheet = workbook.createSheet("Отчет");
+                sheet.autoSizeColumn(1);
 
                 // Шрифты
                 Font boldFont = workbook.createFont();
@@ -696,20 +697,19 @@ public class DeviceDefectView extends VerticalLayout {
 
                 int rowNum = 0;
 
-                // A1 - линия
+                // A1
                 Row row1 = sheet.createRow(rowNum++);
                 Cell cellLine = row1.createCell(0);
                 cellLine.setCellValue(line);
                 cellLine.setCellStyle(boldLeft);
 
-                // A2 - даты с точкой как разделителем
                 Row row2 = sheet.createRow(rowNum++);
                 Cell cellDates = row2.createCell(0);
                 String dates = startDate + " - " + finishDate;
                 cellDates.setCellValue(dates);
                 cellDates.setCellStyle(boldLeft);
 
-                // Объединяем B1 и B2 - название устройства, выравнивание по центру и вертикали
+                // B1 и B2
                 sheet.addMergedRegion(new CellRangeAddress(0, 1, 1, 1));
                 Cell cellDevice = row1.createCell(1);
                 cellDevice.setCellValue(deviceName);
@@ -718,7 +718,7 @@ public class DeviceDefectView extends VerticalLayout {
                 Cell cellDevice2 = row2.createCell(1);
                 cellDevice2.setCellStyle(boldCenter);
 
-                // Партия (шт.) и значение
+                // Партия
                 Row row3 = sheet.createRow(rowNum++);
                 Cell cellPartLabel = row3.createCell(0);
                 cellPartLabel.setCellValue("Партия (шт)");
@@ -740,7 +740,7 @@ public class DeviceDefectView extends VerticalLayout {
                     cellDefectCount.setCellStyle(normalRight);
                 }
 
-                // Итого (жёлтая строка)
+                // Итого
                 Row rowItogo = sheet.createRow(rowNum++);
                 Cell cellItogo = rowItogo.createCell(0);
                 cellItogo.setCellValue("итого");
