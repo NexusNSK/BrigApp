@@ -75,7 +75,6 @@ public class MainLayout extends AppLayout {
                 createTab(VaadinIcon.FILE_TABLE, "Отчёты", new RouterLink(Reports.class)),
                 createTab(VaadinIcon.SERVER, "Сервисный раздел", new RouterLink(ServiceTools.class)),
                 createTab(VaadinIcon.CALENDAR_USER, "Табель", new RouterLink(TableView.class)),
-                createTab(VaadinIcon.DATABASE, "Настройки БД", new RouterLink(BDView.class)),
                 createTab(VaadinIcon.CLUSTER, "Учёт брака", new RouterLink(DeviceDefectView.class)),
                 createTab(VaadinIcon.EXIT, "Отпуска", new RouterLink(Exit.class)));
 
