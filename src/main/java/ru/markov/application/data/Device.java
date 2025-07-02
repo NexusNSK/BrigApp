@@ -21,7 +21,7 @@ public class Device implements Serializable, Comparable<Device>{
     //      Обращаемся браку по ключу, указываем ключ месяца, ключ дня, получаем количество брака в конкретный день/партию
     public HashMap<Integer,HashMap<Integer, Integer>> totalPartMap = new HashMap<>();
     //     HashMap<Месяц,  HashMap<День, сколько в партии>>
-    public HashMap<Integer, HashMap<Integer, String>> lineMap = new HashMap<>();
+    public HashMap<Object, HashMap<Integer, String>> lineMap = new HashMap<Object, HashMap<Integer, String>>();
     //     HashMap<Месяц.  HashMap<День, Линия>>
     public HashMap<Integer, HashMap<Integer, String>> startPartDate = new HashMap<>();
     //     HashMap<Месяц.  HashMap<День, Дата начало партии>>
