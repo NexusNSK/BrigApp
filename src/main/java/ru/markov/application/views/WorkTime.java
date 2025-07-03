@@ -83,6 +83,7 @@ public class WorkTime extends Div {
             workTimeGrid.setWidthFull();
             workTimeGrid.setMinHeight("500px");
             workTimeGrid.setHeight("800px");
+            workTimeGrid.setAllRowsVisible(true);
             setItemForGrid(username, workTimeGrid);
 
 

@@ -449,6 +449,7 @@ public class BrigEdit extends Div {
                 });
                 grid.getElement().getThemeList().clear();
                 grid.getElement().getThemeList().add("spacing-m");
+                grid.setAllRowsVisible(true);
 
                 //добавляем возможность устанавливать диапазон отпусков для автозаполнения в табеле
                 // ---------------------------------------------------------
