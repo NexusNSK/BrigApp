@@ -48,7 +48,7 @@ import com.vaadin.flow.component.datepicker.DatePicker.DatePickerI18n;
 
 @Route(value = "device_defect", layout = MainLayout.class)
 @PermitAll
-@CssImport("themes/brigapp/styles.css")
+@CssImport("./styles.css")
 @CssImport("./grid.css")
 public class DeviceDefectView extends VerticalLayout {
     private String selectDeviceName = "";
@@ -635,7 +635,13 @@ public class DeviceDefectView extends VerticalLayout {
             parameterFields.forEach((k, v) -> params.put(k, v.getValue()));
             devices.get(deviceName).totalPartMap.get(monthToOperations).put(dayToOperations, batch);
             devices.get(deviceName).lineMap.get(monthToOperations).put(dayToOperations, lineComboBox.getValue());
-            params.forEach((defect, volume) -> devices.get(deviceName).deviceMap.get(defect).get(monthToOperations).put(dayToOperations, volume));
+            params.forEach((defect, volume) -> {
+                if (volume==null) {
+                    devices.get(deviceName).deviceMap.get(defect).get(monthToOperations).put(dayToOperations, 0);
+                } else {
+                    devices.get(deviceName).deviceMap.get(defect).get(monthToOperations).put(dayToOperations, volume);
+                }
+            });
             devices.get(deviceName).lineMap.get(monthToOperations).put(dayToOperations, lineComboBox.getValue());
             devices.get(deviceName).startPartDate.get(monthToOperations).put(dayToOperations, startDate.getValue().format(formatter));
             devices.get(deviceName).finishPartDate.get(monthToOperations).put(dayToOperations, finishDate.getValue().format(formatter));
