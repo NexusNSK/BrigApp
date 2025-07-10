@@ -29,6 +29,8 @@ import com.vaadin.flow.server.StreamResource;
 import jakarta.annotation.security.PermitAll;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import ru.markov.application.data.Device;
 import ru.markov.application.security.SecurityService;
@@ -656,11 +658,11 @@ public class DeviceDefectView extends VerticalLayout {
     private StreamResource createExcelResource(Device device, int month, int day) {
         String safeDeviceName = device.getDeviceName().replace('/', 'x').replace(',', 'x');
         return new StreamResource("Отчёт по " + safeDeviceName + ".xlsx", () -> {
-            try (Workbook workbook = new XSSFWorkbook();
+            try (Workbook workbook = new SXSSFWorkbook();
                  ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
 
-                Sheet sheet = workbook.createSheet("Отчет");
-                sheet.autoSizeColumn(1);
+                SXSSFSheet sheet = (SXSSFSheet) workbook.createSheet("Отчет");
+                sheet.trackAllColumnsForAutoSizing();
 
                 Font boldFont = workbook.createFont();
                 boldFont.setBold(true);
@@ -759,6 +761,7 @@ public class DeviceDefectView extends VerticalLayout {
                 cellPartValue.setCellValue(totalPart);
                 cellPartValue.setCellStyle(boldRight);
 
+
                 for (String defect : defects) {
                     Row row = sheet.createRow(rowNum++);
                     Cell cellDefect = row.createCell(0);
@@ -793,7 +796,7 @@ public class DeviceDefectView extends VerticalLayout {
                     int currentWidth = sheet.getColumnWidth(col);
                     sheet.setColumnWidth(col, currentWidth + 512);
                 }
-
+                sheet.setColumnWidth(1, (deviceName.length() * 256) + 512);
                 workbook.write(bos);
                 return new ByteArrayInputStream(bos.toByteArray());
 
