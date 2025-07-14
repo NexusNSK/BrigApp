@@ -504,7 +504,6 @@ public class WorkTime extends Div {
                 }
             }
 
-
             IntegerField setTimeEdit = new IntegerField();
             ValidationName timeValid = new ValidationName();
             setTimeEdit.setValue(8);
@@ -525,6 +524,7 @@ public class WorkTime extends Div {
                     "9", "8", "0",
                     "БОЛ",
                     "ОТП",
+                    "РАБ в ОТП",
                     "ОТГ", "АДМ");
             statusEditColumn.setWidthFull();
             addCloseHandler(statusEditColumn, editor);
@@ -560,7 +560,7 @@ public class WorkTime extends Div {
                     case HOSPITAL -> {
                         return "bol";
                     }
-                    case HOLIDAY -> {
+                    case HOLIDAY, HOLYWORK -> {
                         return "otpusk";
                     }
                     case NOTHING -> {

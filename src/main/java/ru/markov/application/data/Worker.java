@@ -74,7 +74,7 @@ public class Worker implements Serializable, Comparable<Worker> {
                     .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.WORK);
         }
     }
-
+    // проверка времени и статуса для "как вчера"
     public boolean checkTimeAndStatus(){
         boolean acceptChanges = true;
         if (!workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue()).get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth()).equals(WorkerStatus.NOTHING)) {
@@ -83,37 +83,34 @@ public class Worker implements Serializable, Comparable<Worker> {
         return acceptChanges;
     }
 
-    @JsonIgnore
+    // время и статус как вчера
     public void setWorkTimeLikeYesterday() {
         workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), getWorkTimeLikeYesterday());
     }
 
-    @JsonIgnore
+    // время и статус как в пятницу
     public void setWorkTimeLikeFriday() {
         workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), getWorkTimeLikeFriday());
     }
 
-    @JsonIgnore
+    // получить время в конкретный день
     public int getWorkTime() {
         return workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth());
     }
 
-    @JsonIgnore
     public int getWorkTimeLikeYesterday() {
         return workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth() - 1);
     }
 
-    @JsonIgnore
     public int getWorkTimeLikeFriday() {
         return workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                 .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth() - 3);
     }
 
-    @JsonIgnore
     public int getWorkTimeToPOI(int day) {
         return workTimeMassive.get(Reports.month).get(day);
     }
@@ -467,7 +464,6 @@ public class Worker implements Serializable, Comparable<Worker> {
         return timeSumm;
     }
 
-
     public String getPost() {
         String ps = "";
         switch (post) {
@@ -481,7 +477,6 @@ public class Worker implements Serializable, Comparable<Worker> {
         return ps;
     }
 
-
     public void setPost(String post) {
         switch (post) {
             case ("Бригадир монтажников") -> this.post = Post.BRIG_MOUNT;
@@ -492,7 +487,6 @@ public class Worker implements Serializable, Comparable<Worker> {
             case ("Техник") -> this.post = Post.TECHNIC;
         }
     }
-
 
     public String getDistrictToString() {
         return switch (district) {
@@ -505,11 +499,9 @@ public class Worker implements Serializable, Comparable<Worker> {
         };
     }
 
-
     public District getDistrict() {
         return this.district;
     }
-
 
     public void setDistrict(String district) {
         switch (district) {
@@ -533,7 +525,6 @@ public class Worker implements Serializable, Comparable<Worker> {
         initWorkerStatusMap();
     }
 
-
     public String getFullName() {
         return lastName + " " + firstName + " " + patronymic;
     }
@@ -550,21 +541,17 @@ public class Worker implements Serializable, Comparable<Worker> {
         this.firstName = firstName;
     }
 
-
     public String getLastName() {
         return this.lastName;
     }
-
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
-
     public String getPatronymic() {
         return this.patronymic;
     }
-
 
     public void setPatronymic(String patronymic) {
         this.patronymic = patronymic;
@@ -598,7 +585,10 @@ public class Worker implements Serializable, Comparable<Worker> {
                 workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                         .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.HOLIDAY);
             }
-
+            case ("РАБ в ОТП") -> {
+                workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
+                        .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.HOLYWORK);
+            }
             case ("ОТГ") -> //setWorkTime(0);
                     workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                             .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.OTRABOTKA);
@@ -643,7 +633,7 @@ public class Worker implements Serializable, Comparable<Worker> {
                 .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth())) {
             case WORK, OTRABOTKA, PERERABOTKA -> "Работает";
             case HOSPITAL -> "Больничный";
-            case HOLIDAY -> "Отпуск";
+            case HOLIDAY, HOLYWORK -> "Отпуск";
             case NOTHING -> "---";
             case ADMINOTP -> "Админ. отпуск";
         };
@@ -669,7 +659,7 @@ public class Worker implements Serializable, Comparable<Worker> {
         return switch (workerStatusMassive.get(Reports.month).get(day)) {
             case WORK, OTRABOTKA, PERERABOTKA -> "Работает";
             case HOSPITAL -> "Больничный";
-            case HOLIDAY -> "Отпуск";
+            case HOLIDAY, HOLYWORK -> "Отпуск";
             case NOTHING -> "---";
             case ADMINOTP -> "Админ. отпуск";
         };

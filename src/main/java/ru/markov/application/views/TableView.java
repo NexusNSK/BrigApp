@@ -62,7 +62,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -95,7 +95,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -129,7 +129,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -163,7 +163,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -197,7 +197,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -231,7 +231,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -265,7 +265,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -299,7 +299,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -333,7 +333,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -367,7 +367,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -401,7 +401,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -435,7 +435,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -469,7 +469,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -503,7 +503,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -537,7 +537,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -571,7 +571,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -605,7 +605,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -639,7 +639,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -673,7 +673,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -707,7 +707,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -741,7 +741,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -775,7 +775,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -809,7 +809,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -843,7 +843,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -877,7 +877,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -911,7 +911,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -945,7 +945,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -979,7 +979,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -1013,7 +1013,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -1047,7 +1047,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> {
                                 return "otpusk";
                             }
                             case NOTHING -> {
@@ -1081,7 +1081,7 @@ public class TableView extends VerticalLayout {
                             case HOSPITAL -> {
                                 return "bol";
                             }
-                            case HOLIDAY -> {
+                            case HOLIDAY, HOLYWORK -> { 
                                 return "otpusk";
                             }
                             case NOTHING -> {
