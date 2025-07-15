@@ -1,9 +1,9 @@
 @import "theme-editor.css";
 @media all and (max-width: 1100px) {
-  .list-view.editing .toolbar,
-  .list-view.editing .contact-grid {
-    display: none;
-  }
+    .list-view.editing .toolbar,
+    .list-view.editing .contact-grid {
+        display: none;
+    }
 }
 a[highlight] {
     font-weight: bold;
@@ -47,5 +47,22 @@ a[highlight] {
 /* Стиль для месяца */
 .v-combo-box {
     margin-bottom: 1rem;
+}
+
+/* Стиль для верхней панели */
+.main-layout-navbar {
+    height: 30px;
+    box-shadow: var(--lumo-box-shadow-s);
+}
+/* Убираем отступ у верхней панели */
+vaadin-app-layout::part(navbar) {
+    min-height: 0px;
+}
+.main-layout-button-2 {
+    height: 30px;
+    color: black;
+}
+vaadin-button.main-layout-button-2::part(label){
+    color: black;
 }
 

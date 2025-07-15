@@ -634,7 +634,7 @@ public class Worker implements Serializable, Comparable<Worker> {
             case WORK, OTRABOTKA, PERERABOTKA -> "Работает";
             case HOSPITAL -> "Больничный";
             case HOLIDAY, HOLYWORK -> "Отпуск";
-            case NOTHING -> "---";
+            case NOTHING -> " ";
             case ADMINOTP -> "Админ. отпуск";
         };
     }
@@ -660,7 +660,7 @@ public class Worker implements Serializable, Comparable<Worker> {
             case WORK, OTRABOTKA, PERERABOTKA -> "Работает";
             case HOSPITAL -> "Больничный";
             case HOLIDAY, HOLYWORK -> "Отпуск";
-            case NOTHING -> "---";
+            case NOTHING -> " ";
             case ADMINOTP -> "Админ. отпуск";
         };
     }

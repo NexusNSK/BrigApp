@@ -2,11 +2,8 @@
  * This file has been created by the Vaadin Theme Editor. Please note that
  * manual changes to individual CSS properties may be overwritten by the theme editor.
  */
-body { font-size:var(--lumo-font-size-m); }
+body { font-size:var(--lumo-font-size-s); }
 
-h1.main-layout-h1-1 {
-
-}
 .compact-grid {
   max-height: 300px;
   overflow-y: auto;
@@ -26,7 +23,6 @@ h1.main-layout-h1-1 {
   margin-bottom: 0.5rem;
 }
 
-
 vaadin-button.main-layout-button-1 {
   --lumo-button-size:var(--lumo-size-m);
   border-radius:var(--lumo-border-radius-m);
@@ -38,6 +34,12 @@ vaadin-button.main-layout-button-1::part(label) {
   color:rgb(231,34,34);
   font-size:var(--lumo-font-size-m);
   font-weight:normal;
+}
+
+:host(.work-time-grid) [part~="cell header-cell last-column-cell first-header-row-cell last-header-row-cell"] {
+  height: 60px;
+  min-height: 60px;
+  max-height: 60px;
 }
 
 vaadin-grid.work-time-grid::part(administrat) {

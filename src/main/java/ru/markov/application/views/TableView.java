@@ -1114,18 +1114,7 @@ public class TableView extends VerticalLayout {
     }
 
     public void setItemForGrid(String sc, Grid<Worker> grid) {
-        switch (sc) {
-            case "admin", "owner" -> grid.setItems(BrigEdit.workerList);
-            case "volna1" -> grid.setItems(BrigEdit.mountMap.get(ConveyLine.LINE_1));
-            case "volna2" -> grid.setItems(BrigEdit.mountMap.get(ConveyLine.LINE_2));
-            case "volna3" -> grid.setItems(BrigEdit.mountMap.get(ConveyLine.LINE_3));
-            case "volna4" -> grid.setItems(BrigEdit.mountMap.get(ConveyLine.LINE_4));
-            case "sborka1" -> grid.setItems(BrigEdit.builderMap.get(ConveyLine.LINE_1));
-            case "sborka2" -> grid.setItems(BrigEdit.builderMap.get(ConveyLine.LINE_2));
-            case "sborka3" -> grid.setItems(BrigEdit.builderMap.get(ConveyLine.LINE_3));
-            case "sborka4" -> grid.setItems(BrigEdit.builderMap.get(ConveyLine.LINE_4));
-            case "tech" -> grid.setItems(BrigEdit.allTech);
-        }
+        WorkTime.switchItemForGrid(sc, grid);
 
     }
 }

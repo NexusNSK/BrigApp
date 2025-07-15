@@ -33,7 +33,6 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 		LoginI18n login18n = LoginI18n.createDefault();
 
 		LoginI18n.Header login18nHeader = new LoginI18n.Header();
-		//login18nHeader.setTitle("BrigApp");
 		login18n.setHeader(login18nHeader);
 
 		LoginI18n.Form i18nForm = login18n.getForm();
@@ -63,11 +62,9 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 		loginOverlay.getElement().setAttribute("no-autofocus", "");
 		loginOverlay.addForgotPasswordListener(event -> visitorMode.getUI().ifPresent(ui -> ui.navigate("plan")));
 
+		add(loginOverlay, visitorMode);
 
 
-		add(/*new H1("BrigApp"),*/loginOverlay /*/login*/, visitorMode);
-		loginOverlay.getCustomFormArea().add(rememberMe);
-		//<theme-editor-local-classname>
 				loginOverlay.setOpened(true);
 		addClassName("login-view-vertical-layout-1");
 	}

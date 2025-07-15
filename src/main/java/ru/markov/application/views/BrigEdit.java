@@ -139,10 +139,6 @@ public class BrigEdit extends Div {
                 TextField firstNameT = new TextField("Имя"); //поле ввода имени при добавлении сотрудника
                 TextField lastNameT = new TextField("Фамилия"); //поле ввода фамилии при добавлении сотрудника
                 TextField fatherNameT = new TextField("Отчество"); //поле ввода отчества при добавлении сотрудника
-//
-                HorizontalLayout headerLayout = new HorizontalLayout();
-                headerLayout.setWidthFull();
-                headerLayout.setHeight("100px");
                 ComboBox<String> districtBox = new ComboBox<>("Бригада"); //поле выбора участка (волна, сборка, техники)
                 districtBox.setAllowCustomValue(true);
                 districtBox.setItems(
@@ -153,7 +149,6 @@ public class BrigEdit extends Div {
                         "Лаборатория 2",
                         "Лаборатория 5"
                 );
-                headerLayout.add(districtBox);
 //
                 ComboBox<String> lineBox = new ComboBox<>("Линия");
                 lineBox.setItems("1", "2", "3", "4", "Не распределено");
@@ -232,17 +227,14 @@ public class BrigEdit extends Div {
 
                 //объявление формы, отвечающей за добавление сотрудников и сохранения бригады
                 FormLayout formToAddWorkers = new FormLayout();
-                formToAddWorkers.add(lastNameT, firstNameT, fatherNameT, lineBox, postBox, addWorker, saveWorkers, instructArea);
+                formToAddWorkers.add(lastNameT, firstNameT, fatherNameT, lineBox, districtBox, postBox, addWorker, saveWorkers, instructArea);
                 formToAddWorkers.setResponsiveSteps(
                         new FormLayout.ResponsiveStep("600px", 3),
                         new FormLayout.ResponsiveStep("1500px", 6));
                 formToAddWorkers.setColspan(instructArea, 4);
                 formToAddWorkers.setMaxWidth("1700px");
 
-                add(headerLayout ,formToAddWorkers);
-
-                //HorizontalLayout topHead = new HorizontalLayout();
-
+                add(formToAddWorkers);
 
                 //объявление полей для таблицы со списком сотрудников
                 ValidationName firstNameValid = new ValidationName();
@@ -326,7 +318,6 @@ public class BrigEdit extends Div {
                     deleteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY,
                             ButtonVariant.LUMO_ERROR);
                     deleteButton.getStyle().set("margin-right", "auto");
-                    //   dialog.getFooter().add(deleteButton);
 
                     Button cancelButton = new Button("Отмена", (t) -> dialog.close());
                     cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -340,7 +331,6 @@ public class BrigEdit extends Div {
                 //объявление привязки изменяемого поля к объявляемому
                 Binder<Worker> binder = new Binder<>(Worker.class);
                 editor.setBinder(binder);
-                // editor.setBuffered(true);
 
                 //при изменении фамилии
                 TextField lastNameField = new TextField();
@@ -417,7 +407,6 @@ public class BrigEdit extends Div {
                         .bind(Worker::getPatronymic, Worker::setPatronymic);
                 fatherNameColumn.setEditorComponent(fatherNameField);
 
-
                 //объявление и конфигурация кнопки дял сохранения (или отмены) изменений в данных сотрудника
                 Button saveButton = new Button("Сохранить", e -> {
                     editor.save();
@@ -439,7 +428,6 @@ public class BrigEdit extends Div {
                 HorizontalLayout actions = new HorizontalLayout(saveButton,
                         cancelButton);
                 actions.setPadding(false);
-                //       editColumn.setEditorComponent(actions);
                 editor.addCancelListener(e -> {
                     firstNameValid.setText("");
                     lastNameValid.setText("");

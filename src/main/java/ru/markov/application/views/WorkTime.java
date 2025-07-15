@@ -12,6 +12,7 @@ import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.grid.editor.Editor;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -23,6 +24,7 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -45,7 +47,7 @@ import java.util.function.Consumer;
 public class WorkTime extends Div {
 
     public DatePicker workTimeDatePicker = new DatePicker();
-    private String dayOfWeek = LocalDate.now().getDayOfWeek().toString();
+
     public WorkTime(SecurityService securityService) {
 
         if (!securityService.getAuthenticatedUser().getUsername().equals("admin") & ServiceTools.serviceFlag) {
@@ -58,7 +60,6 @@ public class WorkTime extends Div {
             serviceMessage.setValue("Извините, идут сервисные работы.\nПовторите попытку позже.");
             add(serviceMessage);
         } else {
-
             BrigEdit.initSplitDistrictWorkersList();
             String username = securityService.getAuthenticatedUser().getUsername();
             DatePicker.DatePickerI18n ruPicker = new DatePicker.DatePickerI18n()
@@ -86,7 +87,6 @@ public class WorkTime extends Div {
             workTimeGrid.setAllRowsVisible(true);
             setItemForGrid(username, workTimeGrid);
 
-
             Editor<Worker> editor = workTimeGrid.getEditor();
             Binder<Worker> binder = new Binder<>(Worker.class);
             editor.setBinder(binder);
@@ -100,312 +100,12 @@ public class WorkTime extends Div {
             Button save = new Button("Записать время");
             save.addClickListener(buttonClickEvent -> {
                 Serial.save();
-                //System.out.println("Рабочее время было записано");
                 workTimeGrid.getDataProvider().refreshAll();
             });
 
-            Button likeYesterday = new Button("\"Как вчера\"");
-            likeYesterday.addClickListener(buttonClickEvent -> {
-                switch (username) {
-                    case "volna1" -> {
-                        for (Worker w : BrigEdit.workerList) {
-                            if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_1)) {
-                                if (w.checkTimeAndStatus()){
-                                    w.setWorkTimeLikeYesterday();
-                                    w.setWorkerStatusMassiveLikeYesterday();
-                                }
-                                else {
-                                    Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
-                                    notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
-                                    notification.setPosition(Notification.Position.MIDDLE);
-                                    notification.setDuration(9000);
-
-                                }
-                            }
-                        }
-                    }
-                    case "volna2" -> {
-                        for (Worker w : BrigEdit.workerList) {
-                            if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_2)) {
-                                if (w.checkTimeAndStatus()){
-                                    w.setWorkTimeLikeYesterday();
-                                    w.setWorkerStatusMassiveLikeYesterday();
-                                }
-                                else {
-                                    Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
-                                    notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
-                                    notification.setPosition(Notification.Position.MIDDLE);
-                                    notification.setDuration(9000);
-
-                                }
-                            }
-                        }
-                    }
-                    case "volna3" -> {
-                        for (Worker w : BrigEdit.workerList) {
-                            if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_3)) { if (w.checkTimeAndStatus()){
-                                w.setWorkTimeLikeYesterday();
-                                w.setWorkerStatusMassiveLikeYesterday();
-                            }
-                            else {
-                                Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
-                                notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
-                                notification.setPosition(Notification.Position.MIDDLE);
-                                notification.setDuration(9000);
-
-                            }
-                            }
-                        }
-                    }
-                    case "volna4" -> {
-                        for (Worker w : BrigEdit.workerList) {
-                            if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_4)) { if (w.checkTimeAndStatus()){
-                                w.setWorkTimeLikeYesterday();
-                                w.setWorkerStatusMassiveLikeYesterday();
-                            }
-                            else {
-                                Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
-                                notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
-                                notification.setPosition(Notification.Position.MIDDLE);
-                                notification.setDuration(9000);
-
-                            }
-                            }
-                        }
-                    }
-                    case "sborka1" -> {
-                        for (Worker w : BrigEdit.workerList) {
-                            if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_1)) { if (w.checkTimeAndStatus()){
-                                w.setWorkTimeLikeYesterday();
-                                w.setWorkerStatusMassiveLikeYesterday();
-                            }
-                            else {
-                                Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
-                                notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
-                                notification.setPosition(Notification.Position.MIDDLE);
-                                notification.setDuration(9000);
-
-                            }
-                            }
-                        }
-                    }
-                    case "sborka2" -> {
-                        for (Worker w : BrigEdit.workerList) {
-                            if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_2)) { if (w.checkTimeAndStatus()){
-                                w.setWorkTimeLikeYesterday();
-                                w.setWorkerStatusMassiveLikeYesterday();
-                            }
-                            else {
-                                Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
-                                notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
-                                notification.setPosition(Notification.Position.MIDDLE);
-                                notification.setDuration(9000);
-
-                            }
-                            }
-                        }
-                    }
-                    case "sborka3" -> {
-                        for (Worker w : BrigEdit.workerList) {
-                            if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_3)) { if (w.checkTimeAndStatus()){
-                                w.setWorkTimeLikeYesterday();
-                                w.setWorkerStatusMassiveLikeYesterday();
-                            }
-                            else {
-                                Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
-                                notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
-                                notification.setPosition(Notification.Position.MIDDLE);
-                                notification.setDuration(9000);
-
-                            }
-                            }
-                        }
-                    }
-                    case "sborka4" -> {
-                        for (Worker w : BrigEdit.workerList) {
-                            if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_4)) { if (w.checkTimeAndStatus()){
-                                w.setWorkTimeLikeYesterday();
-                                w.setWorkerStatusMassiveLikeYesterday();
-                            }
-                            else {
-                                Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
-                                notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
-                                notification.setPosition(Notification.Position.MIDDLE);
-                                notification.setDuration(9000);
-
-                            }
-                            }
-                        }
-                    }
-                    case "tech" -> {
-                        for (Worker w : BrigEdit.workerList) {
-                            if (w.getDistrict().equals(District.TECH) || w.getDistrict().equals(District.LAB1) || w.getDistrict().equals(District.LAB2) || w.getDistrict().equals(District.LAB5)) {
-                                if (w.checkTimeAndStatus()){
-                                    w.setWorkTimeLikeYesterday();
-                                    w.setWorkerStatusMassiveLikeYesterday();
-                                }
-                                else {
-                                    Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
-                                    notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
-                                    notification.setPosition(Notification.Position.MIDDLE);
-                                    notification.setDuration(9000);
-                                }
-                            }
-                        }
-                    }
-                }
-                workTimeGrid.getDataProvider().refreshAll();
-            });
-            Button likeFriday = new Button("\"Как в пятницу\"");
-            likeFriday.addClickListener(buttonClickEvent -> {
-                switch (username) {
-                    case "volna1" -> {
-                        for (Worker w : BrigEdit.workerList) {
-                            if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_1)) {
-                                if (w.checkTimeAndStatus()){
-                                    w.setWorkTimeLikeFriday();
-                                    w.setWorkerStatusMassiveLikeFriday();
-                                }
-                                else {
-                                    Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
-                                    notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
-                                    notification.setPosition(Notification.Position.MIDDLE);
-                                    notification.setDuration(9000);
-                                }
-                            }
-                        }
-                    }
-                    case "volna2" -> {
-                        for (Worker w : BrigEdit.workerList) {
-                            if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_2)) {
-                                if (w.checkTimeAndStatus()){
-                                    w.setWorkTimeLikeFriday();
-                                    w.setWorkerStatusMassiveLikeFriday();
-                                }
-                                else {
-                                    Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
-                                    notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
-                                    notification.setPosition(Notification.Position.MIDDLE);
-                                    notification.setDuration(9000);
-                                }
-                            }
-                        }
-                    }
-                    case "volna3" -> {
-                        for (Worker w : BrigEdit.workerList) {
-                            if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_3)) {
-                                if (w.checkTimeAndStatus()){
-                                    w.setWorkTimeLikeFriday();
-                                    w.setWorkerStatusMassiveLikeFriday();
-                                }
-                                else {
-                                    Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
-                                    notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
-                                    notification.setPosition(Notification.Position.MIDDLE);
-                                    notification.setDuration(9000);
-                                }
-                            }
-                        }
-                    }
-                    case "volna4" -> {
-                        for (Worker w : BrigEdit.workerList) {
-                            if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_4)) {
-                                if (w.checkTimeAndStatus()){
-                                    w.setWorkTimeLikeFriday();
-                                    w.setWorkerStatusMassiveLikeFriday();
-                                }
-                                else {
-                                    Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
-                                    notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
-                                    notification.setPosition(Notification.Position.MIDDLE);
-                                    notification.setDuration(9000);
-                                }
-                            }
-                        }
-                    }
-                    case "sborka1" -> {
-                        for (Worker w : BrigEdit.workerList) {
-                            if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_1)) {
-                                if (w.checkTimeAndStatus()){
-                                    w.setWorkTimeLikeFriday();
-                                    w.setWorkerStatusMassiveLikeFriday();
-                                }
-                                else {
-                                    Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
-                                    notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
-                                    notification.setPosition(Notification.Position.MIDDLE);
-                                    notification.setDuration(9000);
-                                }
-                            }
-                        }
-                    }
-                    case "sborka2" -> {
-                        for (Worker w : BrigEdit.workerList) {
-                            if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_2)) {
-                                if (w.checkTimeAndStatus()){
-                                    w.setWorkTimeLikeFriday();
-                                    w.setWorkerStatusMassiveLikeFriday();
-                                }
-                                else {
-                                    Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
-                                    notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
-                                    notification.setPosition(Notification.Position.MIDDLE);
-                                    notification.setDuration(9000);
-                                }
-                            }
-                        }
-                    }
-                    case "sborka3" -> {
-                        for (Worker w : BrigEdit.workerList) {
-                            if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_3)) {
-                                if (w.checkTimeAndStatus()){
-                                    w.setWorkTimeLikeFriday();
-                                    w.setWorkerStatusMassiveLikeFriday();
-                                }
-                                else {
-                                    Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
-                                    notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
-                                    notification.setPosition(Notification.Position.MIDDLE);
-                                    notification.setDuration(9000);
-                                }
-                            }
-                        }
-                    }
-                    case "sborka4" -> {
-                        for (Worker w : BrigEdit.workerList) {
-                            if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_4)) {
-                                if (w.checkTimeAndStatus()){
-                                    w.setWorkTimeLikeFriday();
-                                    w.setWorkerStatusMassiveLikeFriday();
-                                }
-                                else {
-                                    Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
-                                    notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
-                                    notification.setPosition(Notification.Position.MIDDLE);
-                                    notification.setDuration(9000);
-                                }
-                            }
-                        }
-                    }
-                    case "tech" -> {
-                        for (Worker w : BrigEdit.workerList) {
-                            if (w.getDistrict().equals(District.TECH) || w.getDistrict().equals(District.LAB1) || w.getDistrict().equals(District.LAB2) || w.getDistrict().equals(District.LAB5)) {
-                                if (w.checkTimeAndStatus()){
-                                    w.setWorkTimeLikeFriday();
-                                    w.setWorkerStatusMassiveLikeFriday();
-                                }
-                                else {
-                                    Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
-                                    notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
-                                    notification.setPosition(Notification.Position.MIDDLE);
-                                    notification.setDuration(9000);
-                                }
-                            }
-                        }
-                    }
-                }
-                workTimeGrid.getDataProvider().refreshAll();
-            });
+            Button likeYesterday = getLikeYesterday(username, workTimeGrid);
+            Button likeFriday = getLikeFriday(username, workTimeGrid);
+            String dayOfWeek = LocalDate.now().getDayOfWeek().toString();
             if (dayOfWeek.equals("MONDAY")) {
                 likeYesterday.setEnabled(false);
                 likeFriday.setEnabled(true);
@@ -426,25 +126,16 @@ public class WorkTime extends Div {
 
             switch (securityService.getAuthenticatedUser().getUsername()) {
                 case "admin" -> fullNameColumn.setFooter("Сотрудников: " + BrigEdit.workerList.size());
-                case "volna1" ->
-                        fullNameColumn.setFooter("Сотрудников: " + BrigEdit.mountMap.get(ConveyLine.LINE_1).size());
-                case "volna2" ->
-                        fullNameColumn.setFooter("Сотрудников: " + BrigEdit.mountMap.get(ConveyLine.LINE_2).size());
-                case "volna3" ->
-                        fullNameColumn.setFooter("Сотрудников: " + BrigEdit.mountMap.get(ConveyLine.LINE_3).size());
-                case "volna4" ->
-                        fullNameColumn.setFooter("Сотрудников: " + BrigEdit.mountMap.get(ConveyLine.LINE_4).size());
-                case "sborka1" ->
-                        fullNameColumn.setFooter("Сотрудников: " + BrigEdit.builderMap.get(ConveyLine.LINE_1).size());
-                case "sborka2" ->
-                        fullNameColumn.setFooter("Сотрудников: " + BrigEdit.builderMap.get(ConveyLine.LINE_2).size());
-                case "sborka3" ->
-                        fullNameColumn.setFooter("Сотрудников: " + BrigEdit.builderMap.get(ConveyLine.LINE_3).size());
-                case "sborka4" ->
-                        fullNameColumn.setFooter("Сотрудников: " + BrigEdit.builderMap.get(ConveyLine.LINE_4).size());
+                case "volna1" -> fullNameColumn.setFooter("Сотрудников: " + BrigEdit.mountMap.get(ConveyLine.LINE_1).size());
+                case "volna2" -> fullNameColumn.setFooter("Сотрудников: " + BrigEdit.mountMap.get(ConveyLine.LINE_2).size());
+                case "volna3" -> fullNameColumn.setFooter("Сотрудников: " + BrigEdit.mountMap.get(ConveyLine.LINE_3).size());
+                case "volna4" -> fullNameColumn.setFooter("Сотрудников: " + BrigEdit.mountMap.get(ConveyLine.LINE_4).size());
+                case "sborka1" -> fullNameColumn.setFooter("Сотрудников: " + BrigEdit.builderMap.get(ConveyLine.LINE_1).size());
+                case "sborka2" -> fullNameColumn.setFooter("Сотрудников: " + BrigEdit.builderMap.get(ConveyLine.LINE_2).size());
+                case "sborka3" -> fullNameColumn.setFooter("Сотрудников: " + BrigEdit.builderMap.get(ConveyLine.LINE_3).size());
+                case "sborka4" -> fullNameColumn.setFooter("Сотрудников: " + BrigEdit.builderMap.get(ConveyLine.LINE_4).size());
                 case "tech" -> fullNameColumn.setFooter("Сотрудников: " + BrigEdit.techListUPC.size());
             }
-
 
             Grid.Column<Worker> lineColumn = workTimeGrid.
                     addColumn(Worker::getLineToString)
@@ -463,13 +154,12 @@ public class WorkTime extends Div {
                     .setWidth("200px")
                     .setFlexGrow(1);
 
-
             Grid.Column<Worker> workTimeColumn = workTimeGrid
                     .addColumn(Worker::getWorkTime)
                     .setHeader("Время")
                     .setAutoWidth(false)
                     .setResizable(false)
-                    .setWidth("115px")
+                    .setWidth("30px")
                     .setFlexGrow(0);
 
             if (!(username.equals("admin"))) {
@@ -477,13 +167,42 @@ public class WorkTime extends Div {
                 workTimeColumn.setWidth("115px");
             }
 
+            Grid.Column<Worker> workerStatusColumn = workTimeGrid.addColumn(
+                            new ComponentRenderer<>(worker -> {
+                                Span statusSpan = new Span();
+                                String status = worker.getWorkerStatusMassive();
 
-            Grid.Column<Worker> workerStatusColumn = workTimeGrid.
-                    addColumn(Worker::getWorkerStatusMassive)
+                                // Add icon based on status
+                                if ("Больничный".equals(status)) {
+                                    Icon cross = VaadinIcon.DOCTOR_BRIEFCASE.create();
+                                    cross.setColor("red");
+                                    statusSpan.add(cross);
+                                } else if ("Отпуск".equals(status)) {
+                                    Icon palm = VaadinIcon.SUN_O.create(); // или PALM_TREE
+                                    palm.setColor("orange");
+                                    statusSpan.add(palm);
+                                } else if ("Админ. отпуск".equals(status)) {
+                                    Icon admin = VaadinIcon.TAXI.create();
+                                    admin.setColor("rebeccapurple");
+                                    statusSpan.add(admin);
+                                } else if ("Работает".equals(status)) {
+                                    Icon work = VaadinIcon.WORKPLACE.create();
+                                    work.setColor("hsl(237deg 74% 33% / 61%)");
+                                    statusSpan.add(work);
+                                }else if (" ".equals(status)) {
+                                    Icon nothing = VaadinIcon.ELLIPSIS_DOTS_H.create();
+                                    nothing.setColor("gray");
+                                    statusSpan.add(nothing);
+                                }
+
+                                statusSpan.add(" " + status);
+                                return statusSpan;
+                            })
+                    )
                     .setHeader("Статус")
                     .setAutoWidth(false)
                     .setResizable(true)
-                    .setWidth("150px")
+                    .setWidth("180px")
                     .setFlexGrow(1);
 
             //добавляем фильтры
@@ -534,7 +253,6 @@ public class WorkTime extends Div {
                     .bind(Worker::getWorkerStatusMassive, Worker::setWorkerStatusMassive);
             workerStatusColumn.setEditorComponent(statusEditColumn);
 
-
             workTimeGrid.addItemClickListener(e -> {
                 editor.editItem(e.getItem());
                 Component editorComponent = e.getColumn().getEditorComponent();
@@ -543,7 +261,6 @@ public class WorkTime extends Div {
                 }
                 workTimeGrid.getDataProvider().refreshAll();
             });
-
 
             editor.addCancelListener(e -> {
                 timeValid.setText("");
@@ -554,27 +271,13 @@ public class WorkTime extends Div {
 
             workTimeGrid.setPartNameGenerator(person -> {
                 switch (person.getWorkerStatus()) {
-                    case WORK -> {
-                        return "work";
-                    }
-                    case HOSPITAL -> {
-                        return "bol";
-                    }
-                    case HOLIDAY, HOLYWORK -> {
-                        return "otpusk";
-                    }
-                    case NOTHING -> {
-                        return "nothing";
-                    }
-                    case ADMINOTP -> {
-                        return "administrat";
-                    }
-                    case OTRABOTKA -> {
-                        return "otrabotka";
-                    }
-                    case PERERABOTKA -> {
-                        return "pererabotka";
-                    }
+                    case WORK -> {return "work";}
+                    case HOSPITAL -> {return "bol";}
+                    case HOLIDAY, HOLYWORK -> {return "otpusk";}
+                    case NOTHING -> {return "nothing";}
+                    case ADMINOTP -> {return "administrat";}
+                    case OTRABOTKA -> {return "otrabotka";}
+                    case PERERABOTKA -> {return "pererabotka";}
                 }
                 return null;
             });
@@ -583,7 +286,185 @@ public class WorkTime extends Div {
         }
     }
 
+    private static Button getLikeFriday(String username, Grid<Worker> workTimeGrid) {
+        Button likeFriday = new Button("\"Как в пятницу\"");
+        likeFriday.addClickListener(buttonClickEvent -> {
+            switch (username) {
+                case "volna1" -> {
+                    for (Worker w : BrigEdit.workerList) {
+                        if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_1)) {
+                            getCheckTimeAndStatus(w);
+                        }
+                    }
+                }
+                case "volna2" -> {
+                    for (Worker w : BrigEdit.workerList) {
+                        if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_2)) {
+                            getCheckTimeAndStatus(w);
+                        }
+                    }
+                }
+                case "volna3" -> {
+                    for (Worker w : BrigEdit.workerList) {
+                        if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_3)) {
+                            getCheckTimeAndStatus(w);
+                        }
+                    }
+                }
+                case "volna4" -> {
+                    for (Worker w : BrigEdit.workerList) {
+                        if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_4)) {
+                            getCheckTimeAndStatus(w);
+                        }
+                    }
+                }
+                case "sborka1" -> {
+                    for (Worker w : BrigEdit.workerList) {
+                        if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_1)) {
+                            getCheckTimeAndStatus(w);
+                        }
+                    }
+                }
+                case "sborka2" -> {
+                    for (Worker w : BrigEdit.workerList) {
+                        if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_2)) {
+                            getCheckTimeAndStatus(w);
+                        }
+                    }
+                }
+                case "sborka3" -> {
+                    for (Worker w : BrigEdit.workerList) {
+                        if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_3)) {
+                            getCheckTimeAndStatus(w);
+                        }
+                    }
+                }
+                case "sborka4" -> {
+                    for (Worker w : BrigEdit.workerList) {
+                        if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_4)) {
+                            getCheckTimeAndStatus(w);
+                        }
+                    }
+                }
+                case "tech" -> {
+                    for (Worker w : BrigEdit.workerList) {
+                        if (w.getDistrict().equals(District.TECH) || w.getDistrict().equals(District.LAB1) || w.getDistrict().equals(District.LAB2) || w.getDistrict().equals(District.LAB5)) {
+                            getCheckTimeAndStatus(w);
+                        }
+                    }
+                }
+            }
+            workTimeGrid.getDataProvider().refreshAll();
+        });
+        return likeFriday;
+    }
+
+    private static void getCheckTimeAndStatus(Worker w) {
+        if (w.checkTimeAndStatus()){
+            w.setWorkTimeLikeFriday();
+            w.setWorkerStatusMassiveLikeFriday();
+        }
+        else {
+            Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
+            notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
+            notification.setPosition(Notification.Position.MIDDLE);
+            notification.setDuration(9000);
+        }
+    }
+
+    private static Button getLikeYesterday(String username, Grid<Worker> workTimeGrid) {
+        Button likeYesterday = new Button("\"Как вчера\"");
+        likeYesterday.addClickListener(buttonClickEvent -> {
+            switch (username) {
+                case "volna1" -> {
+                    for (Worker w : BrigEdit.workerList) {
+                        if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_1)) {
+                            getCheckTimeAndStatusLikeYesterday(w);
+                        }
+                    }
+                }
+                case "volna2" -> {
+                    for (Worker w : BrigEdit.workerList) {
+                        if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_2)) {
+                            getCheckTimeAndStatusLikeYesterday(w);
+                        }
+                    }
+                }
+                case "volna3" -> {
+                    for (Worker w : BrigEdit.workerList) {
+                        if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_3)) {
+                            getCheckTimeAndStatusLikeYesterday(w);
+                        }
+                    }
+                }
+                case "volna4" -> {
+                    for (Worker w : BrigEdit.workerList) {
+                        if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_4)) {
+                            getCheckTimeAndStatusLikeYesterday(w);
+                        }
+                    }
+                }
+                case "sborka1" -> {
+                    for (Worker w : BrigEdit.workerList) {
+                        if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_1)) {
+                            getCheckTimeAndStatusLikeYesterday(w);
+                        }
+                    }
+                }
+                case "sborka2" -> {
+                    for (Worker w : BrigEdit.workerList) {
+                        if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_2)) {
+                            getCheckTimeAndStatusLikeYesterday(w);
+                        }
+                    }
+                }
+                case "sborka3" -> {
+                    for (Worker w : BrigEdit.workerList) {
+                        if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_3)) {
+                            getCheckTimeAndStatusLikeYesterday(w);
+                        }
+                    }
+                }
+                case "sborka4" -> {
+                    for (Worker w : BrigEdit.workerList) {
+                        if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_4)) {
+                            getCheckTimeAndStatusLikeYesterday(w);
+                        }
+                    }
+                }
+                case "tech" -> {
+                    for (Worker w : BrigEdit.workerList) {
+                        if (w.getDistrict().equals(District.TECH) || w.getDistrict().equals(District.LAB1) || w.getDistrict().equals(District.LAB2) || w.getDistrict().equals(District.LAB5)) {
+                            getCheckTimeAndStatusLikeYesterday(w);
+                        }
+                    }
+                }
+            }
+            workTimeGrid.getDataProvider().refreshAll();
+        });
+        return likeYesterday;
+    }
+
+    private static void getCheckTimeAndStatusLikeYesterday(Worker w) {
+        if (w.checkTimeAndStatus()){
+            w.setWorkTimeLikeYesterday();
+            w.setWorkerStatusMassiveLikeYesterday();
+        }
+        else {
+            Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
+            notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
+            notification.setPosition(Notification.Position.MIDDLE);
+            notification.setDuration(9000);
+
+        }
+    }
+
     public void setItemForGrid(String sc, Grid<Worker> grid) {
+        switchItemForGrid(sc, grid);
+
+    }
+
+    static void switchItemForGrid(String sc, Grid<Worker> grid) {
         switch (sc) {
             case "admin", "owner" -> grid.setItems(BrigEdit.workerList);
             case "volna1" -> grid.setItems(BrigEdit.mountMap.get(ConveyLine.LINE_1));
@@ -596,7 +477,6 @@ public class WorkTime extends Div {
             case "sborka4" -> grid.setItems(BrigEdit.builderMap.get(ConveyLine.LINE_4));
             case "tech" -> grid.setItems(BrigEdit.allTech);
         }
-
     }
 
     private static void addCloseHandler(Component textField, Editor<Worker> editor) {
@@ -606,15 +486,16 @@ public class WorkTime extends Div {
     }
 
     private static Component createFilterHeader(Consumer<String> filterChangeConsumer) {
-        TextField textField = new TextField();
-        textField.setValueChangeMode(ValueChangeMode.EAGER);
-        textField.setClearButtonVisible(true);
-        textField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        textField.setWidthFull();
-        textField.getStyle().set("max-width", "100%");
-        textField.addValueChangeListener(
+        TextField field;
+        field = new TextField();
+        field.setValueChangeMode(ValueChangeMode.EAGER);
+        field.setClearButtonVisible(true);
+        field.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        field.setWidthFull();
+        field.getStyle().set("max-width", "100%");
+        field.addValueChangeListener(
                 e -> filterChangeConsumer.accept(e.getValue()));
-        VerticalLayout layout = new VerticalLayout(textField);
+        VerticalLayout layout = new VerticalLayout(field);
         layout.getThemeList().clear();
         layout.getThemeList().add("spacing-xs");
 

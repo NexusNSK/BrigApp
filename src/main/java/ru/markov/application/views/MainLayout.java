@@ -26,7 +26,9 @@ public class MainLayout extends AppLayout {
     private final SecurityService securityService;
     public MainLayout(SecurityService securityService) {
         this.securityService = securityService;
-        System.out.println(LocalDate.now() + " " + LocalTime.now() + " пользователь " + securityService.getAuthenticatedUser().getUsername() + " вошел в систему");
+        System.out.println(LocalDate.now() + " " + LocalTime.now().getHour()+
+                ":" + LocalTime.now().getMinute() + " " + " пользователь "
+                + securityService.getAuthenticatedUser().getUsername() + " вошел в систему");
         createHeader();
         addClassName("main-layout-app-layout-1");
         HorizontalLayout horizontalLayout = new HorizontalLayout();
@@ -58,7 +60,7 @@ public class MainLayout extends AppLayout {
         });
 
         var header = new HorizontalLayout(new DrawerToggle(), logo, theme, logout);
-        header.addClassName("main-layout-horizontal-layout-1");
+        header.addClassName("main-layout-navbar");
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         header.expand(logo);
         header.setWidthFull();
