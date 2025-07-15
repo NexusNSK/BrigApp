@@ -85,6 +85,8 @@ public class WorkTime extends Div {
             workTimeGrid.setMinHeight("500px");
             workTimeGrid.setHeight("800px");
             workTimeGrid.setAllRowsVisible(true);
+            workTimeGrid.getElement().setAttribute("theme", "wrap-cell-content lumo compact");
+
             setItemForGrid(username, workTimeGrid);
 
             Editor<Worker> editor = workTimeGrid.getEditor();
