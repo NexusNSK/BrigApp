@@ -11,7 +11,7 @@ import ru.markov.application.views.BrigEdit;
 
 @SpringBootApplication
 @Push
-@Theme(value = "brigapp")
+@Theme("brigapp")
 public class Application implements AppShellConfigurator {
     public static void main(String[] args) throws ClassNotFoundException {
         SpringApplication.run(Application.class, args);

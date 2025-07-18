@@ -4,11 +4,6 @@
  */
 body { font-size:var(--lumo-font-size-s); }
 
-
-
-h1.main-layout-h1-1 {
-
-}
 .compact-grid {
   max-height: 300px;
   overflow-y: auto;
@@ -27,7 +22,6 @@ h1.main-layout-h1-1 {
   margin-top: 1rem;
   margin-bottom: 0.5rem;
 }
-
 
 vaadin-button.main-layout-button-1 {
   --lumo-button-size:var(--lumo-size-m);
@@ -50,10 +44,12 @@ vaadin-button.main-layout-button-1::part(label) {
 /* Применяем к grid с темой lumo compact */
 vaadin-grid[theme~="compact"]::part(header-row),
 vaadin-grid[theme~="compact"]::part(header-cell) {
+  background-color: ghostwhite;
+  color: darkblue;
   height: 28px !important;
   line-height: 28px !important;
   padding: 0 0px !important;
-  font-size: 0.75rem !important;
+  font-size: 0.8rem !important;
   box-sizing: border-box;
   white-space: nowrap !important;
   overflow: hidden !important;
@@ -75,6 +71,11 @@ vaadin-grid::part(sort-indicator) {
   transform: scale(1); /* уменьшаем размер стрелки */
   margin-left: 4px;
 
+}
+vaadin-grid.work-time-grid {
+  height: auto;
+  max-height: none;
+  overflow-y: visible;
 }
 vaadin-grid.work-time-grid::part(administrat) {
   padding: 0px;
@@ -172,23 +173,14 @@ vaadin-login-form [slot="forgot-password"] {
 vaadin-login-form-wrapper::part(form) {
   background-blend-mode:screen;
   background-image:linear-gradient(rgb(255, 255, 255), rgb(60, 121, 197)),url(rm309-aew-001.jpg);
-  background-position-x:center;
+  background-position-x: center;
   background-repeat:no-repeat;
-  background-size:165%;
+  background-size: cover;
   block-size:auto;
-  border-radius:0% 0% 0% 0%;
-}
-
-vaadin-login-overlay-wrapper::part(backdrop) { background-color:rgba(0,0,0,0.07); }
-
-vaadin-login-overlay-wrapper::part(brand) {
-  background-blend-mode: screen;
-  background-image: linear-gradient(rgb(60, 121, 197), rgba(255, 255, 255, 0.34)),url(logoBAPP.png);
-  background-repeat:no-repeat;
-  background-size:120%;
   border-radius:0% 0% 0% 0%;
 }
 
 vaadin-login-overlay-wrapper::part(title) { color:rgba(0,0,0,0.53); }
 
 vaadin-vertical-layout { gap:var(--lumo-space-xs); }
+

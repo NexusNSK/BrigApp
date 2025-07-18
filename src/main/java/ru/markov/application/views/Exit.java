@@ -3,6 +3,7 @@ package ru.markov.application.views;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.JavaScript;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.IFrame;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -25,10 +26,8 @@ import java.nio.file.Path;
 @PageTitle("BrigApp א Отпуска")
 @PermitAll
 @JavaScript("./vacation-calendar.js")
-public class Exit extends VerticalLayout {
+public class Exit extends Div {
     public Exit(SecurityService securityService) throws IOException {
-        VerticalLayout layout = new VerticalLayout();
-        /*
         if (!securityService.getAuthenticatedUser().getUsername().equals("admin") & ServiceTools.serviceFlag) {
             TextArea serviceMessage = new TextArea();
             serviceMessage.setMinWidth("500px");
@@ -39,24 +38,12 @@ public class Exit extends VerticalLayout {
             serviceMessage.setValue("Извините, идут сервисные работы.\nПовторите попытку позже.");
             add(serviceMessage);
         } else {
-            add(loadPlanOtp(Files.readAllBytes(Path.of("src/main/resources/images/otpusk.png")), "plan"));
+            IFrame iframe = new IFrame("https://eltex.loc/vacation/");
+            addClassName("exit-layout");
+            iframe.setWidthFull();
+            iframe.setHeightFull();
+            add(iframe);
         }
     }
-
-    public Image loadPlanOtp(byte[] bytes, String alt) {
-        StreamResource sr = new StreamResource("otp", (InputStreamFactory) () -> new ByteArrayInputStream(bytes));
-        Image plan = new Image(sr, alt);
-        plan.setWidth("100%");
-        return plan;
-    }
-
-        */
-        layout.setWidthFull();
-        layout.setHeight("850px");
-        IFrame iframe = new IFrame("https://eltex.loc/vacation/");
-        iframe.setWidthFull();
-        iframe.setHeightFull();
-        add(layout);
-        layout.add(iframe);
-    }
 }
+

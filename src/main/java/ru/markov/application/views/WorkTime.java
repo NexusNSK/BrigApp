@@ -49,7 +49,7 @@ public class WorkTime extends Div {
     public DatePicker workTimeDatePicker = new DatePicker();
 
     public WorkTime(SecurityService securityService) {
-
+        addClassName("worktime-page");
         if (!securityService.getAuthenticatedUser().getUsername().equals("admin") & ServiceTools.serviceFlag) {
             TextArea serviceMessage = new TextArea();
             serviceMessage.setMinWidth("500px");
@@ -83,7 +83,7 @@ public class WorkTime extends Div {
 
             workTimeGrid.setWidthFull();
             workTimeGrid.setMinHeight("500px");
-            workTimeGrid.setHeight("800px");
+            //workTimeGrid.setHeight("800px");
             workTimeGrid.setAllRowsVisible(true);
             workTimeGrid.getElement().setAttribute("theme", "wrap-cell-content lumo compact");
 

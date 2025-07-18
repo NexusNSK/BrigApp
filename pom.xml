@@ -6,7 +6,7 @@
     <groupId>ru.markov.application</groupId>
     <artifactId>BrigApp</artifactId>
     <name>BrigApp</name>
-    <version>1.6.7</version>
+    <version>1.6.9</version>
     <packaging>jar</packaging>
 
     <properties>

@@ -60,9 +60,56 @@ vaadin-app-layout::part(navbar) {
 }
 .main-layout-button-2 {
     height: 30px;
-    color: black;
+    color: #2c3e50;
 }
-vaadin-button.main-layout-button-2::part(label){
+vaadin-button.main-layout-button-2::part(lable){
     color: black;
 }
 
+@media (min-width: 600px) {
+    /* Ваши мобильные стили */
+    vaadin-login-overlay-wrapper::part(content) {
+        align-items: center;
+        width: auto;
+    }
+    vaadin-login-overlay-wrapper::part(brand) {
+        height: 100px;
+        align-items: center;
+        background-blend-mode: screen;
+        background-image: linear-gradient(rgb(60, 121, 197), rgba(255, 255, 255, 0.34)),url(logoBAPP.png);
+        background-repeat:no-repeat;
+        background-size: cover;
+        border-radius:0% 0% 0% 0%;
+    }
+}
+
+@media (max-width: 599px) {
+    /* Ваши мобильные стили */
+    vaadin-login-overlay-wrapper::part(content) {
+        align-items: end;
+    }
+
+    vaadin-login-overlay-wrapper::part(brand) {
+        height: 190px;
+        align-items: start;
+        background-blend-mode: screen;
+        background-image: linear-gradient(rgb(60, 121, 197), rgba(255, 255, 255, 0.34)), url(logoBAPP.png);
+        background-repeat: no-repeat;
+        background-size: cover;
+        border-radius: 0% 0% 0% 0%;
+    }
+}
+.exit-layout {
+    padding: 0px;
+    height: 300vh;
+}
+
+.worktime-page {
+
+}
+
+.work-time-grid-sett {
+    height: auto;
+    max-height: none;
+    overflow-y: visible;
+}
