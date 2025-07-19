@@ -445,7 +445,7 @@ public class BrigEdit extends Div {
 
                 add(grid, firstNameValid, lastNameValid, fatherNameValid);
             } else {
-                Notification notification = Notification.show("У вас нет доступа с этой странице");
+                Notification notification = Notification.show("У вас нет доступа к этой странице");
                 notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
                 notification.setPosition(Notification.Position.MIDDLE);
 

@@ -26,10 +26,10 @@
     color: black;
 }
 .red-button {
-    background-color: rgb(255 0 0 / 70%);
+    background-color: rgba(255, 0, 0, 0.58);
     color: black;
 }
 .green-button {
-    background-color: rgb(48 217 40 / 70%);
+    background-color: rgba(48, 217, 40, 0.63);
     color: black;
 }

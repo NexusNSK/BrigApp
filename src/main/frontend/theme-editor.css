@@ -184,3 +184,18 @@ vaadin-login-overlay-wrapper::part(title) { color:rgba(0,0,0,0.53); }
 
 vaadin-vertical-layout { gap:var(--lumo-space-xs); }
 
+.total-count {
+  font-weight: bold;
+}
+
+.percent-defect {
+  font-weight: bold;
+  color: dodgerblue;
+}
+
+.cancel-button {
+  background-color: rgba(220, 20, 60, 0.58);
+  color: aliceblue;
+  float: right;
+}
+

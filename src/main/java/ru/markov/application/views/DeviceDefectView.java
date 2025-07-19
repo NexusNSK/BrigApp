@@ -86,9 +86,7 @@ public class DeviceDefectView extends VerticalLayout {
             serviceMessage.setPrefixComponent(VaadinIcon.QUESTION_CIRCLE.create());
             serviceMessage.setValue("Извините, идут сервисные работы.\nПовторите попытку позже.");
             add(serviceMessage);
-        } else if (securityService.getAuthenticatedUser().getUsername().equals("admin")
-                || securityService.getAuthenticatedUser().getUsername().equals("tech")) {
-
+        } else {
             Tabs tabs = new Tabs();
             grid.addClassName("repoGrid");
             VerticalLayout contentArea = new VerticalLayout();
@@ -97,9 +95,17 @@ public class DeviceDefectView extends VerticalLayout {
             Tab manageTab = new Tab("Учёт");
             VerticalLayout defectContent = createDefectContent();
             Tab tableDefect = new Tab("Сводка");
-            VerticalLayout tableDefectContent = createTableDefectContent();
-            tabs.add(tableDefect, manageTab, settingsTab);
-
+            VerticalLayout tableDefectContent = createTableDefectContent(securityService);
+            if (securityService.getAuthenticatedUser().getUsername().equals("admin") ||
+                securityService.getAuthenticatedUser().getUsername().equals("tech")) {
+                settingsTab.setEnabled(true);
+                manageTab.setEnabled(true);
+                tabs.add(tableDefect, manageTab, settingsTab);
+            } else {
+                settingsTab.setEnabled(false);
+                manageTab.setEnabled(false);
+                tabs.add(tableDefect, manageTab, settingsTab);
+            }
             tabs.addSelectedChangeListener(event -> {
                 contentArea.removeAll();
                 if (event.getSelectedTab().equals(settingsTab)) {
@@ -249,12 +255,12 @@ public class DeviceDefectView extends VerticalLayout {
     }
 
     // --- Вкладка "Сводка" с разделением по линиям ---
-    private VerticalLayout createTableDefectContent() {
+    private VerticalLayout createTableDefectContent(SecurityService securityService) {
         VerticalLayout tableDefectLayout = new VerticalLayout();
         initializeMonthSelector();
-        monthSelect.addValueChangeListener(event -> updateGroupedGrids(tableDefectLayout));
+        monthSelect.addValueChangeListener(event -> updateGroupedGrids(tableDefectLayout, securityService));
         tableDefectLayout.add(monthSelect);
-        updateGroupedGrids(tableDefectLayout);
+        updateGroupedGrids(tableDefectLayout, securityService);
         tableDefectLayout.setPadding(false);
         tableDefectLayout.setSpacing(false);
         return tableDefectLayout;
@@ -267,7 +273,7 @@ public class DeviceDefectView extends VerticalLayout {
         monthSelect.setValue(LocalDate.now().getMonth());
     }
 
-    private void updateGroupedGrids(VerticalLayout layout) {
+    private void updateGroupedGrids(VerticalLayout layout, SecurityService securityService) {
         layout.removeAll();
         layout.add(monthSelect);
 
@@ -321,7 +327,7 @@ public class DeviceDefectView extends VerticalLayout {
             Grid<Device> grid = new Grid<>(Device.class, false);
             grid.addClassName("compact-grid");
             configureGrid(grid);
-            addDayColumnsToGrid(grid, selectedMonth, lineName, monthValue);
+            addDayColumnsToGrid(grid, selectedMonth, lineName, monthValue, securityService);
             grid.setItems(devicesForLine);
             grid.setAllRowsVisible(true);
             layout.add(grid);
@@ -339,7 +345,7 @@ public class DeviceDefectView extends VerticalLayout {
                 .addClassName("repoGrid::part(cell).first-column-cell");
     }
 
-    private void addDayColumnsToGrid(Grid<Device> grid, Month selectedMonth, String lineName, int monthValue) {
+    private void addDayColumnsToGrid(Grid<Device> grid, Month selectedMonth, String lineName, int monthValue, SecurityService securityService) {
         List<Integer> days = getDaysInMonth(selectedMonth);
         days.forEach(day -> {
             grid.addComponentColumn(device -> {
@@ -369,7 +375,7 @@ public class DeviceDefectView extends VerticalLayout {
                     Icon content = VaadinIcon.CHECK.create();
                     content.getElement().getThemeList().add("badge success");
                     content.getStyle().set("cursor", "pointer");
-                    content.addClickListener(e -> showReportDialog(device, monthValue, day));
+                    content.addClickListener(e -> showReportDialog(device, monthValue, day, securityService));
                     return content;
                 } else {
                     return new Span("");
@@ -384,31 +390,32 @@ public class DeviceDefectView extends VerticalLayout {
                 .collect(Collectors.toList());
     }
 
-    private void showReportDialog(Device device, int month, int day) {
+    private void showReportDialog(Device device, int month, int day, SecurityService securityService) {
+        int totalDefectDeviceCount = 0;
         Dialog dialog = new Dialog();
         dialog.setWidth("500px");
 
-        VerticalLayout layout = new VerticalLayout();
-        layout.setPadding(true);
-        layout.setSpacing(true);
+        VerticalLayout reportDialogLayout = new VerticalLayout();
+        reportDialogLayout.setPadding(true);
+        reportDialogLayout.setSpacing(true);
 
         H3 title = new H3("Отчет по устройству " + device.getDeviceName());
-        layout.add(title);
+        reportDialogLayout.add(title);
 
         H4 line = new H4(device.lineMap.get(month).get(day));
-        layout.add(line);
+        reportDialogLayout.add(line);
 
         H4 startFinishPart = new H4(device.startPartDate.get(month).get(day) + " - " + device.finishPartDate.get(month).get(day)+"\n");
-        layout.add(startFinishPart);
+        reportDialogLayout.add(startFinishPart);
 
         Integer count = device.totalPartMap
                 .get(month)
                 .get(day);
         Span countSpan = new Span("Количество в партии: " + count);
-        layout.add(countSpan);
+        reportDialogLayout.add(countSpan);
 
         H4 defectsTitle = new H4("Брак в этой партии:");
-        layout.add(defectsTitle);
+        reportDialogLayout.add(defectsTitle);
 
         boolean hasDefects = false;
         for (Map.Entry<String, HashMap<Integer, HashMap<Integer, Integer>>> defectEntry : device.deviceMap.entrySet()) {
@@ -419,11 +426,18 @@ public class DeviceDefectView extends VerticalLayout {
             if (defectCount != null && defectCount > 0) {
                 hasDefects = true;
                 Span defectSpan = new Span(defectName + ": " + defectCount);
-                layout.add(defectSpan);
+                reportDialogLayout.add(defectSpan);
+                totalDefectDeviceCount += defectCount;
             }
         }
+        Span totalCount = new Span("Всего брака: " + totalDefectDeviceCount);
+        totalCount.addClassName("total-count");
+        reportDialogLayout.add(totalCount);
+        Span percentDefect = new Span("Процент брака: " + String.format("%.2f",((float) totalDefectDeviceCount/count*100)) + "%");
+        percentDefect.addClassName("percent-defect");
+        reportDialogLayout.add(percentDefect);
         if (!hasDefects) {
-            layout.add(new Span("Брак не зафиксирован."));
+            reportDialogLayout.add(new Span("Брак не зафиксирован."));
         }
 
         Button closeButton = new Button("Закрыть", e -> dialog.close());
@@ -443,8 +457,13 @@ public class DeviceDefectView extends VerticalLayout {
             dayToOperations = day;
             openFormDialog(device.getDeviceName());
         });
-        layout.add(downloadLink, correctReport, closeButton);
-        dialog.add(layout);
+        if (securityService.getAuthenticatedUser().getUsername().equals("admin")
+                ||securityService.getAuthenticatedUser().getUsername().equals("tech")) {
+            reportDialogLayout.add(downloadLink, correctReport, closeButton);
+        } else {
+            reportDialogLayout.add(downloadLink, closeButton);
+        }
+        dialog.add(reportDialogLayout);
         dialog.open();
     }
 
@@ -651,7 +670,11 @@ public class DeviceDefectView extends VerticalLayout {
             formDialog.close();
         });
         saveButton.setClassName("green-button");
-        formDialog.add(formLayout, saveButton);
+        Button closeButton = new Button("Отмена", event -> {
+            formDialog.close();
+        } );
+        closeButton.setClassName("cancel-button");
+        formDialog.add(formLayout, saveButton, closeButton);
         formDialog.open();
     }
 
