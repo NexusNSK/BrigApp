@@ -31,11 +31,9 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import ru.markov.application.data.Device;
 import ru.markov.application.security.SecurityService;
 import ru.markov.application.service.Serial;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
@@ -657,11 +655,7 @@ public class DeviceDefectView extends VerticalLayout {
             devices.get(deviceName).totalPartMap.get(monthToOperations).put(dayToOperations, batch);
             devices.get(deviceName).lineMap.get(monthToOperations).put(dayToOperations, lineComboBox.getValue());
             params.forEach((defect, volume) -> {
-                if (volume==null) {
-                    devices.get(deviceName).deviceMap.get(defect).get(monthToOperations).put(dayToOperations, 0);
-                } else {
-                    devices.get(deviceName).deviceMap.get(defect).get(monthToOperations).put(dayToOperations, volume);
-                }
+                devices.get(deviceName).deviceMap.get(defect).get(monthToOperations).put(dayToOperations, Objects.requireNonNullElse(volume, 0));
             });
             devices.get(deviceName).lineMap.get(monthToOperations).put(dayToOperations, lineComboBox.getValue());
             devices.get(deviceName).startPartDate.get(monthToOperations).put(dayToOperations, startDate.getValue().format(formatter));
