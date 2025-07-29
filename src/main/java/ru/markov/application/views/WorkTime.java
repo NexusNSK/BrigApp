@@ -106,15 +106,6 @@ public class WorkTime extends Div {
             });
 
             Button likeYesterday = getLikeYesterday(username, workTimeGrid);
-            Button likeFriday = getLikeFriday(username, workTimeGrid);
-            String dayOfWeek = LocalDate.now().getDayOfWeek().toString();
-            if (dayOfWeek.equals("MONDAY")) {
-                likeYesterday.setEnabled(false);
-                likeFriday.setEnabled(true);
-            } else {
-                likeYesterday.setEnabled(true);
-                likeFriday.setEnabled(false);
-            }
 
             Grid.Column<Worker> fullNameColumn = workTimeGrid
                     .addColumn(Worker::getFullNameWithInitials).setTextAlign(ColumnTextAlign.START)
@@ -284,93 +275,7 @@ public class WorkTime extends Div {
                 return null;
             });
 
-            add(workTimeDatePicker, save, likeYesterday, likeFriday, workTimeGrid);
-        }
-    }
-
-    private static Button getLikeFriday(String username, Grid<Worker> workTimeGrid) {
-        Button likeFriday = new Button("\"Как в пятницу\"");
-        likeFriday.addClickListener(buttonClickEvent -> {
-            switch (username) {
-                case "volna1" -> {
-                    for (Worker w : BrigEdit.workerList) {
-                        if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_1)) {
-                            getCheckTimeAndStatus(w);
-                        }
-                    }
-                }
-                case "volna2" -> {
-                    for (Worker w : BrigEdit.workerList) {
-                        if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_2)) {
-                            getCheckTimeAndStatus(w);
-                        }
-                    }
-                }
-                case "volna3" -> {
-                    for (Worker w : BrigEdit.workerList) {
-                        if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_3)) {
-                            getCheckTimeAndStatus(w);
-                        }
-                    }
-                }
-                case "volna4" -> {
-                    for (Worker w : BrigEdit.workerList) {
-                        if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_4)) {
-                            getCheckTimeAndStatus(w);
-                        }
-                    }
-                }
-                case "sborka1" -> {
-                    for (Worker w : BrigEdit.workerList) {
-                        if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_1)) {
-                            getCheckTimeAndStatus(w);
-                        }
-                    }
-                }
-                case "sborka2" -> {
-                    for (Worker w : BrigEdit.workerList) {
-                        if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_2)) {
-                            getCheckTimeAndStatus(w);
-                        }
-                    }
-                }
-                case "sborka3" -> {
-                    for (Worker w : BrigEdit.workerList) {
-                        if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_3)) {
-                            getCheckTimeAndStatus(w);
-                        }
-                    }
-                }
-                case "sborka4" -> {
-                    for (Worker w : BrigEdit.workerList) {
-                        if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_4)) {
-                            getCheckTimeAndStatus(w);
-                        }
-                    }
-                }
-                case "tech" -> {
-                    for (Worker w : BrigEdit.workerList) {
-                        if (w.getDistrict().equals(District.TECH) || w.getDistrict().equals(District.LAB1) || w.getDistrict().equals(District.LAB2) || w.getDistrict().equals(District.LAB5)) {
-                            getCheckTimeAndStatus(w);
-                        }
-                    }
-                }
-            }
-            workTimeGrid.getDataProvider().refreshAll();
-        });
-        return likeFriday;
-    }
-
-    private static void getCheckTimeAndStatus(Worker w) {
-        if (w.checkTimeAndStatus()){
-            w.setWorkTimeLikeFriday();
-            w.setWorkerStatusMassiveLikeFriday();
-        }
-        else {
-            Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
-            notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
-            notification.setPosition(Notification.Position.MIDDLE);
-            notification.setDuration(9000);
+            add(workTimeDatePicker, save, likeYesterday, workTimeGrid);
         }
     }
 
@@ -450,7 +355,6 @@ public class WorkTime extends Div {
     private static void getCheckTimeAndStatusLikeYesterday(Worker w) {
         if (w.checkTimeAndStatus()){
             w.setWorkTimeLikeYesterday();
-            w.setWorkerStatusMassiveLikeYesterday();
         }
         else {
             Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");

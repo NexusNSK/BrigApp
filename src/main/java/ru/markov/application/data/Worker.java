@@ -4,6 +4,7 @@ import ru.markov.application.service.*;
 import ru.markov.application.views.Reports;
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -63,23 +64,15 @@ public class Worker implements Serializable, Comparable<Worker> {
 
     // проверка времени и статуса для "как вчера"
     public boolean checkTimeAndStatus(){
-        boolean acceptChanges = true;
-        if (!workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue()).get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth()).equals(WorkerStatus.NOTHING)) {
-            acceptChanges = false;
-        }
-        return acceptChanges;
+        return workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue()).get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth()).equals(WorkerStatus.NOTHING);
     }
 
     // время и статус как вчера
     public void setWorkTimeLikeYesterday() {
         workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
-                .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), getWorkTimeLikeYesterday());
-    }
-
-    // время и статус как в пятницу
-    public void setWorkTimeLikeFriday() {
-        workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
-                .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), getWorkTimeLikeFriday());
+                .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), (Integer) getWorkTimeLikeYesterday().get(0));
+        workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
+                .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), (WorkerStatus) getWorkTimeLikeYesterday().get(1));
     }
 
     // получить время в конкретный день
@@ -88,15 +81,46 @@ public class Worker implements Serializable, Comparable<Worker> {
                 .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth());
     }
 
-    public int getWorkTimeLikeYesterday() {
-        return workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
-                .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth() - 1);
+    public ArrayList<Object> getWorkTimeLikeYesterday() {
+        ArrayList<Object> result = new ArrayList<>();
+        int defaultWorkTime = 0;
+        WorkerStatus defaultStatus = WorkerStatus.NOTHING;
+
+        LocalDate date = TimeAdapter.workTimeDatePicker.getValue();
+        date = date.minusDays(1);  // старт с предыдущего дня
+
+        LocalDate yearStart = LocalDate.of(date.getYear(), 1, 1);
+
+        while (!date.isBefore(yearStart)) {
+            int month = date.getMonthValue();     // 1..12
+            int day = date.getDayOfMonth();       // 1..31
+
+            HashMap<Integer, Integer> workTimeDayMap = workTimeMassive.get(month);
+            HashMap<Integer, WorkerStatus> statusDayMap = workerStatusMassive.get(month);
+
+            if (workTimeDayMap != null && statusDayMap != null) {
+                Integer workTime = workTimeDayMap.get(day);
+                WorkerStatus status = statusDayMap.get(day);
+
+                if (workTime != null && status != null) {
+                    if (!(workTime == 0 && status == WorkerStatus.NOTHING)) {
+                        result.add(workTime);
+                        result.add(status);
+                        return result;
+                    }
+                }
+            }
+
+            date = date.minusDays(1);  // откатываем дату ещё на один день назад
+        }
+
+        // Не нашли подходящих данных, возвращаем значения по умолчанию
+        result.add(defaultWorkTime);
+        result.add(defaultStatus);
+        //System.out.println("Не удалось найти учетные данные за этот год.");
+        return result;
     }
 
-    public int getWorkTimeLikeFriday() {
-        return workTimeMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
-                .get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth() - 3);
-    }
 
     public int getWorkTimeToPOI(int day) {
         return workTimeMassive.get(Reports.month).get(day);
@@ -241,10 +265,8 @@ public class Worker implements Serializable, Comparable<Worker> {
                 workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                         .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.HOLIDAY);
             }
-            case ("РАБ в ОТП") -> {
-                workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
-                        .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.HOLYWORK);
-            }
+            case ("РАБ в ОТП") -> workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
+                    .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.HOLYWORK);
             case ("ОТГ") -> //setWorkTime(0);
                     workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
                             .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), WorkerStatus.OTRABOTKA);
@@ -266,17 +288,8 @@ public class Worker implements Serializable, Comparable<Worker> {
                 .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), getWorkerStatusLikeYesterday());
     }
 
-    public void setWorkerStatusMassiveLikeFriday() {
-        workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue())
-                .put(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth(), getWorkerStatusLikeFriday());
-    }
-
     private WorkerStatus getWorkerStatusLikeYesterday() {
         return workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue()).get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth() - 1);
-    }
-
-    private WorkerStatus getWorkerStatusLikeFriday() {
-        return workerStatusMassive.get(TimeAdapter.workTimeDatePicker.getValue().getMonthValue()).get(TimeAdapter.workTimeDatePicker.getValue().getDayOfMonth() - 3);
     }
 
     public String getWorkerStatusMassive() {
