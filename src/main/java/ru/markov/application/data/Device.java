@@ -2,9 +2,7 @@ package ru.markov.application.data;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Device implements Serializable, Comparable<Device>{
     @Serial
@@ -18,15 +16,23 @@ public class Device implements Serializable, Comparable<Device>{
 
     public HashMap<String, HashMap<Integer,HashMap<Integer, Integer>>> deviceMap = new HashMap<>();
     //      HashMap<Брак,   HashMap<Месяц,  HashMap<День, количество>>>
-    //      Обращаемся браку по ключу, указываем ключ месяца, ключ дня, получаем количество брака в конкретный день/партию
+    //      Обращаемся к браку по ключу, указываем ключ месяца, ключ дня, получаем количество брака в конкретный день/партию
+
     public HashMap<Integer,HashMap<Integer, Integer>> totalPartMap = new HashMap<>();
     //     HashMap<Месяц,  HashMap<День, сколько в партии>>
-    public HashMap<Object, HashMap<Integer, String>> lineMap = new HashMap<Object, HashMap<Integer, String>>();
+
+    public HashMap<Integer, HashMap<Integer, String>> lineMap = new HashMap<>();
     //     HashMap<Месяц.  HashMap<День, Линия>>
+
     public HashMap<Integer, HashMap<Integer, String>> startPartDate = new HashMap<>();
     //     HashMap<Месяц.  HashMap<День, Дата начало партии>>
+
+    private HashMap<Integer, HashMap<Integer, List<Integer>>> partRanges = new HashMap<>();
+    //     HashMap<Месяц.  HashMap<День, List<список дней партии>>
+
     public HashMap<Integer, HashMap<Integer, String>> finishPartDate = new HashMap<>();
     //     HashMap<Месяц.  HashMap<День, Дата окончания партии>>
+
 
     public Device(String deviceName, ArrayList<String> parts) {
         this.deviceName = deviceName;
@@ -36,6 +42,37 @@ public class Device implements Serializable, Comparable<Device>{
     public Device(String deviceName) {
         this.deviceName = deviceName;
         initOtherMap();
+    }
+
+    /**
+     * Добавить диапазон дней партии, включительно
+     *
+     * @param month       Месяц (int)
+     * @param day         День (ключ, например день партии)
+     * @param startDay    Начальный день диапазона (например 10)
+     * @param finishDay   Конечный день диапазона (например 15)
+     */
+    public void addPartDayRange(int month, int day, int startDay, int finishDay) {
+        if (finishDay < startDay) {
+            throw new IllegalArgumentException("finishDay не может быть меньше startDay");
+        }
+
+        List<Integer> daysInRange = new ArrayList<>();
+        for (int d = startDay; d <= finishDay; d++) {
+            daysInRange.add(d);
+        }
+
+        partRanges.computeIfAbsent(month, m -> new HashMap<>())
+                .put(day, daysInRange);
+    }
+
+    /**
+     * Получить список дней диапазона для конкретного месяца и дня
+     */
+    public List<Integer> getPartDayRange(int month, int day) {
+        HashMap<Integer, List<Integer>> defaultValue = new HashMap<>();
+        return partRanges.getOrDefault(month, defaultValue)
+                .getOrDefault(day, Collections.emptyList());
     }
 
     @Override
