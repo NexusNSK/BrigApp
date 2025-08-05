@@ -33,3 +33,12 @@
     background-color: rgba(48, 217, 40, 0.63);
     color: black;
 }
+.badge.success {
+    color: green;
+    background: #d4edda;
+}
+.badge.error {
+    color: red;
+    background: #f8d7da;
+}
+

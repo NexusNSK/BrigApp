@@ -27,9 +27,6 @@ public class Device implements Serializable, Comparable<Device>{
     public HashMap<Integer, HashMap<Integer, String>> startPartDate = new HashMap<>();
     //     HashMap<Месяц.  HashMap<День, Дата начало партии>>
 
-    private HashMap<Integer, HashMap<Integer, List<Integer>>> partRanges = new HashMap<>();
-    //     HashMap<Месяц.  HashMap<День, List<список дней партии>>
-
     public HashMap<Integer, HashMap<Integer, String>> finishPartDate = new HashMap<>();
     //     HashMap<Месяц.  HashMap<День, Дата окончания партии>>
 
@@ -42,37 +39,6 @@ public class Device implements Serializable, Comparable<Device>{
     public Device(String deviceName) {
         this.deviceName = deviceName;
         initOtherMap();
-    }
-
-    /**
-     * Добавить диапазон дней партии, включительно
-     *
-     * @param month       Месяц (int)
-     * @param day         День (ключ, например день партии)
-     * @param startDay    Начальный день диапазона (например 10)
-     * @param finishDay   Конечный день диапазона (например 15)
-     */
-    public void addPartDayRange(int month, int day, int startDay, int finishDay) {
-        if (finishDay < startDay) {
-            throw new IllegalArgumentException("finishDay не может быть меньше startDay");
-        }
-
-        List<Integer> daysInRange = new ArrayList<>();
-        for (int d = startDay; d <= finishDay; d++) {
-            daysInRange.add(d);
-        }
-
-        partRanges.computeIfAbsent(month, m -> new HashMap<>())
-                .put(day, daysInRange);
-    }
-
-    /**
-     * Получить список дней диапазона для конкретного месяца и дня
-     */
-    public List<Integer> getPartDayRange(int month, int day) {
-        HashMap<Integer, List<Integer>> defaultValue = new HashMap<>();
-        return partRanges.getOrDefault(month, defaultValue)
-                .getOrDefault(day, Collections.emptyList());
     }
 
     @Override
@@ -106,6 +72,16 @@ public class Device implements Serializable, Comparable<Device>{
         preset.forEach(this::operateToInitMap);
     }
 
+    public List<Integer> getDaysForLineInMonth(String lineName, int month) {
+        List<Integer> days = new ArrayList<>();
+        Map<Integer, String> monthMap = lineMap.getOrDefault(month, new HashMap<>());
+        for (Map.Entry<Integer, String> entry : monthMap.entrySet()) {
+            if (lineName.equals(entry.getValue())) {
+                days.add(entry.getKey());
+            }
+        }
+        return days;
+    }
 
     public void initOtherMap(){
         for (int month = 1; month <= 12; month++) {
@@ -142,4 +118,31 @@ public class Device implements Serializable, Comparable<Device>{
         }
     }
 
+    public IntPair getPartStartEnd(int monthValue) {
+        Map<Integer, Integer> dayToSizeMap = totalPartMap.getOrDefault(monthValue, new HashMap<>());
+        int start = Integer.MAX_VALUE;
+        int end = Integer.MIN_VALUE;
+        for (Map.Entry<Integer, Integer> entry : dayToSizeMap.entrySet()) {
+            int day = entry.getKey();
+            int size = entry.getValue();
+            if (size > 0) {
+                start = Math.min(start, day);
+                end = Math.max(end, day);
+            }
+        }
+        return (start <= end) ? new IntPair(start, end) : null;
+    }
+
+    public static class IntPair {
+        public final int start;
+        public final int end;
+
+        public IntPair(int start, int end) {
+            this.start = start;
+            this.end = end;
+        }
+    }
+
+
 }
+
