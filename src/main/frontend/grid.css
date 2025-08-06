@@ -41,4 +41,12 @@
     color: red;
     background: #f8d7da;
 }
-
+.part-range-cell {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 20, 255, 0.46); /* или любой нужный цвет */
+    min-height: 24px;    /* для видимости */
+    min-width: 24px;
+    border-radius: 4px;
+}

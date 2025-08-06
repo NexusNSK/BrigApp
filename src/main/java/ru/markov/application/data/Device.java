@@ -24,6 +24,18 @@ public class Device implements Serializable, Comparable<Device>{
     public HashMap<Integer, HashMap<Integer, String>> lineMap = new HashMap<>();
     //     HashMap<Месяц.  HashMap<День, Линия>>
 
+    public HashMap<Integer, HashMap<Integer, Boolean>> lineMapRange1 = new HashMap<>();
+    //     HashMap<Месяц.  HashMap<День, Линия 1>>
+
+    public HashMap<Integer, HashMap<Integer, Boolean>> lineMapRange2 = new HashMap<>();
+    //     HashMap<Месяц.  HashMap<День, Линия 2>>
+
+    public HashMap<Integer, HashMap<Integer, Boolean>> lineMapRange3 = new HashMap<>();
+    //     HashMap<Месяц.  HashMap<День, Линия 3>>
+
+    public HashMap<Integer, HashMap<Integer, Boolean>> lineMapRange4 = new HashMap<>();
+    //     HashMap<Месяц.  HashMap<День, Линия 4>>
+
     public HashMap<Integer, HashMap<Integer, String>> startPartDate = new HashMap<>();
     //     HashMap<Месяц.  HashMap<День, Дата начало партии>>
 
@@ -35,10 +47,12 @@ public class Device implements Serializable, Comparable<Device>{
         this.deviceName = deviceName;
         initMapWithPreset(parts);
         initOtherMap();
+        initRangeMap();
     }
     public Device(String deviceName) {
         this.deviceName = deviceName;
         initOtherMap();
+        initRangeMap();
     }
 
     @Override
@@ -118,23 +132,19 @@ public class Device implements Serializable, Comparable<Device>{
         }
     }
 
-    public int getStartDay(int month) {
-        int toReturn = 0;
-        for (int i = 1; i <= 31; i++) {
-            if (!startPartDate.get(month).get(i).isEmpty())
-            toReturn = Integer.parseInt(startPartDate.get(month).get(i).substring(0,2));
+public void initRangeMap() {
+        for (int month = 1; month <= 12; month++) {
+            lineMapRange1.put(month, new HashMap<>());
+            lineMapRange2.put(month, new HashMap<>());
+            lineMapRange3.put(month, new HashMap<>());
+            lineMapRange4.put(month, new HashMap<>());
+            for (int day = 1; day <= 31; day++) {
+                lineMapRange1.get(month).put(day, false);
+                lineMapRange2.get(month).put(day, false);
+                lineMapRange3.get(month).put(day, false);
+                lineMapRange4.get(month).put(day, false);
+            }
         }
-        return toReturn;
-    }
-
-    public int getFinishDay(int month) {
-        int toReturn = 0;
-        for (int i = 1; i <= 31; i++) {
-            if (!finishPartDate.get(month).get(i).isEmpty())
-                toReturn = Integer.parseInt(finishPartDate.get(month).get(i).substring(0,2));
-        }
-        return toReturn;
-    }
-
+}
 }
 

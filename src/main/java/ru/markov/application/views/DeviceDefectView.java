@@ -355,22 +355,29 @@ public class DeviceDefectView extends VerticalLayout {
                 String deviceLine = device.lineMap
                         .getOrDefault(monthValue, defaultValue)
                         .get(day);
-
+/*
                 if (deviceLine == null || !deviceLine.equals(lineName)) {
                     return new Span("");
                 }
-
-                if (device.totalPartMap.get(monthValue).get(day) > 0) {
+*/
+                if (deviceLine.equals(lineName) && device.totalPartMap.get(monthValue).get(day) > 0) {
                     Icon content = VaadinIcon.CHECK.create();
                     content.getElement().getThemeList().add("badge success");
                     content.getStyle().set("cursor", "pointer");
                     content.addClickListener(e -> showReportDialog(device, monthValue, day, securityService));
                     return content;
-                } else if (day >= device.getStartDay(monthValue) && day < device.getFinishDay(monthValue)) {
-                    System.out.println("провалился в дни партии, день: " + day);
-                    return new Icon(VaadinIcon.EYE);
+
+                } else if (
+                        ("Линия 1".equals(lineName) && Boolean.TRUE.equals(device.lineMapRange1.get(monthValue).get(day))) ||
+                                ("Линия 2".equals(lineName) && Boolean.TRUE.equals(device.lineMapRange2.get(monthValue).get(day))) ||
+                                ("Линия 3".equals(lineName) && Boolean.TRUE.equals(device.lineMapRange3.get(monthValue).get(day))) ||
+                                ("Линия 4".equals(lineName) && Boolean.TRUE.equals(device.lineMapRange4.get(monthValue).get(day)))
+                ) {
+                    Span coloredCell = new Span(new Icon(VaadinIcon.RASTER));
+                    coloredCell.addClassName("part-range-cell");
+                    return coloredCell;
                 } else {
-                    return new Span("ху");
+                    return new Span("");
                 }
             }).setHeader(day.toString()).setAutoWidth(true).setFlexGrow(0);
         });
@@ -644,6 +651,7 @@ public class DeviceDefectView extends VerticalLayout {
 
         Button saveButton = new Button("Сохранить", event -> {
             int batch = partTotalField.getValue();
+            String lineToRange = lineComboBox.getValue();
             Map<String, Integer> params = new HashMap<>();
             parameterFields.forEach((k, v) -> params.put(k, v.getValue()));
             devices.get(deviceName).totalPartMap.get(monthToOperations).put(dayToOperations, batch);
@@ -652,9 +660,33 @@ public class DeviceDefectView extends VerticalLayout {
                 devices.get(deviceName).deviceMap.get(defect).get(monthToOperations).put(dayToOperations, Objects.requireNonNullElse(volume, 0));
             });
             devices.get(deviceName).lineMap.get(monthToOperations).put(dayToOperations, lineComboBox.getValue());
-            for (int i = devices.get(deviceName).getStartDay(monthToOperations); i <= devices.get(deviceName).getFinishDay(monthToOperations); i++) {
-                devices.get(deviceName).lineMap.get(monthToOperations).put(i, lineComboBox.getValue());
+            switch (lineToRange){
+                case "Линия 1": {
+                    for (int i = startDate.getValue().getDayOfMonth(); i <= finishDate.getValue().getDayOfMonth(); i++) {
+                        devices.get(deviceName).lineMapRange1.get(monthToOperations).put(i, true);
+                    }
+                    break;
+                }
+                case "Линия 2": {
+                    for (int i = startDate.getValue().getDayOfMonth(); i <= finishDate.getValue().getDayOfMonth(); i++) {
+                        devices.get(deviceName).lineMapRange2.get(monthToOperations).put(i, true);
+                    }
+                    break;
+                }
+                case "Линия 3": {
+                    for (int i = startDate.getValue().getDayOfMonth(); i <= finishDate.getValue().getDayOfMonth(); i++) {
+                        devices.get(deviceName).lineMapRange3.get(monthToOperations).put(i, true);
+                    }
+                    break;
+                }
+                case "Линия 4": {
+                    for (int i = startDate.getValue().getDayOfMonth(); i <= finishDate.getValue().getDayOfMonth(); i++) {
+                        devices.get(deviceName).lineMapRange4.get(monthToOperations).put(i, true);
+                    }
+                    break;
+                }
             }
+
             devices.get(deviceName).startPartDate.get(monthToOperations).put(dayToOperations, startDate.getValue().format(formatter));
             devices.get(deviceName).finishPartDate.get(monthToOperations).put(dayToOperations, finishDate.getValue().format(formatter));
             Serial.saveDevice();
