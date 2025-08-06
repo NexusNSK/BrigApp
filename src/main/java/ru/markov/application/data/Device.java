@@ -118,31 +118,23 @@ public class Device implements Serializable, Comparable<Device>{
         }
     }
 
-    public IntPair getPartStartEnd(int monthValue) {
-        Map<Integer, Integer> dayToSizeMap = totalPartMap.getOrDefault(monthValue, new HashMap<>());
-        int start = Integer.MAX_VALUE;
-        int end = Integer.MIN_VALUE;
-        for (Map.Entry<Integer, Integer> entry : dayToSizeMap.entrySet()) {
-            int day = entry.getKey();
-            int size = entry.getValue();
-            if (size > 0) {
-                start = Math.min(start, day);
-                end = Math.max(end, day);
-            }
+    public int getStartDay(int month) {
+        int toReturn = 0;
+        for (int i = 1; i <= 31; i++) {
+            if (!startPartDate.get(month).get(i).isEmpty())
+            toReturn = Integer.parseInt(startPartDate.get(month).get(i).substring(0,2));
         }
-        return (start <= end) ? new IntPair(start, end) : null;
+        return toReturn;
     }
 
-    public static class IntPair {
-        public final int start;
-        public final int end;
-
-        public IntPair(int start, int end) {
-            this.start = start;
-            this.end = end;
+    public int getFinishDay(int month) {
+        int toReturn = 0;
+        for (int i = 1; i <= 31; i++) {
+            if (!finishPartDate.get(month).get(i).isEmpty())
+                toReturn = Integer.parseInt(finishPartDate.get(month).get(i).substring(0,2));
         }
+        return toReturn;
     }
-
 
 }
 

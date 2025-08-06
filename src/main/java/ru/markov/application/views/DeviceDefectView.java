@@ -7,9 +7,11 @@ import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.html.Anchor;
+import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.H4;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.listbox.ListBox;
@@ -323,7 +325,7 @@ public class DeviceDefectView extends VerticalLayout {
             Grid<Device> grid = new Grid<>(Device.class, false);
             grid.addClassName("compact-grid");
             configureGrid(grid);
-           // addDayColumnsToGrid(grid, selectedMonth, lineName, monthValue, securityService);
+            addDayColumnsToGrid(grid, selectedMonth, lineName, monthValue, securityService);
             grid.setItems(devicesForLine);
             grid.setAllRowsVisible(true);
             layout.add(grid);
@@ -341,118 +343,38 @@ public class DeviceDefectView extends VerticalLayout {
                 .addClassName("repoGrid::part(cell).first-column-cell");
     }
 
-    /**
     private void addDayColumnsToGrid(Grid<Device> grid, Month selectedMonth, String lineName, int monthValue, SecurityService securityService) {
         List<Integer> days = getDaysInMonth(selectedMonth);
 
         days.forEach(day -> {
             grid.addComponentColumn(device -> {
-                Device.IntPair range = device.getPartStartEnd(monthValue);
-                boolean isInRange = (range != null) && (day >= range.start && day <= range.end);
 
+
+                // Проверяем принадлежность к линии
                 HashMap<Integer, String> defaultValue = new HashMap<>();
-                String deviceLine = device.lineMap.getOrDefault(monthValue, defaultValue).get(day);
+                String deviceLine = device.lineMap
+                        .getOrDefault(monthValue, defaultValue)
+                        .get(day);
 
-                // ⏱️ Логируем ключевые параметры
-                System.out.println("Device: " + device.getDeviceName());
-                System.out.println("Day: " + day + ", Range: " + (range != null ? range.start + "–" + range.end : "null") + ", isInRange: " + isInRange);
-                System.out.println("Line: " + deviceLine + ", Expected: " + lineName);
-                System.out.println("----------");
-
-                // Если это не нужная линия и день не входит в диапазон — ничего не рисуем
-                if (!Objects.equals(lineName, deviceLine) && !isInRange) {
-                    return new Div();
+                if (deviceLine == null || !deviceLine.equals(lineName)) {
+                    return new Span("");
                 }
 
-                Div cell = new Div();
-                cell.setWidthFull();
-                cell.setHeight("40px");
-                cell.getStyle().set("display", "flex");
-                cell.getStyle().set("align-items", "center");
-                cell.getStyle().set("justify-content", "center");
-                cell.getStyle().set("box-sizing", "border-box");
-
-                // Если день входит в диапазон — окрашиваем ячейку
-                if (isInRange) {
-                    cell.getStyle().set("background-color", "#eef");
-                    cell.getStyle().set("border", "1px dashed #88f");
-                    cell.setText("\u00A0"); // невидимый символ
+                if (device.totalPartMap.get(monthValue).get(day) > 0) {
+                    Icon content = VaadinIcon.CHECK.create();
+                    content.getElement().getThemeList().add("badge success");
+                    content.getStyle().set("cursor", "pointer");
+                    content.addClickListener(e -> showReportDialog(device, monthValue, day, securityService));
+                    return content;
+                } else if (day >= device.getStartDay(monthValue) && day < device.getFinishDay(monthValue)) {
+                    System.out.println("провалился в дни партии, день: " + day);
+                    return new Icon(VaadinIcon.EYE);
+                } else {
+                    return new Span("ху");
                 }
-
-                // Проверяем наличие дефектов — добавляем иконку
-                if (Objects.equals(lineName, deviceLine)) {
-                    int totalDefects = 0;
-
-                    for (String defectType : device.deviceMap.keySet()) {
-                        Map<Integer, Integer> dayMap = device.deviceMap.getOrDefault(defectType, new HashMap<>()).get(monthValue);
-                        if (dayMap != null) {
-                            Integer val = dayMap.get(day);
-                            if (val != null && val > 0) {
-                                totalDefects += val;
-                            }
-                        }
-                    }
-
-                    if (totalDefects >= 0) {
-                        Icon icon;
-                        if (totalDefects == 0) {
-                            icon = VaadinIcon.CHECK_CIRCLE.create();
-                            icon.getElement().getThemeList().add("badge success");
-                        } else {
-                            icon = VaadinIcon.EXCLAMATION_CIRCLE.create();
-                            icon.getElement().getThemeList().add("badge error");
-                        }
-
-                        icon.getStyle().set("cursor", "pointer");
-                        icon.addClickListener(e -> showReportDialog(device, monthValue, day, securityService));
-                        cell.add(icon);
-                    }
-                }
-
-                return cell;
-            }).setHeader(String.valueOf(day)).setAutoWidth(true).setFlexGrow(0);
+            }).setHeader(day.toString()).setAutoWidth(true).setFlexGrow(0);
         });
     }
-*/
-    private void addComponentColumn(Grid<Device> grid, String lineName, int day) {
-        grid.addComponentColumn(device -> {
-            // Определяем, входит ли день в диапазон
-            boolean isInRange = false;
-           // for (int month = monthToOperations; month <= day; month++) {
-                //грамотно попилить диапазон            }
-
-
-            // Получаем строку, на которой был зарегистрирован девайс
-            String deviceLine = device.lineMap.get(monthSelect.getValue()).get(day);
-
-            // Создаем ячейку
-            Div cell = new Div();
-            cell.setWidthFull();
-            cell.setHeight("40px");
-            cell.getStyle().set("display", "flex");
-            cell.getStyle().set("align-items", "center");
-            cell.getStyle().set("justify-content", "center");
-            cell.getStyle().set("box-sizing", "border-box");
-
-            if (isInRange) {
-                // Окрашиваем фон и добавляем стиль
-                cell.getStyle().set("background-color", "#eef");
-                cell.getStyle().set("border", "1px dashed #88f");
-                cell.setText("\u00A0"); // пробел для визуализации
-
-                // Добавляем иконку, если линия совпадает
-                if (Objects.equals(deviceLine, lineName)) {
-                    Icon icon = new Icon(VaadinIcon.CHECK);
-                    icon.setSize("16px");
-                    icon.setColor("green");
-                    cell.add(icon);
-                }
-            }
-
-            return cell;
-        }).setHeader(String.valueOf(day)).setTextAlign(ColumnTextAlign.CENTER);
-    }
-
 
     private List<Integer> getDaysInMonth(Month month) {
         return IntStream.rangeClosed(1, month.length(Year.now().isLeap()))
@@ -730,6 +652,9 @@ public class DeviceDefectView extends VerticalLayout {
                 devices.get(deviceName).deviceMap.get(defect).get(monthToOperations).put(dayToOperations, Objects.requireNonNullElse(volume, 0));
             });
             devices.get(deviceName).lineMap.get(monthToOperations).put(dayToOperations, lineComboBox.getValue());
+            for (int i = devices.get(deviceName).getStartDay(monthToOperations); i <= devices.get(deviceName).getFinishDay(monthToOperations); i++) {
+                devices.get(deviceName).lineMap.get(monthToOperations).put(i, lineComboBox.getValue());
+            }
             devices.get(deviceName).startPartDate.get(monthToOperations).put(dayToOperations, startDate.getValue().format(formatter));
             devices.get(deviceName).finishPartDate.get(monthToOperations).put(dayToOperations, finishDate.getValue().format(formatter));
             Serial.saveDevice();
@@ -924,20 +849,5 @@ public class DeviceDefectView extends VerticalLayout {
         return devices.values().stream()
                 .filter(device -> deviceHasAnyRecordInMonth(device, monthValue))
                 .collect(Collectors.toList());
-    }
-
-    public class IntPair {
-        public final int start;
-        public final int end;
-
-        public IntPair(int start, int end) {
-            this.start = start;
-            this.end = end;
-        }
-
-        @Override
-        public String toString() {
-            return "(" + start + ", " + end + ")";
-        }
     }
 }
