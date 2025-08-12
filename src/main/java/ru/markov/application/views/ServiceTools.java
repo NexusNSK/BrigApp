@@ -17,13 +17,14 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 import jakarta.annotation.security.PermitAll;
 import org.apache.commons.io.FileUtils;
+import ru.markov.application.data.Device;
 import ru.markov.application.data.Worker;
 import ru.markov.application.security.SecurityService;
 import ru.markov.application.service.Serial;
 import ru.markov.application.service.UploadRussianI18N;
 import java.io.*;
 import java.time.LocalDateTime;
-
+import java.util.HashMap;
 
 
 @Route(value = "service", layout = MainLayout.class)
@@ -202,9 +203,19 @@ public class ServiceTools extends VerticalLayout {
                 download.getElement().setAttribute("download", true);
                 download.add(new Button("Выгрузить \"worker list.bin\"", new Icon(VaadinIcon.DOWNLOAD_ALT)));
 
+                Button initRangeMap = new Button("Первая инициализация rangeMap");
+                initRangeMap.setIcon(new Icon(VaadinIcon.OPTIONS));
+                initRangeMap.addClickListener(event -> {
+                    for (HashMap.Entry<String, Device> entry : DeviceDefectView.devices.entrySet()) {
+                        String key = entry.getKey();
+                        Device device = entry.getValue();
+                        device.initRangeMap();
+                    }
+                });
+
 
                 //добавляем кнопки в интерфейс приложения
-                add(serviceButton, eraseAllTime, download, instructArea, singleFileUpload, instructAreaPlan, singleFileUploadPlan, instructOtpAreaPlan, singleFileUploadPlanOtp);
+                add(initRangeMap, serviceButton, eraseAllTime, download, instructArea, singleFileUpload, instructAreaPlan, singleFileUploadPlan, instructOtpAreaPlan, singleFileUploadPlanOtp);
 
             } else {
                 Notification notification = Notification.show("У вас нет доступа к этой странице");

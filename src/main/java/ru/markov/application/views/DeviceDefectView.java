@@ -341,6 +341,9 @@ public class DeviceDefectView extends VerticalLayout {
                 .setFlexGrow(0)
                 .setAutoWidth(true)
                 .addClassName("repoGrid::part(cell).first-column-cell");
+        grid.setAllRowsVisible(true);
+        grid.setHeightFull();
+        grid.setWidthFull();
     }
 
     private void addDayColumnsToGrid(Grid<Device> grid, Month selectedMonth, String lineName, int monthValue, SecurityService securityService) {
@@ -348,18 +351,12 @@ public class DeviceDefectView extends VerticalLayout {
 
         days.forEach(day -> {
             grid.addComponentColumn(device -> {
-
-
                 // Проверяем принадлежность к линии
                 HashMap<Integer, String> defaultValue = new HashMap<>();
                 String deviceLine = device.lineMap
                         .getOrDefault(monthValue, defaultValue)
                         .get(day);
-/*
-                if (deviceLine == null || !deviceLine.equals(lineName)) {
-                    return new Span("");
-                }
-*/
+
                 if (deviceLine.equals(lineName) && device.totalPartMap.get(monthValue).get(day) > 0) {
                     Icon content = VaadinIcon.CHECK.create();
                     content.getElement().getThemeList().add("badge success");
@@ -373,7 +370,7 @@ public class DeviceDefectView extends VerticalLayout {
                                 ("Линия 3".equals(lineName) && Boolean.TRUE.equals(device.lineMapRange3.get(monthValue).get(day))) ||
                                 ("Линия 4".equals(lineName) && Boolean.TRUE.equals(device.lineMapRange4.get(monthValue).get(day)))
                 ) {
-                    Span coloredCell = new Span(new Icon(VaadinIcon.RASTER));
+                    Span coloredCell = new Span("➤");
                     coloredCell.addClassName("part-range-cell");
                     return coloredCell;
                 } else {

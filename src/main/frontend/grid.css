@@ -7,6 +7,11 @@
     align-items: center;
 }
 
+.repoGrid {
+    height: max-content;
+}
+
+
 .repoGrid::part(cell).first-column-cell {
     background-color: #003366;
     color: white;
@@ -45,8 +50,10 @@
     display: block;
     width: 100%;
     height: 100%;
-    background: rgba(0, 20, 255, 0.46); /* или любой нужный цвет */
-    min-height: 24px;    /* для видимости */
+    font-weight: bolder;
+    color: green;
+    font-size: 24px;
+    text-align: center;
+    min-height: 10px;
     min-width: 24px;
-    border-radius: 4px;
 }

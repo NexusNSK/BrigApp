@@ -12,11 +12,12 @@ a[highlight] {
 
 /* Компактные таблицы */
 .compact-grid {
-    max-height: 300px;
+    max-height: max-content;
     overflow-y: auto;
     border: 1px solid #ddd;
     border-radius: 4px;
     margin-bottom: 1rem;
+    width: max-content;
 }
 
 .compact-grid .vaadin-grid {

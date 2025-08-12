@@ -133,6 +133,10 @@ public class Device implements Serializable, Comparable<Device>{
     }
 
 public void initRangeMap() {
+        if (lineMapRange1==null) lineMapRange1 = new HashMap<>();
+        if (lineMapRange2==null) lineMapRange2 = new HashMap<>();
+        if (lineMapRange3==null) lineMapRange3 = new HashMap<>();
+        if (lineMapRange4==null) lineMapRange4 = new HashMap<>();
         for (int month = 1; month <= 12; month++) {
             lineMapRange1.put(month, new HashMap<>());
             lineMapRange2.put(month, new HashMap<>());
