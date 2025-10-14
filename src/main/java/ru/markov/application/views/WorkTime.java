@@ -5,6 +5,7 @@ import com.vaadin.flow.component.Focusable;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dependency.Uses;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
@@ -17,6 +18,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.IntegerField;
@@ -231,6 +233,15 @@ public class WorkTime extends Div {
             workTimeColumn.setEditorComponent(setTimeEdit);
 
             RadioButtonGroup<String> statusEditColumn = new RadioButtonGroup<>();
+            statusEditColumn.addValueChangeListener(event -> {
+                String newStatus = event.getValue();
+                if ("БОЛ".equals(newStatus) || "ОТП".equals(newStatus)) {
+                    Worker currentWorker = editor.getItem();
+                    if (currentWorker != null && !hasSickOrVacationStatusToday(currentWorker)) {
+                        openDateRangeDialog(currentWorker, newStatus);
+                    }
+                }
+            });
             ValidationName statusValid = new ValidationName();
             statusEditColumn.setItems("10",
                     "9", "8", "0",
@@ -466,6 +477,57 @@ public class WorkTime extends Div {
     private void initPage(Grid<Worker> grid) {
         TimeAdapter.workTimeDatePicker.setValue(workTimeDatePicker.getValue());
         grid.getDataProvider().refreshAll();
+    }
+
+    // Метод проверки, есть ли сегодня больничный или отпуск
+    private boolean hasSickOrVacationStatusToday(Worker worker) {
+        String statusToday = worker.getWorkerStatusMassive();
+        return "БОЛ".equals(statusToday) || "ОТП".equals(statusToday);
+    }
+
+    // Метод открытия диалога выбора диапазона
+    private void openDateRangeDialog(Worker worker, String statusToSet) {
+        Dialog dialog = new Dialog();
+
+        DatePicker startDate = new DatePicker("Начало");
+        DatePicker endDate = new DatePicker("Конец");
+        startDate.setValue(LocalDate.now());
+        endDate.setValue(LocalDate.now());
+
+        Button save = new Button("Сохранить", e -> {
+            LocalDate start = startDate.getValue();
+            LocalDate end = endDate.getValue();
+            if (start != null && end != null && !start.isAfter(end)) {
+                applyStatusForDateRange(worker, statusToSet, start, end);
+                dialog.close();
+                // Обновляем грид
+                // Здесь нужно обновить источник данных грид, например:
+                // workTimeGrid.getDataProvider().refreshAll();
+            } else {
+                Notification.show("Пожалуйста, выберите корректный диапазон дат");
+            }
+        });
+        Button cancel = new Button("Отмена", e -> dialog.close());
+
+        HorizontalLayout buttons = new HorizontalLayout(save, cancel);
+        VerticalLayout layout = new VerticalLayout(startDate, endDate, buttons);
+        dialog.add(layout);
+        dialog.open();
+    }
+
+    // Метод применения статуса на диапазон дней
+    private void applyStatusForDateRange(Worker worker, String status, LocalDate start, LocalDate end) {
+        // Логика обновления модели: например, сохранение в базе и обновление worker
+        // Тут надо добавить код для каждого дня диапазона менять статус.
+        // Возможно, у вас есть структура с хранением записей по датам, меняйте их.
+
+        // Для примера:
+        LocalDate date = start;
+        while (!date.isAfter(end)) {
+            // Обновляем статус работника на дату date
+            // worker.setStatusForDate(date, status); // примерный метод, его надо реализовать
+            date = date.plusDays(1);
+        }
     }
 }
 
