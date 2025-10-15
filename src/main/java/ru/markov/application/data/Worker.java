@@ -20,7 +20,7 @@ public class Worker implements Serializable, Comparable<Worker> {
 
     private final HashMap<Integer, HashMap<Integer, WorkerStatus>> workerStatusMassive = new HashMap<>(12);
     private final HashMap<Integer, HashMap<Integer, Integer>> workTimeMassive = new HashMap<>(12);
-    //            hashmap <номер месяца : hashmap  <номер дня : ч  асы>>
+    //            hashmap <номер месяца : hashmap  <номер дня : часы>>
 
     public void initWorkerStatusMap() {
         if (workerStatusMassive.isEmpty()) {
@@ -31,6 +31,21 @@ public class Worker implements Serializable, Comparable<Worker> {
                 }
             }
             //System.out.println(getFullName() +  ": Создание карты учета статуса работника завершено!");
+        }
+    }
+    public void setStatusForDateRange(LocalDate startDate, LocalDate endDate, WorkerStatus status) {
+        LocalDate date = startDate;
+        while (!date.isAfter(endDate)) {
+            int month = date.getMonthValue();
+            int day = date.getDayOfMonth();
+
+            // Получаем или создаём вложенный hashmap для месяца
+            HashMap<Integer, WorkerStatus> dayStatusMap = workerStatusMassive.computeIfAbsent(month, k -> new HashMap<>());
+
+            // Устанавливаем статус для дня
+            dayStatusMap.put(day, status);
+
+            date = date.plusDays(1);
         }
     }
 

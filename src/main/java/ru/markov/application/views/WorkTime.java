@@ -13,6 +13,7 @@ import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.grid.editor.Editor;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -38,6 +39,7 @@ import ru.markov.application.security.SecurityService;
 import ru.markov.application.service.*;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.function.Consumer;
 
 
@@ -235,10 +237,18 @@ public class WorkTime extends Div {
             RadioButtonGroup<String> statusEditColumn = new RadioButtonGroup<>();
             statusEditColumn.addValueChangeListener(event -> {
                 String newStatus = event.getValue();
-                if ("БОЛ".equals(newStatus) || "ОТП".equals(newStatus)) {
+                WorkerStatus newWStatus = WorkerStatus.NOTHING;
+                if ("БОЛ".equals(newStatus)) {
                     Worker currentWorker = editor.getItem();
+                    newWStatus = WorkerStatus.HOSPITAL;
                     if (currentWorker != null && !hasSickOrVacationStatusToday(currentWorker)) {
-                        openDateRangeDialog(currentWorker, newStatus);
+                        openDateRangeDialog(currentWorker, newWStatus, workTimeGrid);
+                    }
+                } else if ("ОТП".equals(newStatus)) {
+                    Worker currentWorker = editor.getItem();
+                    newWStatus = WorkerStatus.HOLIDAY;
+                    if (currentWorker != null && !hasSickOrVacationStatusToday(currentWorker)) {
+                        openDateRangeDialog(currentWorker, newWStatus, workTimeGrid);
                     }
                 }
             });
@@ -486,13 +496,21 @@ public class WorkTime extends Div {
     }
 
     // Метод открытия диалога выбора диапазона
-    private void openDateRangeDialog(Worker worker, String statusToSet) {
+    private void openDateRangeDialog(Worker worker, WorkerStatus statusToSet, Grid grid) {
         Dialog dialog = new Dialog();
+        H3 title = new H3();
+        if (statusToSet != null && statusToSet == WorkerStatus.HOLIDAY) {
+            title.setText("Укажите первый и последний день отпуска сотрудника " + worker.getFullNameWithInitials());
+        }
+        if (statusToSet != null && statusToSet == WorkerStatus.HOSPITAL){
+            title.setText("Укажите первый и последний день больничного у сотрудника " + worker.getFullNameWithInitials());
+        }
 
         DatePicker startDate = new DatePicker("Начало");
         DatePicker endDate = new DatePicker("Конец");
-        startDate.setValue(LocalDate.now());
+        startDate.setValue(workTimeDatePicker.getValue());
         endDate.setValue(LocalDate.now());
+
 
         Button save = new Button("Сохранить", e -> {
             LocalDate start = startDate.getValue();
@@ -501,8 +519,7 @@ public class WorkTime extends Div {
                 applyStatusForDateRange(worker, statusToSet, start, end);
                 dialog.close();
                 // Обновляем грид
-                // Здесь нужно обновить источник данных грид, например:
-                // workTimeGrid.getDataProvider().refreshAll();
+                grid.getDataProvider().refreshAll();
             } else {
                 Notification.show("Пожалуйста, выберите корректный диапазон дат");
             }
@@ -510,25 +527,15 @@ public class WorkTime extends Div {
         Button cancel = new Button("Отмена", e -> dialog.close());
 
         HorizontalLayout buttons = new HorizontalLayout(save, cancel);
-        VerticalLayout layout = new VerticalLayout(startDate, endDate, buttons);
+        VerticalLayout layout = new VerticalLayout(title, startDate, endDate, buttons);
         dialog.add(layout);
         dialog.open();
     }
 
     // Метод применения статуса на диапазон дней
-    private void applyStatusForDateRange(Worker worker, String status, LocalDate start, LocalDate end) {
-        // Логика обновления модели: например, сохранение в базе и обновление worker
-        // Тут надо добавить код для каждого дня диапазона менять статус.
-        // Возможно, у вас есть структура с хранением записей по датам, меняйте их.
-
-        // Для примера:
-        LocalDate date = start;
-        while (!date.isAfter(end)) {
-            // Обновляем статус работника на дату date
-            // worker.setStatusForDate(date, status); // примерный метод, его надо реализовать
-            date = date.plusDays(1);
-        }
-    }
+    private void applyStatusForDateRange(Worker worker, WorkerStatus status, LocalDate start, LocalDate end) {
+        worker.setStatusForDateRange(start, end, status);
+            }
 }
 
 
