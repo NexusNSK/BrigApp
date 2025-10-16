@@ -39,7 +39,6 @@ import ru.markov.application.security.SecurityService;
 import ru.markov.application.service.*;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.function.Consumer;
 
 
@@ -497,19 +496,32 @@ public class WorkTime extends Div {
 
     // Метод открытия диалога выбора диапазона
     private void openDateRangeDialog(Worker worker, WorkerStatus statusToSet, Grid grid) {
+        DatePicker.DatePickerI18n ruPicker = new DatePicker.DatePickerI18n()
+                .setWeekdays(Arrays.asList(
+                        "Воскресенье", "Понедельник", "Вторник", "Среда",
+                        "Четверг", "Пятница", "Суббота"))
+                .setWeekdaysShort(Arrays.asList("Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"))
+                .setMonthNames(Arrays.asList(
+                        "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
+                        "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"))
+                .setToday("Сегодня")
+                .setCancel("Отмена")
+                .setFirstDayOfWeek(1);
         Dialog dialog = new Dialog();
         H3 title = new H3();
-        if (statusToSet != null && statusToSet == WorkerStatus.HOLIDAY) {
+        if (statusToSet == WorkerStatus.HOLIDAY) {
             title.setText("Укажите первый и последний день отпуска сотрудника " + worker.getFullNameWithInitials());
         }
-        if (statusToSet != null && statusToSet == WorkerStatus.HOSPITAL){
+        if (statusToSet == WorkerStatus.HOSPITAL){
             title.setText("Укажите первый и последний день больничного у сотрудника " + worker.getFullNameWithInitials());
         }
 
         DatePicker startDate = new DatePicker("Начало");
+        startDate.setI18n(ruPicker);
         DatePicker endDate = new DatePicker("Конец");
+        endDate.setI18n(ruPicker);
         startDate.setValue(workTimeDatePicker.getValue());
-        endDate.setValue(LocalDate.now());
+        endDate.setValue(workTimeDatePicker.getValue());
 
 
         Button save = new Button("Сохранить", e -> {

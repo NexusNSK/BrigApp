@@ -153,11 +153,11 @@ public class Worker implements Serializable, Comparable<Worker> {
     }
 
     public int getWorkerAllTimeToTableView(){
-        int timeSumm = 0;
+        int timeSum = 0;
         for (int i = 1; i<32; i++){
-            timeSumm = timeSumm+workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(i);
+            timeSum = timeSum+workTimeMassive.get(LocalDateTime.now().getMonthValue()).get(i);
         }
-        return timeSumm;
+        return timeSum;
     }
 
     public String getPost() {
