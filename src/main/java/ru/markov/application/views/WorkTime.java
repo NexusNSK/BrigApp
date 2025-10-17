@@ -98,7 +98,7 @@ public class WorkTime extends Div {
             editor.setBuffered(false);
 
             workTimeDatePicker.addClientValidatedEventListener(clientValidatedEvent -> {
-                TimeAdapter.workTimeDatePicker.setValue(workTimeDatePicker.getValue());
+                //TimeAdapter.workTimeDatePicker.setValue(workTimeDatePicker.getValue());
                 workTimeGrid.getDataProvider().refreshAll();
             });
 
@@ -108,7 +108,7 @@ public class WorkTime extends Div {
                 workTimeGrid.getDataProvider().refreshAll();
             });
 
-            Button likeYesterday = getLikeYesterday(username, workTimeGrid);
+            Button likeYesterday = getLikeYesterday(workTimeDatePicker.getValue(), username, workTimeGrid);
 
             Grid.Column<Worker> fullNameColumn = workTimeGrid
                     .addColumn(Worker::getFullNameWithInitials).setTextAlign(ColumnTextAlign.START)
@@ -151,7 +151,7 @@ public class WorkTime extends Div {
                     .setFlexGrow(1);
 
             Grid.Column<Worker> workTimeColumn = workTimeGrid
-                    .addColumn(Worker::getWorkTime)
+                    .addColumn(worker -> worker.getWorkTime(workTimeDatePicker.getValue()))
                     .setHeader("Время")
                     .setAutoWidth(false)
                     .setResizable(false)
@@ -166,7 +166,7 @@ public class WorkTime extends Div {
             Grid.Column<Worker> workerStatusColumn = workTimeGrid.addColumn(
                             new ComponentRenderer<>(worker -> {
                                 Span statusSpan = new Span();
-                                String status = worker.getWorkerStatusMassive();
+                                String status = worker.getWorkerStatusMassive(workTimeDatePicker.getValue());
 
                                 // Add icon based on status
                                 if ("Больничный".equals(status)) {
@@ -206,7 +206,7 @@ public class WorkTime extends Div {
                 try {
                     HeaderRow headerRow = workTimeGrid.appendHeaderRow();
                     GridListDataView<Worker> dataView = workTimeGrid.setItems(BrigEdit.workerList);
-                    PersonFilter personFilter = new WorkTime.PersonFilter(dataView);
+                    PersonFilter personFilter = new WorkTime.PersonFilter(workTimeDatePicker.getValue() ,dataView);
 
                     headerRow.getCell(lineColumn).setComponent(createFilterHeader(personFilter::setLine));
                     headerRow.getCell(districtColumn).setComponent(createFilterHeader(personFilter::setDistrict));
@@ -230,7 +230,11 @@ public class WorkTime extends Div {
             binder.forField(setTimeEdit)
                     .asRequired()
                     .withStatusLabel(timeValid)
-                    .bind(Worker::getWorkTime, Worker::setWorkTime);
+                    .bind(
+                            worker -> worker.getWorkTime(workTimeDatePicker.getValue()),
+                            (worker, hours) -> worker.setWorkTime(workTimeDatePicker.getValue(), hours)
+                    );
+
             workTimeColumn.setEditorComponent(setTimeEdit);
 
             RadioButtonGroup<String> statusEditColumn = new RadioButtonGroup<>();
@@ -240,13 +244,13 @@ public class WorkTime extends Div {
                 if ("БОЛ".equals(newStatus)) {
                     Worker currentWorker = editor.getItem();
                     newWStatus = WorkerStatus.HOSPITAL;
-                    if (currentWorker != null && !hasSickOrVacationStatusToday(currentWorker)) {
+                    if (currentWorker != null && !hasSickOrVacationStatusToday(workTimeDatePicker.getValue(), currentWorker)) {
                         openDateRangeDialog(currentWorker, newWStatus, workTimeGrid);
                     }
                 } else if ("ОТП".equals(newStatus)) {
                     Worker currentWorker = editor.getItem();
                     newWStatus = WorkerStatus.HOLIDAY;
-                    if (currentWorker != null && !hasSickOrVacationStatusToday(currentWorker)) {
+                    if (currentWorker != null && !hasSickOrVacationStatusToday(workTimeDatePicker.getValue() ,currentWorker)) {
                         openDateRangeDialog(currentWorker, newWStatus, workTimeGrid);
                     }
                 }
@@ -263,7 +267,11 @@ public class WorkTime extends Div {
             binder.forField(statusEditColumn)
                     .asRequired()
                     .withStatusLabel(statusValid)
-                    .bind(Worker::getWorkerStatusMassive, Worker::setWorkerStatusMassive);
+                    .bind(
+                            worker -> worker.getWorkerStatusMassive(workTimeDatePicker.getValue()),
+                            (worker, status) -> worker.setWorkerStatusMassive(workTimeDatePicker.getValue(), status)
+                    );
+
             workerStatusColumn.setEditorComponent(statusEditColumn);
 
             workTimeGrid.addItemClickListener(e -> {
@@ -283,7 +291,7 @@ public class WorkTime extends Div {
             workTimeGrid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
 
             workTimeGrid.setPartNameGenerator(person -> {
-                switch (person.getWorkerStatus()) {
+                switch (person.getWorkerStatus(workTimeDatePicker.getValue())) {
                     case WORK -> {return "work";}
                     case HOSPITAL -> {return "bol";}
                     case HOLIDAY, HOLYWORK -> {return "otpusk";}
@@ -299,70 +307,70 @@ public class WorkTime extends Div {
         }
     }
 
-    private static Button getLikeYesterday(String username, Grid<Worker> workTimeGrid) {
+    private static Button getLikeYesterday(LocalDate date, String username, Grid<Worker> workTimeGrid) {
         Button likeYesterday = new Button("\"Как вчера\"");
         likeYesterday.addClickListener(buttonClickEvent -> {
             switch (username) {
                 case "volna1" -> {
                     for (Worker w : BrigEdit.workerList) {
                         if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_1)) {
-                            getCheckTimeAndStatusLikeYesterday(w);
+                            getCheckTimeAndStatusLikeYesterday(date, w);
                         }
                     }
                 }
                 case "volna2" -> {
                     for (Worker w : BrigEdit.workerList) {
                         if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_2)) {
-                            getCheckTimeAndStatusLikeYesterday(w);
+                            getCheckTimeAndStatusLikeYesterday(date, w);
                         }
                     }
                 }
                 case "volna3" -> {
                     for (Worker w : BrigEdit.workerList) {
                         if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_3)) {
-                            getCheckTimeAndStatusLikeYesterday(w);
+                            getCheckTimeAndStatusLikeYesterday(date, w);
                         }
                     }
                 }
                 case "volna4" -> {
                     for (Worker w : BrigEdit.workerList) {
                         if (w.getDistrict().equals(District.MOUNTING) && w.getLine().equals(ConveyLine.LINE_4)) {
-                            getCheckTimeAndStatusLikeYesterday(w);
+                            getCheckTimeAndStatusLikeYesterday(date, w);
                         }
                     }
                 }
                 case "sborka1" -> {
                     for (Worker w : BrigEdit.workerList) {
                         if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_1)) {
-                            getCheckTimeAndStatusLikeYesterday(w);
+                            getCheckTimeAndStatusLikeYesterday(date, w);
                         }
                     }
                 }
                 case "sborka2" -> {
                     for (Worker w : BrigEdit.workerList) {
                         if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_2)) {
-                            getCheckTimeAndStatusLikeYesterday(w);
+                            getCheckTimeAndStatusLikeYesterday(date, w);
                         }
                     }
                 }
                 case "sborka3" -> {
                     for (Worker w : BrigEdit.workerList) {
                         if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_3)) {
-                            getCheckTimeAndStatusLikeYesterday(w);
+                            getCheckTimeAndStatusLikeYesterday(date, w);
                         }
                     }
                 }
                 case "sborka4" -> {
                     for (Worker w : BrigEdit.workerList) {
                         if (w.getDistrict().equals(District.BUILDING) && w.getLine().equals(ConveyLine.LINE_4)) {
-                            getCheckTimeAndStatusLikeYesterday(w);
+                            getCheckTimeAndStatusLikeYesterday(date, w);
                         }
                     }
                 }
                 case "tech" -> {
                     for (Worker w : BrigEdit.workerList) {
                         if (w.getDistrict().equals(District.TECH) || w.getDistrict().equals(District.LAB1) || w.getDistrict().equals(District.LAB2) || w.getDistrict().equals(District.LAB5)) {
-                            getCheckTimeAndStatusLikeYesterday(w);
+                            getCheckTimeAndStatusLikeYesterday(date, w);
                         }
                     }
                 }
@@ -372,9 +380,9 @@ public class WorkTime extends Div {
         return likeYesterday;
     }
 
-    private static void getCheckTimeAndStatusLikeYesterday(Worker w) {
-        if (w.checkTimeAndStatus()){
-            w.setWorkTimeLikeYesterday();
+    private static void getCheckTimeAndStatusLikeYesterday(LocalDate date, Worker w) {
+        if (w.checkTimeAndStatus(date)){
+            w.setWorkTimeLikeYesterday(date);
         }
         else {
             Notification notification = Notification.show("У работника "+w.getFullNameWithInitials()+"сегодня уже проставлено время, либо статус.\nПроверьте актуальность данных");
@@ -436,9 +444,9 @@ public class WorkTime extends Div {
         private String time;
         private String status;
 
-        public PersonFilter(GridListDataView<Worker> dataView) {
+        public PersonFilter(LocalDate date, GridListDataView<Worker> dataView) {
             this.dataView = dataView;
-            this.dataView.addFilter(this::matchesField);
+            this.dataView.addFilter(worker -> matchesField(date, worker));
         }
 
         public void setFullName(String fullName) {
@@ -466,12 +474,12 @@ public class WorkTime extends Div {
             this.dataView.refreshAll();
         }
 
-        public boolean matchesField(Worker worker) {
+        public boolean matchesField(LocalDate date, Worker worker) {
             boolean matchesLine = matches(worker.getLineToString(), line);
             boolean matchesDistrict = matches(worker.getDistrictToString(), district);
             boolean matchesFullName = matches(worker.getFullName(), fullName);
-            boolean matchesTime = matches(String.valueOf(worker.getWorkTime()), time);
-            boolean matchesStatus = matches(worker.getWorkerStatusMassive(), status);
+            boolean matchesTime = matches(String.valueOf(worker.getWorkTime(date)), time);
+            boolean matchesStatus = matches(worker.getWorkerStatusMassive(date), status);
 
 
             return matchesLine && matchesDistrict && matchesFullName && matchesTime && matchesStatus;
@@ -484,13 +492,12 @@ public class WorkTime extends Div {
     }
 
     private void initPage(Grid<Worker> grid) {
-        TimeAdapter.workTimeDatePicker.setValue(workTimeDatePicker.getValue());
         grid.getDataProvider().refreshAll();
     }
 
     // Метод проверки, есть ли сегодня больничный или отпуск
-    private boolean hasSickOrVacationStatusToday(Worker worker) {
-        String statusToday = worker.getWorkerStatusMassive();
+    private boolean hasSickOrVacationStatusToday(LocalDate date, Worker worker) {
+        String statusToday = worker.getWorkerStatusMassive(date);
         return "БОЛ".equals(statusToday) || "ОТП".equals(statusToday);
     }
 
