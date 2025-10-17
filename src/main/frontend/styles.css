@@ -17,6 +17,7 @@ a[highlight] {
     border: 1px solid #ddd;
     border-radius: 4px;
     margin-bottom: 1rem;
+    width: max-content;
 }
 
 .compact-grid .vaadin-grid {

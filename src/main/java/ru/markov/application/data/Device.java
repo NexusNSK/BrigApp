@@ -2,9 +2,7 @@ package ru.markov.application.data;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Device implements Serializable, Comparable<Device>{
     @Serial
@@ -18,24 +16,43 @@ public class Device implements Serializable, Comparable<Device>{
 
     public HashMap<String, HashMap<Integer,HashMap<Integer, Integer>>> deviceMap = new HashMap<>();
     //      HashMap<Брак,   HashMap<Месяц,  HashMap<День, количество>>>
-    //      Обращаемся браку по ключу, указываем ключ месяца, ключ дня, получаем количество брака в конкретный день/партию
+    //      Обращаемся к браку по ключу, указываем ключ месяца, ключ дня, получаем количество брака в конкретный день/партию
+
     public HashMap<Integer,HashMap<Integer, Integer>> totalPartMap = new HashMap<>();
     //     HashMap<Месяц,  HashMap<День, сколько в партии>>
+
     public HashMap<Integer, HashMap<Integer, String>> lineMap = new HashMap<>();
     //     HashMap<Месяц.  HashMap<День, Линия>>
+
+    public HashMap<Integer, HashMap<Integer, Boolean>> lineMapRange1 = new HashMap<>();
+    //     HashMap<Месяц.  HashMap<День, Линия 1>>
+
+    public HashMap<Integer, HashMap<Integer, Boolean>> lineMapRange2 = new HashMap<>();
+    //     HashMap<Месяц.  HashMap<День, Линия 2>>
+
+    public HashMap<Integer, HashMap<Integer, Boolean>> lineMapRange3 = new HashMap<>();
+    //     HashMap<Месяц.  HashMap<День, Линия 3>>
+
+    public HashMap<Integer, HashMap<Integer, Boolean>> lineMapRange4 = new HashMap<>();
+    //     HashMap<Месяц.  HashMap<День, Линия 4>>
+
     public HashMap<Integer, HashMap<Integer, String>> startPartDate = new HashMap<>();
     //     HashMap<Месяц.  HashMap<День, Дата начало партии>>
+
     public HashMap<Integer, HashMap<Integer, String>> finishPartDate = new HashMap<>();
     //     HashMap<Месяц.  HashMap<День, Дата окончания партии>>
+
 
     public Device(String deviceName, ArrayList<String> parts) {
         this.deviceName = deviceName;
         initMapWithPreset(parts);
         initOtherMap();
+        initRangeMap();
     }
     public Device(String deviceName) {
         this.deviceName = deviceName;
         initOtherMap();
+        initRangeMap();
     }
 
     @Override
@@ -69,6 +86,16 @@ public class Device implements Serializable, Comparable<Device>{
         preset.forEach(this::operateToInitMap);
     }
 
+    public List<Integer> getDaysForLineInMonth(String lineName, int month) {
+        List<Integer> days = new ArrayList<>();
+        Map<Integer, String> monthMap = lineMap.getOrDefault(month, new HashMap<>());
+        for (Map.Entry<Integer, String> entry : monthMap.entrySet()) {
+            if (lineName.equals(entry.getValue())) {
+                days.add(entry.getKey());
+            }
+        }
+        return days;
+    }
 
     public void initOtherMap(){
         for (int month = 1; month <= 12; month++) {
@@ -105,4 +132,23 @@ public class Device implements Serializable, Comparable<Device>{
         }
     }
 
+public void initRangeMap() {
+        if (lineMapRange1==null) lineMapRange1 = new HashMap<>();
+        if (lineMapRange2==null) lineMapRange2 = new HashMap<>();
+        if (lineMapRange3==null) lineMapRange3 = new HashMap<>();
+        if (lineMapRange4==null) lineMapRange4 = new HashMap<>();
+        for (int month = 1; month <= 12; month++) {
+            lineMapRange1.put(month, new HashMap<>());
+            lineMapRange2.put(month, new HashMap<>());
+            lineMapRange3.put(month, new HashMap<>());
+            lineMapRange4.put(month, new HashMap<>());
+            for (int day = 1; day <= 31; day++) {
+                lineMapRange1.get(month).put(day, false);
+                lineMapRange2.get(month).put(day, false);
+                lineMapRange3.get(month).put(day, false);
+                lineMapRange4.get(month).put(day, false);
+            }
+        }
 }
+}
+
