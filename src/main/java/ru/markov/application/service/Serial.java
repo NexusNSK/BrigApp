@@ -18,6 +18,27 @@ public class Serial {
     private static final String workDir = System.getProperty("user.home");
 
 
+    private static void printBoxedMessageAligned(String title, List<String> messages) {
+        int maxLength = title.length();
+        for (String msg : messages) {
+            if (msg.length() > maxLength) {
+                maxLength = msg.length();
+            }
+        }
+        String border = "╔" + "═".repeat(maxLength + 2) + "╗";
+        String bottomBorder = "╚" + "═".repeat(maxLength + 2) + "╝";
+
+        System.out.println(border);
+        System.out.println("║ " + title + " ".repeat(maxLength - title.length()) + " ║");
+        System.out.println("╠" + "═".repeat(maxLength + 2) + "╣");
+
+        for (String msg : messages) {
+            System.out.println("║ " + msg + " ".repeat(maxLength - msg.length()) + " ║");
+        }
+
+        System.out.println(bottomBorder);
+    }
+
     public static void save() {
         try {
             final String fullFilename = workDir + File.separator + filename;
@@ -47,46 +68,50 @@ public class Serial {
     }
 
     public static void load() throws ClassNotFoundException {
+        List<String> messages = new ArrayList<>();
+        messages.add("Ищу данные о составе бригады...");
         try {
-            System.out.println("...Ищу данные о составе бригады...\n / | \\");
             FileInputStream fis = new FileInputStream(filename);
             ObjectInputStream ois = new ObjectInputStream(fis);
             BrigEdit.workerList = (List<Worker>) ois.readObject();
-            System.out.println("...Состав бригады был успешно загружен из основного файла...");
+            messages.add("Состав бригады успешно загружен из основного файла.");
             ois.close();
         } catch (IOException e) {
-            System.out.println("...Основной файл с данными о составе бригады пуст или не найден...");
-            System.out.println("...Произвожу попытку загрузки из резервного файла...");
+            messages.add("Основной файл с данными о составе бригады пуст или не найден.");
+            messages.add("Произвожу попытку загрузки из резервного файла...");
             try {
                 final String fullFilename = workDir + File.separator + filename;
-                System.out.println("...Ищу данные о составе бригады...\n / | \\");
+                messages.add("Ищу данные о составе бригады...");
                 FileInputStream fisReserv = new FileInputStream(fullFilename);
                 ObjectInputStream oisReserv = new ObjectInputStream(fisReserv);
                 BrigEdit.workerList = (List<Worker>) oisReserv.readObject();
-                System.out.println("...Состав бригады был успешно загружен из резервного файла...");
+                messages.add("Состав бригады успешно загружен из резервного файла.");
                 oisReserv.close();
             } catch (IOException ex) {
-                System.out.println("...Резервный файл с данными о составе бригады пуст или не найден...");
+                messages.add("Резервный файл с данными о составе бригады пуст или не найден.");
             }
         }
+        printBoxedMessageAligned("Загрузка состава бригады", messages);
     }
 
     public static void loadDevice() throws ClassNotFoundException {
+        List<String> messages = new ArrayList<>();
+        messages.add("Ищу данные о списке устройств...");
         try {
-            System.out.println("...Ищу данные о списке устройств...\n / | \\");
             FileInputStream fis = new FileInputStream(workDir + File.separator + defect_devise_file);
             ObjectInputStream ois = new ObjectInputStream(fis);
             DeviceDefectView.devices = (HashMap<String, Device>) ois.readObject();
-            System.out.println("...Список устройств был успешно загружен из основного файла...");
+            messages.add("Список устройств был успешно загружен из основного файла.");
             ois.close();
-            System.out.println("Загружено устройств: " + DeviceDefectView.devices.size());
+            messages.add("Загружено устройств: " + DeviceDefectView.devices.size() + ".");
         } catch (IOException e) {
             DeviceDefectView.devices = new HashMap<>();
-            System.out.println("Файл \"device.bin\" не был загружен");
+            messages.add("Файл \"device.bin\" не был загружен.");
         }
+        printBoxedMessageAligned("Загрузка списка устройств", messages);
     }
 
-    public static void savePreset(){
+    public static void savePreset() {
         try {
             final String fullFilename = workDir + File.separator + defect_presets;
             FileOutputStream fos = new FileOutputStream(fullFilename);
@@ -102,21 +127,22 @@ public class Serial {
         }
     }
 
-    public static void loadPreset(){
+    public static void loadPreset() {
+        List<String> messages = new ArrayList<>();
+        messages.add("Ищу данные о пресетах брака...");
         try {
-            System.out.println("...Ищу данные о пресетах брака...\n / | \\");
             FileInputStream fis = new FileInputStream(workDir + File.separator + defect_presets);
             ObjectInputStream ois = new ObjectInputStream(fis);
             DeviceDefectView.familyDefectList = (HashMap<String, ArrayList<String>>) ois.readObject();
-            System.out.println("...Список пресетов был успешно загружен из основного файла...");
+            messages.add("Список пресетов был успешно загружен из основного файла.");
             ois.close();
-            System.out.println("Загружено пресетов: " + DeviceDefectView.familyDefectList.size());
+            messages.add("Загружено пресетов: " + DeviceDefectView.familyDefectList.size() + ".");
         } catch (IOException e) {
             DeviceDefectView.familyDefectList = new HashMap<>();
-            System.out.println("Файл \"defect presets.srl\" не был загружен");
+            messages.add("Файл \"defect presets.srl\" не был загружен.");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+        printBoxedMessageAligned("Загрузка пресетов брака", messages);
     }
-
 }
