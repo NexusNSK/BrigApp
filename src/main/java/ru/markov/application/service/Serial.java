@@ -75,6 +75,7 @@ public class Serial {
             ObjectInputStream ois = new ObjectInputStream(fis);
             BrigEdit.workerList = (List<Worker>) ois.readObject();
             messages.add("Состав бригады успешно загружен из основного файла.");
+            messages.add("Загружено сотрудников: " + BrigEdit.workerList.size());
             ois.close();
         } catch (IOException e) {
             messages.add("Основной файл с данными о составе бригады пуст или не найден.");
@@ -103,7 +104,7 @@ public class Serial {
             DeviceDefectView.devices = (HashMap<String, Device>) ois.readObject();
             messages.add("Список устройств был успешно загружен из основного файла.");
             ois.close();
-            messages.add("Загружено устройств: " + DeviceDefectView.devices.size() + ".");
+            messages.add("Загружено устройств: " + DeviceDefectView.devices.size());
         } catch (IOException e) {
             DeviceDefectView.devices = new HashMap<>();
             messages.add("Файл \"device.bin\" не был загружен.");
@@ -136,7 +137,7 @@ public class Serial {
             DeviceDefectView.familyDefectList = (HashMap<String, ArrayList<String>>) ois.readObject();
             messages.add("Список пресетов был успешно загружен из основного файла.");
             ois.close();
-            messages.add("Загружено пресетов: " + DeviceDefectView.familyDefectList.size() + ".");
+            messages.add("Загружено пресетов: " + DeviceDefectView.familyDefectList.size());
         } catch (IOException e) {
             DeviceDefectView.familyDefectList = new HashMap<>();
             messages.add("Файл \"defect presets.srl\" не был загружен.");
