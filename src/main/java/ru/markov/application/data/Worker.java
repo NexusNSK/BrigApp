@@ -117,21 +117,43 @@ public class Worker implements Serializable, Comparable<Worker> {
                 WorkerStatus status = statusDayMap.get(day);
 
                 if (workTime != null && status != null) {
-                    if (!(workTime == 0 && status == WorkerStatus.NOTHING)) {
+                    if (workTime == 8 && status == WorkerStatus.WORK) {
+                        result.add(workTime);
+                        result.add(status);
+                        return result;
+                    } else if (workTime > 8 && status == WorkerStatus.PERERABOTKA) {
+                        result.add(workTime);
+                        result.add(status);
+                        return result;
+                    } else if (workTime >= 0 && workTime < 8 && status == WorkerStatus.OTRABOTKA) {
+                        result.add(workTime);
+                        result.add(status);
+                        return result;
+                    } else if (workTime == 0 && status == WorkerStatus.HOSPITAL) {
+                        result.add(workTime);
+                        result.add(status);
+                        return result;
+                    } else if (workTime == 0 && status == WorkerStatus.HOLIDAY) {
+                        result.add(workTime);
+                        result.add(status);
+                        return result;
+                    } else if (workTime > 0 && status == WorkerStatus.HOLYWORK) {
+                        result.add(workTime);
+                        result.add(status);
+                        return result;
+                    } else if (workTime == 0 && status == WorkerStatus.ADMINOTP) {
                         result.add(workTime);
                         result.add(status);
                         return result;
                     }
                 }
             }
-
-            date = date.minusDays(1);  // откатываем дату ещё на один день назад
+            date = date.minusDays(1);
         }
 
-        // Не нашли подходящих данных, возвращаем значения по умолчанию
         result.add(defaultWorkTime);
         result.add(defaultStatus);
-        //System.out.println("Не удалось найти учетные данные за этот год.");
+
         return result;
     }
 
