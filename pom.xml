@@ -85,7 +85,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.parttio</groupId>
+            <artifactId>starpass-theme</artifactId>
+            <version>1.0.4</version>
+        </dependency>
 
     </dependencies>
 

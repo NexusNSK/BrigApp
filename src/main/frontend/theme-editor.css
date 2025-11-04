@@ -44,7 +44,7 @@ vaadin-button.main-layout-button-1::part(label) {
 /* Применяем к grid с темой lumo compact */
 vaadin-grid[theme~="compact"]::part(header-row),
 vaadin-grid[theme~="compact"]::part(header-cell) {
-  background-color: ghostwhite;
+  /*background-color: ghostwhite;*/
   color: darkblue;
   height: 28px !important;
   line-height: 28px !important;
@@ -73,6 +73,7 @@ vaadin-grid::part(sort-indicator) {
 
 }
 vaadin-grid.work-time-grid {
+  background: none
   height: auto;
   max-height: none;
   overflow-y: visible;
@@ -131,7 +132,7 @@ vaadin-grid.work-time-grid::part(cell.content) {
 }
 vaadin-grid.work-time-grid::part(work) {
   padding: 0px;
-  background-color:rgba(255,255,255,0);
+  /*background-color:rgba(255,255,255,0);*/
   border-bottom:1px solid rgba(0,0,0,0.27);
   border-top:1px solid rgba(0,0,0,0.27);
 }
