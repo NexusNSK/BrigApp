@@ -73,7 +73,7 @@ vaadin-grid::part(sort-indicator) {
 
 }
 vaadin-grid.work-time-grid {
-  background: none
+  background: none;
   height: auto;
   max-height: none;
   overflow-y: visible;
@@ -105,7 +105,7 @@ vaadin-grid.work-time-grid::part(font-weight-bold) { font-weight:bold; }
 
 vaadin-grid.work-time-grid::part(nothing) {
   padding: 0px;
-  background-color:rgba(77,44,112,0.11);
+  background-color: rgba(79, 64, 87, 0.7);
   border-bottom:1px solid rgba(0,0,0,0.27);
   border-top:1px solid rgba(0,0,0,0.27);
   align-items: center;
@@ -132,7 +132,7 @@ vaadin-grid.work-time-grid::part(cell.content) {
 }
 vaadin-grid.work-time-grid::part(work) {
   padding: 0px;
-  /*background-color:rgba(255,255,255,0);*/
+  background-color: rgba(255, 255, 255, 0.7);
   border-bottom:1px solid rgba(0,0,0,0.27);
   border-top:1px solid rgba(0,0,0,0.27);
 }
