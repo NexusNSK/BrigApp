@@ -1,38 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-    <title>Offline | Vaadin CRM</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Офлайн режим</title>
     <style>
         body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-family: sans-serif;
-            color: #555;
+          margin: 0;
+          background: #f5f7fa;
+          display: flex;
+          height: 100vh;
+          align-items: center;
+          justify-content: center;
+          font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+          color: #333;
+          text-align: center;
+          padding: 20px;
         }
-
-        .content {
-            width: 80%;
+        .container {
+          background: white;
+          border-radius: 12px;
+          box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+          padding: 40px 30px;
+          max-width: 400px;
+          width: 100%;
         }
-
-        .offline-image {
-            width: 100%;
-            margin: 4em 0px;
+        svg {
+          width: 80px;
+          height: 80px;
+          margin-bottom: 20px;
+          fill: #f44336;
+        }
+        h1 {
+          margin: 0 0 12px;
+          font-size: 24px;
+        }
+        p {
+          margin: 0 0 24px;
+          font-size: 16px;
+          color: #666;
+        }
+        button {
+          background-color: #0078d7;
+          border: none;
+          color: white;
+          padding: 12px 26px;
+          font-size: 16px;
+          border-radius: 6px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+          box-shadow: 0 4px 8px rgba(0, 120, 215, 0.3);
+        }
+        button:hover {
+          background-color: #005ea2;
         }
     </style>
 </head>
 <body>
-
-<div class="content">
-    <img src="../../images/offline.png" alt="VaadinCRM is offline" class="offline-image"/>
-    <h1>Oh deer, you're offline</h1>
-    <p>Your internet connection is offline. Get back online to continue using Vaadin CRM.</p>
+<div class="container" role="main" aria-labelledby="offline-title" aria-describedby="offline-desc">
+    <h1 id="offline-title">Вы в офлайн режиме</h1>
+    <p id="offline-desc">Кажется, сервер сейчас недоступен. Пожалуйста, дождидесь окончания сервисных работ и попробуйте обновить страницу позже.</p>
+    <button onclick="location.reload()">Обновить страницу</button>
 </div>
-<script>
-    window.addEventListener('online', () => window.location.reload());
-</script>
 </body>
 </html>

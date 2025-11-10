@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Офлайн режим</title>
+    <link rel="stylesheet" type="text/css" href="offline.css" />
+</head>
+<body>
+<div class="container" role="main" aria-labelledby="offline-title" aria-describedby="offline-desc">
+    <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <path d="M32 4a28 28 0 1 0 28 28A28.031 28.031 0 0 0 32 4zm0 52a24 24 0 1 1 24-24 24.027 24.027 0 0 1-24 24z"/>
+        <path d="M38 18a2 2 0 0 0-4 0v16a2 2 0 0 0 4 0zM32 44a4 4 0 1 0 4-4 4 4 0 0 0-4 4z"/>
+    </svg>
+    <h1 id="offline-title">Вы в офлайн режиме</h1>
+    <p id="offline-desc">Кажется, сервер сейчас недоступен. Пожалуйста, проверьте соединение с интернетом или попробуйте обновить страницу позже.</p>
+    <button onclick="location.reload()">Обновить страницу</button>
+</div>
+<script>
+    window.addEventListener('online', () => window.location.reload());
+</script>
+
+</body>
+</html>
